@@ -45,10 +45,19 @@ namespace BirdTouch
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int Icon = 2130837504;
+			public const int buttonRegisterStyle = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int Logo = 2130837505;
+			public const int buttonSignInStyle = 2130837505;
+			
+			// aapt resource value: 0x7f020002
+			public const int Icon = 2130837506;
+			
+			// aapt resource value: 0x7f020003
+			public const int Logo = 2130837507;
+			
+			// aapt resource value: 0x7f020004
+			public const int progressBarStyle = 2130837508;
 			
 			static Drawable()
 			{
@@ -63,17 +72,17 @@ namespace BirdTouch
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050002
-			public const int btnRegister = 2131034114;
-			
 			// aapt resource value: 0x7f050001
-			public const int btnSignIn = 2131034113;
+			public const int btnRegister = 2131034113;
+			
+			// aapt resource value: 0x7f050000
+			public const int btnSignIn = 2131034112;
 			
 			// aapt resource value: 0x7f050003
 			public const int progressBar1 = 2131034115;
 			
-			// aapt resource value: 0x7f050000
-			public const int txtLogo = 2131034112;
+			// aapt resource value: 0x7f050002
+			public const int relativeLayout = 2131034114;
 			
 			static Id()
 			{
