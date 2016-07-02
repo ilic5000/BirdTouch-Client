@@ -47,7 +47,7 @@
         android:height="0dp"
         android:textColor="@android:color/holo_blue_dark"
         android:gravity="center"
-        android:textStyle="bold"
+        android:textStyle="normal"
         android:textSize="25dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
