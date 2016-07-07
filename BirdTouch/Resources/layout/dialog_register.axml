@@ -5,21 +5,27 @@
     android:layout_height="fill_parent"
     android:minWidth="300dp"
     android:minHeight="400dp">
-    <EditText
-        android:id="@+id/txtUsername"
+    <LinearLayout
+        android:id="@+id/LayoutUsername"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:background="@drawable/edit_text_style"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="25dp"
-        android:hint="Username"
-        android:paddingLeft="10dp"
-        android:textColor="#000" />
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/txtUsername"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@drawable/edit_text_style"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="25dp"
+            android:hint="Username"
+            android:paddingLeft="10dp"
+            android:textColor="#000" />
+    </LinearLayout>
     <EditText
         android:id="@+id/txtPassword"
-        android:layout_below="@id/txtUsername"
+        android:layout_below="@id/LayoutUsername"
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="35dp"

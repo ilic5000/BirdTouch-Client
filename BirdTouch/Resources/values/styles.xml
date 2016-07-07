@@ -6,4 +6,7 @@
     <item name="android:windowExitAnimation">@anim/slideRight</item>
  </style>
 
+  <style name="MyActionBar"
+         parent="@android:style/Theme.Holo.Light.DarkActionBar" />
+  
 </resources>

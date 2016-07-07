@@ -5,20 +5,31 @@
     android:layout_height="fill_parent"
     android:minWidth="300dp"
     android:minHeight="400dp">
+    <TextView
+        android:text="Please enter your credentials"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/enterCredentials"
+        android:textColor="@android:color/background_dark"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="10dp" />
     <EditText
-        android:id="@+id/txtUsername"
+        android:id="@+id/txtUsernameSignIn"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="@drawable/edit_text_style"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="50dp"
-        android:hint="First Name"
+        android:layout_marginTop="10dp"
+        android:hint="Username"
+        android:layout_below="@id/enterCredentials"
         android:paddingLeft="10dp"
         android:textColor="#000" />
     <EditText
-        android:id="@+id/txtPassword"
+        android:id="@+id/txtPasswordSignIn"
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="35dp"
@@ -28,13 +39,14 @@
         android:hint="Password"
         android:paddingLeft="10dp"
         android:textColor="#000"
-        android:layout_below="@id/txtUsername" />
+        android:layout_below="@id/txtUsernameSignIn" />
     <RelativeLayout
+        android:id="@+id/relativeLayoutSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txtPassword"
-        android:layout_marginTop="50dp"
-        android:paddingTop="50dp">
+        android:layout_below="@id/txtPasswordSignIn"
+        android:layout_marginTop="20dp"
+        android:paddingTop="0dp">
         <Button
             android:text="Sign in!"
             android:layout_width="match_parent"
@@ -46,10 +58,21 @@
             android:paddingLeft="5dp"
             android:paddingBottom="5dp"
             android:paddingRight="5dp"
-            android:height="70dp"
+            android:height="75dp"
             android:paddingTop="2dp"
             android:background="@drawable/buttonSignInStyle"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="30dp" />
     </RelativeLayout>
+    <ProgressBar
+        android:layout_below="@id/relativeLayoutSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBarSignIn"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminate="false"
+        android:background="@drawable/progressbarstylesignin"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
 </RelativeLayout>

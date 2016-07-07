@@ -81,6 +81,9 @@ namespace BirdTouch
 			// aapt resource value: 0x7f020005
 			public const int progressBarStyle = 2130837509;
 			
+			// aapt resource value: 0x7f020006
+			public const int progressBarStyleSignIn = 2130837510;
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -94,32 +97,65 @@ namespace BirdTouch
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f070003
-			public const int btnDialogEmail = 2131165187;
+			// aapt resource value: 0x7f080000
+			public const int LayoutUsername = 2131230720;
 			
-			// aapt resource value: 0x7f070004
-			public const int btnDialogSignIn = 2131165188;
+			// aapt resource value: 0x7f080004
+			public const int btnDialogEmail = 2131230724;
 			
-			// aapt resource value: 0x7f070006
-			public const int btnRegister = 2131165190;
+			// aapt resource value: 0x7f080009
+			public const int btnDialogSignIn = 2131230729;
 			
-			// aapt resource value: 0x7f070005
-			public const int btnSignIn = 2131165189;
+			// aapt resource value: 0x7f08000c
+			public const int btnRegister = 2131230732;
 			
-			// aapt resource value: 0x7f070008
-			public const int progressBar1 = 2131165192;
+			// aapt resource value: 0x7f08000b
+			public const int btnSignIn = 2131230731;
 			
-			// aapt resource value: 0x7f070007
-			public const int relativeLayout = 2131165191;
+			// aapt resource value: 0x7f080011
+			public const int bussinessUserActionBarButton = 2131230737;
 			
-			// aapt resource value: 0x7f070001
-			public const int txtPassword = 2131165185;
+			// aapt resource value: 0x7f080012
+			public const int celebrityUserActionBarButton = 2131230738;
 			
-			// aapt resource value: 0x7f070002
-			public const int txtPasswordCheck = 2131165186;
+			// aapt resource value: 0x7f080005
+			public const int enterCredentials = 2131230725;
 			
-			// aapt resource value: 0x7f070000
-			public const int txtUsername = 2131165184;
+			// aapt resource value: 0x7f080013
+			public const int optionsActionBarButton = 2131230739;
+			
+			// aapt resource value: 0x7f080010
+			public const int privateUserActionBarButton = 2131230736;
+			
+			// aapt resource value: 0x7f08000e
+			public const int progressBar1 = 2131230734;
+			
+			// aapt resource value: 0x7f08000a
+			public const int progressBarSignIn = 2131230730;
+			
+			// aapt resource value: 0x7f08000d
+			public const int relativeLayout = 2131230733;
+			
+			// aapt resource value: 0x7f080008
+			public const int relativeLayoutSignIn = 2131230728;
+			
+			// aapt resource value: 0x7f08000f
+			public const int toggleButton1 = 2131230735;
+			
+			// aapt resource value: 0x7f080002
+			public const int txtPassword = 2131230722;
+			
+			// aapt resource value: 0x7f080003
+			public const int txtPasswordCheck = 2131230723;
+			
+			// aapt resource value: 0x7f080007
+			public const int txtPasswordSignIn = 2131230727;
+			
+			// aapt resource value: 0x7f080001
+			public const int txtUsername = 2131230721;
+			
+			// aapt resource value: 0x7f080006
+			public const int txtUsernameSignIn = 2131230726;
 			
 			static Id()
 			{
@@ -143,12 +179,31 @@ namespace BirdTouch
 			// aapt resource value: 0x7f030002
 			public const int Main = 2130903042;
 			
+			// aapt resource value: 0x7f030003
+			public const int StartPage = 2130903043;
+			
 			static Layout()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
 			}
 			
 			private Layout()
+			{
+			}
+		}
+		
+		public partial class Menu
+		{
+			
+			// aapt resource value: 0x7f070000
+			public const int menu_main = 2131165184;
+			
+			static Menu()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Menu()
 			{
 			}
 		}
@@ -174,6 +229,9 @@ namespace BirdTouch
 		
 		public partial class Style
 		{
+			
+			// aapt resource value: 0x7f060001
+			public const int MyActionBar = 2131099649;
 			
 			// aapt resource value: 0x7f060000
 			public const int dialog_animation = 2131099648;
