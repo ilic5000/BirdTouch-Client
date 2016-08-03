@@ -44,7 +44,7 @@ namespace BirdTouch
             btnSignIn.Click += (object sender, EventArgs e) =>
             {
                 progressBar.Visibility=ViewStates.Visible;
-                String restUriString = "http://10.13.1.66:80/BirdTouchServer/rest/getUserLogin/" + editTxtUsername.Text + "/" + editTxtPassword.Text;
+                String restUriString = "http://192.168.0.103:80/BirdTouchServer/rest/getUserLogin/" + editTxtUsername.Text + "/" + editTxtPassword.Text;
                 uri = new Uri(restUriString);
                 webClient.DownloadDataAsync(uri);
                 

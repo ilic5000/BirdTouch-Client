@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+  
+    <group android:checkableBehavior="single">
+      <item
+          android:id="@+id/nav_home"
+          android:icon="@drawable/ic_dashboard"
+          android:title="Home" />
+    
+  
+      <item android:title="Update info">
+        <menu>
+      <item
+          android:id="@+id/nav_private"
+          android:icon="@drawable/ic_event"
+          android:title="Private" />
+      <item
+          android:id="@+id/nav_business"
+          android:icon="@drawable/ic_headset"
+          android:title="Business" />
+      <item
+          android:id="@+id/nav_celebrity"
+          android:icon="@drawable/ic_forum"
+          android:title="Celebrity" />
+          </menu>
+  </item>
+  
+  <item android:title="More options">
+    <menu>
+      <item
+        android:id="@+id/nav_saved_contacts" 
+        android:icon="@drawable/ic_dashboard"
+          android:title="Saved contacts" />
+      <item
+           android:id="@+id/nav_settings"
+          android:icon="@drawable/ic_forum"
+          android:title="Settings" />
+    </menu>
+  </item>
+    </group>
+</menu>
