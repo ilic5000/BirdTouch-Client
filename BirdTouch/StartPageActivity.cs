@@ -20,6 +20,7 @@ using Android.Support.Design.Widget;
 using Android.Support.V4.View;
 using Android.Support.V4.App;
 using Java.Lang;
+using BirdTouch.Fragments;
 
 namespace BirdTouch
 {
@@ -44,12 +45,11 @@ namespace BirdTouch
 
             
            User user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("userLoggedInJson"));
-           // Console.WriteLine("SSSSS {0} - {1}", user.FirstName, user.LastName);
-           // ab.Title = user.Username; //kada se uloguje user, da vidimo njegov username u action baru
-              ab.Title = user.FirstName + " " + user.LastName;
+           ab.Title = user.FirstName + " " + user.LastName;
             // Create your application here
 
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            
             NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             if(navigationView != null)
             {
@@ -57,6 +57,8 @@ namespace BirdTouch
                 SetUpDrawerContent(navigationView);
 
             }
+
+            navigationView.GetHeaderView(0).FindViewById<Android.Support.V7.Widget.AppCompatTextView>(Resource.Id.nav_header_username_textView).Text = user.Username;
 
             TabLayout tabs = FindViewById<TabLayout>(Resource.Id.tabs);
 
@@ -81,15 +83,35 @@ namespace BirdTouch
         private void SetUpViewPager(ViewPager viewPager)
         {
             TabAdapter adapter = new TabAdapter(SupportFragmentManager);
-            adapter.AddFragment(null, "Private");
-            adapter.AddFragment(null, "Business");
-            adapter.AddFragment(null, "Celebrity");
+            adapter.AddFragment(new Fragment1_Private(), "Private");
+            adapter.AddFragment(new Fragment1_Private(), "Business");
+            adapter.AddFragment(new Fragment1_Private(), "Celebrity");
             viewPager.Adapter = adapter;
         }
 
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {//kada se klikne na hamburger, sta se dogadja
+            switch (item.ItemId)
+            {
+                case Android.Resource.Id.Home:
+                    drawerLayout.OpenDrawer((int)GravityFlags.Left);
+                    return true;
+
+                default:
+                    return base.OnOptionsItemSelected(item);
+            }
+           
+        }
         private void SetUpDrawerContent(NavigationView navigationView)
         {
-           
+            navigationView.NavigationItemSelected += (object sender, NavigationView.NavigationItemSelectedEventArgs e) =>
+             {
+                 
+                 e.MenuItem.SetChecked(true);
+                 drawerLayout.CloseDrawers();
+             };
+
+
         }
 
         public class TabAdapter : FragmentPagerAdapter //ovo poziva viewpager kako bi znao koji fragment u kom tabu 

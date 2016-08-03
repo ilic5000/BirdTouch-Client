@@ -85,6 +85,8 @@
   <ItemGroup>
     <Compile Include="dialog_Register.cs" />
     <Compile Include="dialog_SignIn.cs" />
+    <Compile Include="Fragments\CheeseHelper\Cheeses.cs" />
+    <Compile Include="Fragments\Fragment1_Private.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -112,6 +114,16 @@
     <AndroidResource Include="Resources\menu\drawer_view.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\Fragment1_private.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\Fragment2_business.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\Fragment3_celebrity.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\List_Item.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml">
