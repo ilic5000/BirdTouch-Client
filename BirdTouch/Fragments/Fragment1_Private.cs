@@ -33,11 +33,19 @@ namespace BirdTouch.Fragments
             return recyclerView;
         }
 
-        private void SetUpRecyclerView(RecyclerView recyclerView)
+        private void SetUpRecyclerView(RecyclerView recyclerView) //ovde da se napravi lista dobijenih korisnika
         {
             var values = GetRandomSubList(CheeseHelper.Cheeses.CheeseStrings, 30);
             recyclerView.SetLayoutManager(new LinearLayoutManager(recyclerView.Context));
             recyclerView.SetAdapter(new SimpleStringRecyclerViewAdapter(recyclerView.Context, values, Activity.Resources));
+            
+            recyclerView.SetItemClickListener((rv,position,view) =>
+            {
+                Context context = view.Context;
+                Intent intent = new Intent(context, typeof(UserDetailActivity));
+                intent.PutExtra(UserDetailActivity.EXTRA_NAME, values[position]);
+                context.StartActivity(intent);
+            });
         }
 
         private List<string> GetRandomSubList(List<string> items, int amount)

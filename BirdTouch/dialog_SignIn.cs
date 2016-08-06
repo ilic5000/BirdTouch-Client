@@ -1,103 +1,88 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
-using Android.Widget;
+using Android.Support.Design.Widget;
 using System.Net;
-using System.Collections.Specialized;
-using System.Xml;
 using BirdTouch.Models;
+using Android.Widget;
+using Android.Text;
 
 namespace BirdTouch
 {
-     
-    class dialog_SignIn : DialogFragment
+    [Activity(Label = "SignInFragment", Theme = "@style/Theme.DesignDemo")]
+    class dialog_SignIn : Android.Support.V4.App.DialogFragment  //v4 support je potreban zbog edittexta iz te biblioteke
     {
         private EditText editTxtUsername;
         private EditText editTxtPassword;
         private Button btnSignIn;
+        private TextInputLayout passwordWrapper;
         private ProgressBar progressBar;
         private WebClient webClient;
         private Uri uri;
-        private int a=0;
-        
+          
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             base.OnCreateView(inflater, container, savedInstanceState);
             var view = inflater.Inflate(Resource.Layout.dialog_signin, container, false);
-
+           
             btnSignIn = view.FindViewById<Button>(Resource.Id.btnDialogSignIn);
             editTxtUsername = view.FindViewById<EditText>(Resource.Id.txtUsernameSignIn);
             editTxtPassword = view.FindViewById<EditText>(Resource.Id.txtPasswordSignIn);
             progressBar = view.FindViewById<ProgressBar>(Resource.Id.progressBarSignIn);
-            
+            passwordWrapper = view.FindViewById<TextInputLayout>(Resource.Id.txtInputLayoutSignInPassword);
 
             webClient = new WebClient();
             webClient.DownloadDataCompleted += WebClient_DownloadDataCompleted;
 
+            
+
             btnSignIn.Click += (object sender, EventArgs e) =>
             {
+                
+    
+                if (Reachability.isOnline(Activity)) { //provera da li je aplikaciji dostupan net
+
                 progressBar.Visibility=ViewStates.Visible;
-                String restUriString = "http://192.168.0.103:80/BirdTouchServer/rest/getUserLogin/" + editTxtUsername.Text + "/" + editTxtPassword.Text;
+                String restUriString = GetString(Resource.String.server_ip_getUserLogin) + editTxtUsername.Text + "/" + editTxtPassword.Text;
                 uri = new Uri(restUriString);
                 webClient.DownloadDataAsync(uri);
-                
+                }
+                else {
 
+                    Snackbar.Make(view, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+
+                }
 
             };
             
             return view;
         }
 
-       
-
         private void WebClient_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
             if (e.Error != null)
             {
-               
-                // Exceptions definitely available here.
-                //Console.WriteLine(e.Error.ToString());
+                //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
+                passwordWrapper.Error = "Wrong username/password, try again";
+                Console.WriteLine("*******Error webclient data completed sign in error");
                 Console.WriteLine(e.Error.Message);
-
-                AlertDialog.Builder alert = new AlertDialog.Builder(Activity);
-                alert.SetTitle("Wrong username/password");
-
-                alert.SetNegativeButton("Try Again", (senderAlert, args) => {
-                    //change value write your own set of instructions
-                    //you can also create an event for the same in xamarin
-                    //instead of writing things here
-                    alert.Dispose();
-                });
-
-                alert.SetPositiveButton("Cancel", (senderAlert, args) => {
-                    //perform your own task for this conditional button click
-                    this.Dismiss();
-                   
-                });
-
-                //run the alert in UI thread to display in the screen
-                //RunOnUiThread(() => {
-                //    alert.Show();
-                //});
-                alert.Show();
-
+                Console.WriteLine("******************************************************");
             }
             else
             {
-                
+                passwordWrapper.Error = "";
                 Console.WriteLine("Success!");
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
                 Console.Out.WriteLine(jsonResult);
                 User user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(jsonResult);
 
+                Console.WriteLine("*******Deserialized user");
                 Console.WriteLine("{0} - {1}", user.FirstName, user.LastName);
+                Console.WriteLine("******************************************************");
 
                 Intent intent = new Intent(this.Activity, typeof(StartPageActivity));
                 intent.PutExtra("userLoggedInJson", jsonResult);
@@ -105,9 +90,8 @@ namespace BirdTouch
                 this.Activity.Finish();
 
             }
-
-            
-            progressBar.Visibility = ViewStates.Gone;
+ 
+            progressBar.Visibility = ViewStates.Gone; //nestaje progress bar jer je ucitavanje sa neta zavrseno
             
         }
 
@@ -115,9 +99,14 @@ namespace BirdTouch
         {
             Dialog.Window.RequestFeature(WindowFeatures.NoTitle); //izbacujemo title bar, stavljamo na invisible
             base.OnActivityCreated(savedInstanceState);
-            Dialog.Window.Attributes.WindowAnimations = Resource.Style.dialog_animation;
-            
+            Dialog.Window.Attributes.WindowAnimations = Resource.Style.dialog_animation; //animacija za pojavu dijaloga (odozdo na gore)
+         }
 
-        }
+       
+
+
+        
     }
+
+
 }

@@ -29,7 +29,7 @@ namespace BirdTouch
     {
 
         private DrawerLayout drawerLayout;
-
+        private User user;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -44,7 +44,7 @@ namespace BirdTouch
             ab.SetDisplayHomeAsUpEnabled(true); //enablovan za home button
 
             
-           User user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("userLoggedInJson"));
+           user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("userLoggedInJson"));
            ab.Title = user.FirstName + " " + user.LastName;
             // Create your application here
 
@@ -97,6 +97,7 @@ namespace BirdTouch
                     drawerLayout.OpenDrawer((int)GravityFlags.Left);
                     return true;
 
+                
                 default:
                     return base.OnOptionsItemSelected(item);
             }
@@ -108,10 +109,24 @@ namespace BirdTouch
              {
                  
                  e.MenuItem.SetChecked(true);
+                 
+                 switch (e.MenuItem.ItemId)
+                 {
+                     case Resource.Id.nav_private: //kada se klikne na private user edit info
+                         Context context = navigationView.Context;
+                         Intent intent = new Intent(context, typeof(EditPrivateUserInfoActivity));
+                         string userSerialized = Newtonsoft.Json.JsonConvert.SerializeObject(user);
+                         intent.PutExtra("userLoggedInJson", userSerialized);
+                         context.StartActivity(intent);
+                         break;
+                     
+
+                 }
+
                  drawerLayout.CloseDrawers();
              };
 
-
+            
         }
 
         public class TabAdapter : FragmentPagerAdapter //ovo poziva viewpager kako bi znao koji fragment u kom tabu 

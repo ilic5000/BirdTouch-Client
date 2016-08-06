@@ -1,66 +1,48 @@
 ﻿using System;
-using Android.App;
-using Android.Content;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Android.Support.V4.App;
+using Android.Support.V7.App;
+using Android.App;
+using Android.Net;
 
 namespace BirdTouch
 {
-    [Activity(Label = "BirdTouch v0.01", MainLauncher = true, Icon = "@drawable/Logo")]
-    public class MainActivity : Activity
+    [Activity(Label = "BirdTouch v0.01", MainLauncher = true, Icon = "@drawable/Logo", Theme = "@style/Theme.DesignDemo")]
+    public class MainActivity : FragmentActivity
     {
 
         private Button btnRegister;
         private Button btnSignIn;
+        
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            ActionBar.Hide();
+          //  ActionBar.Hide();
             
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
-
+            
             btnRegister = FindViewById<Button>(Resource.Id.btnRegister);
             btnRegister.Click += (object sender, EventArgs e) =>
         {
             //poziva dijalog za register
-            FragmentTransaction transaction = FragmentManager.BeginTransaction();
+            Android.Support.V4.App.FragmentManager fm = SupportFragmentManager;
             dialog_Register dialogRegister = new dialog_Register();
-            dialogRegister.Show(transaction, "dialog fragment");
+            dialogRegister.Show(fm, "Dialog fragment");
         };
-
+            
             btnSignIn = FindViewById<Button>(Resource.Id.btnSignIn);
             btnSignIn.Click += (object sender, EventArgs e) =>
             {
-                //poziva dijalog za register
-                FragmentTransaction transaction = FragmentManager.BeginTransaction();
-                dialog_SignIn dialogRegister = new dialog_SignIn();
-                dialogRegister.Show(transaction, "dialog fragment");
+                //poziva dijalog za SIGNin
+                Android.Support.V4.App.FragmentManager fm = SupportFragmentManager;
+                dialog_SignIn dialogSignIn = new dialog_SignIn();
+                dialogSignIn.Show(fm, "Dialog fragment");
             };
 
 
-
-
-
-
-
-
-
-
-
-
-
-            // Get our button from the layout resource,
-            // and attach an event to it
-            //   Button button = FindViewById<Button>(Resource.Id.MyButton);
-
-            //    button.Click += delegate { button.Text = string.Format("{0} clicks!", count++); };
-
-
-
-
+            
 
         }
 
