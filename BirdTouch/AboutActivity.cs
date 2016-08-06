@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 using Android.App;
@@ -15,28 +12,25 @@ using Android.Support.Design.Widget;
 
 namespace BirdTouch
 {
-    [Activity(Label ="UserDetailActivity", Theme = "@style/Theme.DesignDemo")]
-    public class UserDetailActivity : AppCompatActivity
+    [Activity(Label = "AboutActivity", Theme = "@style/Theme.DesignDemo")]
+    public class AboutActivity : AppCompatActivity 
     {
-
-        public const string EXTRA_NAME = "user_name";
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            SetContentView(Resource.Layout.Activity_Detail);
+            SetContentView(Resource.Layout.About_Activity);
 
-            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolbar); //MALO B, nije isti toolbar kao u startpage
+            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolbar_about); //MALO B, nije isti toolbar kao u startpage
             SetSupportActionBar(toolBar);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            SupportActionBar.Title = "About";
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_arrow_back_black_24dp);
 
-            string userName = Intent.GetStringExtra(EXTRA_NAME); //treba da se promeni sve za usera, da nije sir
-            CollapsingToolbarLayout collapsingToolBar = FindViewById<CollapsingToolbarLayout>(Resource.Id.collapsing_toolbar);
-            collapsingToolBar.Title = userName;
+            
+            CollapsingToolbarLayout collapsingToolBar = FindViewById<CollapsingToolbarLayout>(Resource.Id.collapsing_toolbar_about);
+            
 
             LoadBackDrop();
-
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -52,11 +46,11 @@ namespace BirdTouch
         }
 
 
-    
+
         private void LoadBackDrop()
         {
-            ImageView imageView = FindViewById<ImageView>(Resource.Id.backdrop);
-            imageView.SetImageResource(Fragments.CheeseHelper.Cheeses.RandomCheeseDrawable);
+            ImageView imageView = FindViewById<ImageView>(Resource.Id.backdrop_about);
+            imageView.SetImageResource(Resource.Drawable.author);
         }
     }
 }

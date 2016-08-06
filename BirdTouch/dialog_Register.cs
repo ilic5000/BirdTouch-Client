@@ -152,6 +152,7 @@ namespace BirdTouch
                 Console.WriteLine("******************************************************");
 
                 Intent intent = new Intent(this.Activity, typeof(StartPageActivity));
+                intent.PutExtra("userPassword", passwordCheckWrapper.EditText.Text);//mozda mi ne treba, ali zbog bolje zastite
                 intent.PutExtra("userLoggedInJson", jsonResult);
                 this.StartActivity(intent);
                 this.Activity.Finish();

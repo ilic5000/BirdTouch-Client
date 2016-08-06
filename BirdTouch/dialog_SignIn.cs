@@ -86,6 +86,7 @@ namespace BirdTouch
 
                 Intent intent = new Intent(this.Activity, typeof(StartPageActivity));
                 intent.PutExtra("userLoggedInJson", jsonResult);
+                intent.PutExtra("userPassword", editTxtPassword.Text);//mozda mi ne treba, ali zbog bolje zastite
                 this.StartActivity(intent);
                 this.Activity.Finish();
 
