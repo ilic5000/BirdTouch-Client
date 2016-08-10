@@ -16,6 +16,9 @@ using BirdTouch.Models;
 using Android.Text;
 using System.Net;
 using System.Collections.Specialized;
+using Android.Graphics;
+using System.IO;
+using Android.Graphics.Drawables;
 
 namespace BirdTouch
 {
@@ -23,6 +26,7 @@ namespace BirdTouch
     public class EditPrivateUserInfoActivity : AppCompatActivity
     {
         private User user;
+        private ImageView imageView;
         private TextInputLayout firstNameWrapper;
         private TextInputLayout lastNameWrapper;
         private TextInputLayout emailWrapper;
@@ -51,14 +55,6 @@ namespace BirdTouch
             user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("userLoggedInJson"));
             
 
-            //////////////
-
-            //OpetIzvuciPodatkeZaUseraJerMozdaSuSePROMENILINEKIPODACI
-            //////////////
-
-
-
-
             collapsingToolBar = FindViewById<CollapsingToolbarLayout>(Resource.Id.collapsing_toolbar_edit_private_info);
             firstNameWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserFirstNameWrapper);
             lastNameWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserLastNameWrapper);
@@ -84,7 +80,9 @@ namespace BirdTouch
             linkedInLinkWrapper.EditText.Text=user.LinkedInLink;
             collapsingToolBar.Title = user.Username;
 
-           // firstNameWrapper.ClearFocus();
+            imageView= FindViewById<ImageView>(Resource.Id.profile_picture_edit_private_info);
+            imageView.SetImageResource(Fragments.CheeseHelper.Cheeses.RandomCheeseDrawable);
+            imageView.Click += ImageView_Click;
 
             webClient = new WebClient();
             webClient.DownloadDataCompleted += WebClient_DownloadDataCompleted;
@@ -99,6 +97,26 @@ namespace BirdTouch
                     //zbog parametara mora da postoje sva polja kada se salju, makar privremeno 
                     checkIfEditTextsAreEmptyAndTurnThemToNULLString();
 
+                    //imageView.BuildDrawingCache();
+
+
+                    imageView.BuildDrawingCache(true);
+                    Bitmap bitmap = imageView.GetDrawingCache(true);
+                    MemoryStream memStream = new MemoryStream();
+                    bitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, memStream); //moze i drugi format //max img size je 61kB
+                    byte[] picData = memStream.ToArray();
+                    String picDataEncoded = Convert.ToBase64String(picData);
+
+                    imageView.DestroyDrawingCache();
+
+                 //   NameValueCollection nvc = new NameValueCollection();
+                  //  nvc.Add("picDataEncoded", picDataEncoded);
+                    //nvc.Add("test2", "test2 je uspesno stigao");
+
+                 //   webClient.Headers["Content-Type"] = "application/json";
+                 //   webClient.Headers.Add(nvc);
+                    
+
                     String restUriString = GetString(Resource.String.server_ip_changePrivateUser)
                     + user.Id + "/" + firstNameWrapper.EditText.Text + "/" + lastNameWrapper.EditText.Text + "/" + emailWrapper.EditText.Text
                     + "/" + phoneWrapper.EditText.Text + "/" + adressWrapper.EditText.Text + "/" + dateOfBirthWrapper.EditText.Text + "/"
@@ -107,6 +125,7 @@ namespace BirdTouch
 
                     uri = new Uri(restUriString);
                     webClient.DownloadDataAsync(uri);
+                    //webClient.UploadDataAsync()
 
 
                 }
@@ -119,10 +138,35 @@ namespace BirdTouch
 
             };
 
-            LoadBackDrop();
+          
         }
 
-   
+        private void ImageView_Click(object sender, EventArgs e) //klik na sliku, da bi se promenila profilna slika
+        {
+            Intent intent = new Intent();
+            intent.SetType("image/*");
+            intent.SetAction(Intent.ActionGetContent);
+            this.StartActivityForResult(Intent.CreateChooser(intent, "Select a Photo"), 0);
+        }
+
+        protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data) //kada se dobije iz galerije nazad neki podatak
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+
+            if(resultCode == Result.Ok)
+            {
+                System.IO.Stream stream = ContentResolver.OpenInputStream(data.Data);
+            //  imageView.SetImageBitmap(BitmapFactory.DecodeStream(stream)); neefikasan nacin ucitavanja slika, nema skaliranja
+                imageView.SetImageBitmap(DecodeBitmapFromStream(data.Data, 400, 300)); //mozda su prevelike dimenzije, moze da se podesi
+
+                                                                     
+                Bitmap bitmap = BitmapFactory.DecodeStream(stream); //ako hocemo skaliranu, onda koristimo DecodeBitmapFromStream(data.Data, 400, 300)
+                MemoryStream memStream = new MemoryStream();
+                bitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, memStream); //moze i drugi format //max img size je 61kB
+                byte[] picData = memStream.ToArray();
+
+            }
+        }
 
         private void WebClient_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
@@ -146,6 +190,8 @@ namespace BirdTouch
                 Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">Changes saved successfully</font>"), Snackbar.LengthLong).Show();
                 StartPageActivity.ab.Title = firstNameWrapper.EditText.Text + " " + lastNameWrapper.EditText.Text; //update title u glavnoj activity, jer je ime i prezime sada promenjeno
 
+
+                
             }
         }
 
@@ -192,32 +238,52 @@ namespace BirdTouch
             return base.OnOptionsItemSelected(item);
         }
 
-
-
-        private void LoadBackDrop()
+        private Bitmap DecodeBitmapFromStream(Android.Net.Uri data, int requestedWidth, int requestedHeight)
         {
-            ImageView imageView = FindViewById<ImageView>(Resource.Id.backdrop_edit_private_info);
-            imageView.SetImageResource(Fragments.CheeseHelper.Cheeses.RandomCheeseDrawable);
+            //Decode with inJustDecodeBounds = true to check dimensions
+            //proveravamo samo velicinu slike, da nije neka prevelika slika koja bi napunila memoriju
+            Stream stream = ContentResolver.OpenInputStream(data);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.InJustDecodeBounds = true;
+            BitmapFactory.DecodeStream(stream,null,options);
+
+            int imageHeight = options.OutHeight;
+            int imageWidth = options.OutWidth;
+
+
+            //Calculate InSampleSize
+            options.InSampleSize = CalculateInSampleSize(options, requestedWidth, requestedHeight);
+
+            //Decode bitmap with InSampleSize set
+            stream = ContentResolver.OpenInputStream(data); //must read again
+            options.InJustDecodeBounds = false;
+            Bitmap bitmap = BitmapFactory.DecodeStream(stream, null, options);
+
+            return bitmap;
         }
+        private int CalculateInSampleSize(BitmapFactory.Options options, int requestedWidth, int requestedHeight)
+        {
+            //Raw height and width of image
+            int height = options.OutHeight;
+            int width = options.OutWidth;
+            int inSampleSize = 1;
+
+            if(height > requestedHeight || width > requestedWidth)
+            {
+                //slika je veca nego sto nam treba
+                int halfHeight = height / 2;
+                int halfWidth = width / 2;
+
+                while((halfHeight/inSampleSize)>=requestedHeight && (halfWidth / inSampleSize) >= requestedWidth)
+                {
+                    inSampleSize *= 2;
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("SampleSizeBitmap: " + inSampleSize.ToString());
+            Console.WriteLine();
+            return inSampleSize;
+        }
+
     }
 }
-
-
-
-
-
-
-
-//provera da li je aplikaciji dostupan net
-//NameValueCollection parameters = new NameValueCollection();
-//parameters.Add("id2", user.Id.ToString());
-//parameters.Add("firstname2", firstNameWrapper.EditText.Text);
-//parameters.Add("lastname2", lastNameWrapper.EditText.Text);
-//parameters.Add("email2", emailWrapper.EditText.Text);
-//parameters.Add("phone2", phoneWrapper.EditText.Text);
-//parameters.Add("adress2", adressWrapper.EditText.Text);
-//parameters.Add("dateofbirth2", dateOfBirthWrapper.EditText.Text);
-//parameters.Add("fblink2", facebookLinkWrapper.EditText.Text);
-//parameters.Add("twitter2", twitterLinkWrapper.EditText.Text);
-//parameters.Add("gpluslink2", gPlusLinkWrapper.EditText.Text);
-//parameters.Add("linkedin2", linkedInLinkWrapper.EditText.Text);

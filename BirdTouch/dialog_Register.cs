@@ -104,7 +104,7 @@ namespace BirdTouch
 
         private void UsernameEditText_AfterFocusChanged(object sender, View.FocusChangeEventArgs e)
         {
-            if (Reachability.isOnline(Activity))
+            if (Reachability.isOnline(Activity) && !webClient.IsBusy)
             { //provera da li je aplikaciji dostupan net
 
                 String restUriString = GetString(Resource.String.server_ip_doesUsernameExist) + usernameWrapper.EditText.Text;

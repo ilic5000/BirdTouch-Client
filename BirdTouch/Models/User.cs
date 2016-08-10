@@ -25,7 +25,7 @@ namespace BirdTouch.Models
         public string DateOfBirth { get; set; }
         public string Adress { get; set; }
 
-        public string ProfilPictureLink { get; set; }
+        public byte[] ProfilePictureData { get; set; }
 
         public string FbLink { get; set; }
 

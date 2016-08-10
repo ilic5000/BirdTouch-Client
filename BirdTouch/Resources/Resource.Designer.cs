@@ -2044,17 +2044,14 @@ namespace BirdTouch
 			// aapt resource value: 0x7f060074
 			public const int appbar_edit_private_info = 2131099764;
 			
+			// aapt resource value: 0x7f06006c
+			public const int author_picture = 2131099756;
+			
 			// aapt resource value: 0x7f0600a1
 			public const int avatar = 2131099809;
 			
 			// aapt resource value: 0x7f060070
 			public const int backdrop = 2131099760;
-			
-			// aapt resource value: 0x7f06006c
-			public const int backdrop_about = 2131099756;
-			
-			// aapt resource value: 0x7f060076
-			public const int backdrop_edit_private_info = 2131099766;
 			
 			// aapt resource value: 0x7f06001b
 			public const int beginning = 2131099675;
@@ -2313,6 +2310,9 @@ namespace BirdTouch
 			
 			// aapt resource value: 0x7f0600bf
 			public const int privateUserActionBarButton = 2131099839;
+			
+			// aapt resource value: 0x7f060076
+			public const int profile_picture_edit_private_info = 2131099766;
 			
 			// aapt resource value: 0x7f060094
 			public const int progressBarRegister = 2131099796;

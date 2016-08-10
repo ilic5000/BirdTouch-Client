@@ -21,7 +21,7 @@
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleMarginEnd="64dp">
           <refractored.controls.CircleImageView
-                android:id="@+id/backdrop_about"
+                android:id="@+id/author_picture"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginRight="16dp"

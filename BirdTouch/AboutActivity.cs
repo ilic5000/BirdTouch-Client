@@ -1,9 +1,5 @@
-using System.Text;
-
 using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
@@ -25,12 +21,12 @@ namespace BirdTouch
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.Title = "About";
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_arrow_back_black_24dp);
-
-            
+          
             CollapsingToolbarLayout collapsingToolBar = FindViewById<CollapsingToolbarLayout>(Resource.Id.collapsing_toolbar_about);
-            
 
-            LoadBackDrop();
+            ImageView imageView = FindViewById<ImageView>(Resource.Id.author_picture);
+            imageView.SetImageResource(Resource.Drawable.author);
+            
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -44,13 +40,6 @@ namespace BirdTouch
             }
             return base.OnOptionsItemSelected(item);
         }
-
-
-
-        private void LoadBackDrop()
-        {
-            ImageView imageView = FindViewById<ImageView>(Resource.Id.backdrop_about);
-            imageView.SetImageResource(Resource.Drawable.author);
-        }
+  
     }
 }
