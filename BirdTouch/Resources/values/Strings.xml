@@ -19,5 +19,7 @@
   <string name="server_ip_getUserLogin">http://192.168.0.102:80/BirdTouchServer/rest/getUserLogin/"</string>
   <string name="server_ip_doesUsernameExist">http://192.168.0.102:80/BirdTouchServer/rest/doesUsernameExist/"</string>
   <string name="server_ip_registerUser">http://192.168.0.102:80/BirdTouchServer/rest/registerUser/"</string>
-  <string name="server_ip_changePrivateUser">http://192.168.0.102:80/BirdTouchServer/rest/changeUserPrivateInfo/"</string>
+  <string name="server_ip_getBusiness">http://192.168.0.102:80/BirdTouchServer/rest/getBusiness/"</string>
+  <string name="server_ip_changePrivateUser">http://192.168.0.102:80/BirdTouchServer/rest/changeUserPrivateInfo"</string>
+  <string name="server_ip_changeBusinessUser">http://192.168.0.102:80/BirdTouchServer/rest/changeUserBusinessInfo"</string>
 </resources>

@@ -8,7 +8,7 @@
         android:id="@+id/nav_header_imgViewHeader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/cheese_1"
+        android:src="@drawable/blank_navigation"
         android:scaleType="centerCrop" />
     <TextView
         android:id="@+id/nav_header_username_textView"

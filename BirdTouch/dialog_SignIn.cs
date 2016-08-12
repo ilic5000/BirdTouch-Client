@@ -10,6 +10,7 @@ using System.Net;
 using BirdTouch.Models;
 using Android.Widget;
 using Android.Text;
+using Newtonsoft.Json.Linq;
 
 namespace BirdTouch
 {
@@ -44,7 +45,7 @@ namespace BirdTouch
             {
                 
     
-                if (Reachability.isOnline(Activity)) { //provera da li je aplikaciji dostupan net
+                if (Reachability.isOnline(Activity) && !webClient.IsBusy) { //provera da li je aplikaciji dostupan net
 
                 progressBar.Visibility=ViewStates.Visible;
                 String restUriString = GetString(Resource.String.server_ip_getUserLogin) + editTxtUsername.Text + "/" + editTxtPassword.Text;
@@ -76,8 +77,13 @@ namespace BirdTouch
             {
                 passwordWrapper.Error = "";
                 Console.WriteLine("Success!");
-                string jsonResult = Encoding.UTF8.GetString(e.Result);
+                String jsonResult = Encoding.UTF8.GetString(e.Result);
                 Console.Out.WriteLine(jsonResult);
+
+                //JObject obj = JObject.Parse(jsonResult);
+                //string name = (string)obj["ProfilPictureDataEncoded"];
+                //byte[] slika = Convert.FromBase64String(name);
+
                 User user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(jsonResult);
 
                 Console.WriteLine("*******Deserialized user");

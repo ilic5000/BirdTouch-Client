@@ -90,11 +90,15 @@
     <Compile Include="AboutActivity.cs" />
     <Compile Include="dialog_Register.cs" />
     <Compile Include="dialog_SignIn.cs" />
+    <Compile Include="EditBusinessUserInfoActivity.cs" />
+    <Compile Include="EditCelebrityUserInfoActivity.cs" />
     <Compile Include="EditPrivateUserInfoActivity.cs" />
     <Compile Include="Fragments\CheeseHelper\Cheeses.cs" />
     <Compile Include="Fragments\ExtensionMethods.cs" />
     <Compile Include="Fragments\Fragment1_Private.cs" />
+    <Compile Include="Fragments\Fragment3_Celebrity.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Models\Business.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Reachability.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -142,6 +146,12 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\About_Activity.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\Activity_EditBusinessUserInfo.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\Activity_EditCelebrityUserInfo.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
@@ -320,6 +330,18 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\author.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\blank_business_profile.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\blank_navigation.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\blank_user_profile.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\ic_insert_photo_black_24dp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets')" />

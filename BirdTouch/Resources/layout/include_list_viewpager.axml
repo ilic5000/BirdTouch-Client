@@ -30,7 +30,19 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
+        android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_done" />
+
+  
+
+
+  <!--<android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="70dp"
+        android:layout_marginTop="200dp"
+        android:src="@drawable/ic_done"
+        app:layout_anchor="@id/fab" />-->
 </android.support.design.widget.CoordinatorLayout>

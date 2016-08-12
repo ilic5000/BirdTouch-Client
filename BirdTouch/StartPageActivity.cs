@@ -23,6 +23,8 @@ using Java.Lang;
 using BirdTouch.Fragments;
 using System.Net;
 using Android.Text;
+using Android.Graphics;
+using System.IO;
 
 namespace BirdTouch
 {
@@ -34,19 +36,25 @@ namespace BirdTouch
         private NavigationView navigationView;
         private SupportToolbar toolBar;
         public static SupportActionBar ab;
+        public static ImageView profilePictureNavigationHeader;
         private TabLayout tabs;
         private ViewPager viewPager;
 
         private User user;
+        private Business business;
         private System.String userPassword;
 
         private WebClient webClientUserPrivateDataUponOpeningEditDataActivity;
+        private WebClient webClientUserBusinessDataUponOpeningEditDataActivity;
         private Uri uri;
 
 
+        private TabAdapter adapter;
 
-        
-        protected override void OnCreate(Bundle savedInstanceState)
+
+
+
+        protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.StartPage);
@@ -54,8 +62,17 @@ namespace BirdTouch
             webClientUserPrivateDataUponOpeningEditDataActivity = new WebClient();
             webClientUserPrivateDataUponOpeningEditDataActivity.DownloadDataCompleted += WebClientUserPrivateDataUponOpeningEditDataActivity_DownloadDataCompleted;
 
+            webClientUserBusinessDataUponOpeningEditDataActivity = new WebClient();
+            webClientUserBusinessDataUponOpeningEditDataActivity.DownloadDataCompleted += WebClientUserBusinessDataUponOpeningEditDataActivity_DownloadDataCompleted;
+
+
             toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBar);
             SetSupportActionBar(toolBar);
+
+            navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+            
+            drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            profilePictureNavigationHeader = navigationView.GetHeaderView(0).FindViewById<ImageView>(Resource.Id.nav_header_imgViewHeader);
 
             ab = SupportActionBar;
             ab.SetHomeAsUpIndicator(Resource.Drawable.ic_menu); //hamburger menu indicator
@@ -63,11 +80,18 @@ namespace BirdTouch
 
             userPassword = Intent.GetStringExtra("userPassword");//mozda ne treba ali zbog bolje zastite
             user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("userLoggedInJson"));
+
             ab.Title = user.FirstName + " " + user.LastName;
             ab.SetIcon(Resource.Drawable.app_bar_logov2);
 
-            drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
-            navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+            if (user.ProfilePictureData != null)
+            {
+               Bitmap bm = BitmapFactory.DecodeByteArrayAsync(user.ProfilePictureData, 0, user.ProfilePictureData.Length).Result;
+               profilePictureNavigationHeader.SetImageBitmap(bm);
+            }
+
+            
+           
 
             if (navigationView != null)
             {
@@ -85,8 +109,11 @@ namespace BirdTouch
             fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += (o, e) => //o is sender, sender is button, button is a view
             {
+                adapter.AddFragment(new Fragment3_Celebrity(), "TEST");
+                adapter.Fragments[1]=new Fragment3_Celebrity();
+                adapter.NotifyDataSetChanged();
                 View anchor = o as View;
-                Snackbar.Make(anchor, "Yay Snackbar!!", Snackbar.LengthLong).SetAction("Action", v=>
+                Snackbar.Make(anchor, "Yay Snackbar!!", Snackbar.LengthLong).SetAction("Action", v =>
                 {
                     //Do something here
                     //Intent intent new Intent();
@@ -94,14 +121,14 @@ namespace BirdTouch
             };
         }
 
-       
+        
 
         private void SetUpViewPager(ViewPager viewPager)
         {
-            TabAdapter adapter = new TabAdapter(SupportFragmentManager);
+            /*TabAdapter */adapter = new TabAdapter(SupportFragmentManager);
             adapter.AddFragment(new Fragment1_Private(), "Private");
             adapter.AddFragment(new Fragment1_Private(), "Business");
-            adapter.AddFragment(new Fragment1_Private(), "Celebrity");
+            adapter.AddFragment(new Fragment3_Celebrity(), "Celebrity");
             viewPager.Adapter = adapter;
         }
 
@@ -142,14 +169,34 @@ namespace BirdTouch
                          }
                       break;
 
-                     case Resource.Id.nav_logout: //kada se klikne na private user edit info
+
+                     case Resource.Id.nav_business: //kada se klikne na business user edit info
+                         if (Reachability.isOnline(this))
+                         {
+                             System.String restUriString = GetString(Resource.String.server_ip_getBusiness) + user.Id;
+                             uri = new Uri(restUriString);
+                             webClientUserBusinessDataUponOpeningEditDataActivity.DownloadDataAsync(uri);
+                         }
+                         else
+                         {
+                             Snackbar.Make(fab, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+                         }
+                     break;
+
+                     case Resource.Id.nav_celebrity: //kada se klikne na celebrity user edit info
+                         Context context22 = navigationView.Context;
+                         Intent intent22 = new Intent(context22, typeof(EditCelebrityUserInfoActivity));
+                         context22.StartActivity(intent22);
+                         break;
+
+                     case Resource.Id.nav_logout: //kada se klikne na logout
                          this.Finish();
                          Context context = navigationView.Context;
                          Intent intent = new Intent(context, typeof(MainActivity));
                          context.StartActivity(intent);
                          break;
 
-                     case Resource.Id.nav_about:
+                     case Resource.Id.nav_about: //kada se klikne na about
                          Context context2 = navigationView.Context;
                          Intent intent2 = new Intent(context2, typeof(AboutActivity));
                          context2.StartActivity(intent2);
@@ -191,6 +238,35 @@ namespace BirdTouch
                 context.StartActivity(intent);
             }
         }
+
+        private void WebClientUserBusinessDataUponOpeningEditDataActivity_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
+                Console.WriteLine("*******Error webclient data save changes error");
+                Console.WriteLine(e.Error.Message);
+                Console.WriteLine("******************************************************");
+                Snackbar.Make(fab, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
+
+            }
+            else
+            {
+                Console.WriteLine("Success!");
+                string jsonResult = Encoding.UTF8.GetString(e.Result);
+                Console.Out.WriteLine(jsonResult);
+                business = Newtonsoft.Json.JsonConvert.DeserializeObject<Business>(jsonResult);//ZBOG DEBUGA
+
+                Context context = navigationView.Context;
+                Intent intent = new Intent(context, typeof(EditBusinessUserInfoActivity));
+                string userSerialized = Newtonsoft.Json.JsonConvert.SerializeObject(business);
+                intent.PutExtra("businessLoggedInJson", userSerialized);
+
+                context.StartActivity(intent);
+            }
+        }
+
+
 
         public class TabAdapter : FragmentPagerAdapter //ovo poziva viewpager kako bi znao koji fragment u kom tabu 
         {

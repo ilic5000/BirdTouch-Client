@@ -1,32 +1,41 @@
+using System;
+using System.Text;
 using Android.App;
+using Android.Content;
 using Android.OS;
+using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 using Android.Support.V7.App;
 using Android.Support.Design.Widget;
+using BirdTouch.Models;
+using Android.Text;
+using System.Net;
+using System.Collections.Specialized;
+using Android.Graphics;
+using System.IO;
 
 namespace BirdTouch
 {
-    [Activity(Label = "AboutActivity", Theme = "@style/Theme.DesignDemo")]
-    public class AboutActivity : AppCompatActivity 
+    [Activity(Label = "EditCelebrityInfoActivity", Theme = "@style/Theme.DesignDemo")]
+    public class EditCelebrityUserInfoActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(savedInstanceState);
-            SetContentView(Resource.Layout.About_Activity);
+            
 
-            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolbar_about); //MALO B, nije isti toolbar kao u startpage
+            // Create your application here
+            base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.Activity_EditCelebrityUserInfo);
+
+            
+            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolbar_edit_celebrity_info); //nije isti toolbar kao u startpage
+
             SetSupportActionBar(toolBar);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-            SupportActionBar.Title = "";
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_arrow_back_black_24dp);
-          
-            CollapsingToolbarLayout collapsingToolBar = FindViewById<CollapsingToolbarLayout>(Resource.Id.collapsing_toolbar_about);
-
-            ImageView imageView = FindViewById<ImageView>(Resource.Id.author_picture);
-            imageView.SetImageResource(Resource.Drawable.author);
-            
+            SupportActionBar.Title = "";
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -36,10 +45,9 @@ namespace BirdTouch
                 case Android.Resource.Id.Home:
                     Finish();
                     return true;
-
+                    
             }
             return base.OnOptionsItemSelected(item);
         }
-  
     }
 }

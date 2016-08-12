@@ -56,7 +56,7 @@ namespace BirdTouch
             {
 
                 //provera da li je aplikaciji dostupan net
-                if (Reachability.isOnline(Activity))
+                if (Reachability.isOnline(Activity) && !webClientRegister.IsBusy)
                 { 
                     //provera da li je username i password ok i da nisu prazna polja
                     if ((usernameWrapper.Error=="" || usernameWrapper.Error==null) && (passwordCheckWrapper.Error=="" || passwordWrapper.Error == null) && usernameWrapper.EditText.Text!="" && passwordCheckWrapper.EditText.Text != "" && passwordWrapper.EditText.Text != "" && passwordCheckWrapper.EditText.Text.Equals(passwordWrapper.EditText.Text))

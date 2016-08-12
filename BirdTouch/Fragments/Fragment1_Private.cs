@@ -15,10 +15,13 @@ namespace BirdTouch.Fragments
 {
     public class Fragment1_Private : SupportFragment
     {
+
+        private RecyclerView recycleView;
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
+            
             // Create your fragment here
         }
 
@@ -26,11 +29,19 @@ namespace BirdTouch.Fragments
         {
             // Use this to return your custom view for this Fragment
             // return inflater.Inflate(Resource.Layout.YourFragment, container, false);
-            RecyclerView recyclerView = inflater.Inflate(Resource.Layout.Fragment1_private, container, false) as RecyclerView;
+            //   RecyclerView recyclerView = inflater.Inflate(Resource.Layout.Fragment1_private, container, false) as RecyclerView;
 
-           SetUpRecyclerView(recyclerView);
+           
 
-            return recyclerView;
+           // return recyclerView;
+
+
+
+
+            View view = inflater.Inflate(Resource.Layout.Fragment1_private, container, false);
+            recycleView = view.FindViewById<RecyclerView>(Resource.Id.recyclerViewPrivate);
+           SetUpRecyclerView(recycleView);
+            return view;
         }
 
         private void SetUpRecyclerView(RecyclerView recyclerView) //ovde da se napravi lista dobijenih korisnika
