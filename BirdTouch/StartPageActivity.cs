@@ -25,13 +25,20 @@ using System.Net;
 using Android.Text;
 using Android.Graphics;
 using System.IO;
+using Clans.Fab;
 
 namespace BirdTouch
 {
     [Activity(Label = "StartPageActivity", Theme = "@style/Theme.DesignDemo")]
     public class StartPageActivity : AppCompatActivity //zbog design library nije obican activity
-    {
-        private FloatingActionButton fab;
+    {  
+        //private FloatingActionButton
+
+        private Clans.Fab.FloatingActionButton fab_menu_refresh;
+        private Clans.Fab.FloatingActionButton fab_menu_automatically;
+        private Clans.Fab.FloatingActionButton fab_menu_gps;
+        private Clans.Fab.FloatingActionMenu fab_menu;
+
         private DrawerLayout drawerLayout;
         private NavigationView navigationView;
         private SupportToolbar toolBar;
@@ -40,7 +47,8 @@ namespace BirdTouch
         private TabLayout tabs;
         private ViewPager viewPager;
 
-        private User user;
+        public static User user;
+        public static int visibilityMode = 0;
         private Business business;
         private System.String userPassword;
 
@@ -106,22 +114,33 @@ namespace BirdTouch
 
             tabs.SetupWithViewPager(viewPager);
 
-            fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
-            fab.Click += (o, e) => //o is sender, sender is button, button is a view
-            {
-                adapter.AddFragment(new Fragment3_Celebrity(), "TEST");
-                adapter.Fragments[1]=new Fragment3_Celebrity();
-                adapter.NotifyDataSetChanged();
-                View anchor = o as View;
-                Snackbar.Make(anchor, "Yay Snackbar!!", Snackbar.LengthLong).SetAction("Action", v =>
-                {
-                    //Do something here
-                    //Intent intent new Intent();
-                }).Show();
-            };
+            fab_menu_refresh = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh);
+            fab_menu_automatically = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_automatically);
+            fab_menu_gps = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_gps);
+            fab_menu = FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu);
+
+            fab_menu_refresh.Click += Fab_menu_refresh_Click;
+            fab_menu_automatically.Click += Fab_menu_automatically_Click;
+            fab_menu_gps.Click += Fab_menu_gps_Click;
         }
 
-        
+        private void Fab_menu_gps_Click(object sender, EventArgs e)
+        {
+            
+            Snackbar.Make(fab_menu, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Clicked on GPS</font>"), Snackbar.LengthLong).Show();
+        }
+
+        private void Fab_menu_automatically_Click(object sender, EventArgs e)
+        {
+            Snackbar.Make(fab_menu, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Clicked on Automatically</font>"), Snackbar.LengthLong).Show();
+
+        }
+
+        private void Fab_menu_refresh_Click(object sender, EventArgs e)
+        {
+            Snackbar.Make(fab_menu, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Clicked on Refresh</font>"), Snackbar.LengthLong).Show();
+
+        }
 
         private void SetUpViewPager(ViewPager viewPager)
         {
@@ -165,7 +184,7 @@ namespace BirdTouch
                          }
                          else
                          {
-                             Snackbar.Make(fab, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+                             Snackbar.Make(fab_menu, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
                          }
                       break;
 
@@ -179,7 +198,7 @@ namespace BirdTouch
                          }
                          else
                          {
-                             Snackbar.Make(fab, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+                             Snackbar.Make(fab_menu, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
                          }
                      break;
 
@@ -220,7 +239,7 @@ namespace BirdTouch
                 Console.WriteLine("*******Error webclient data save changes error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
-                Snackbar.Make(fab, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(fab_menu, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
 
             }
             else
@@ -247,7 +266,7 @@ namespace BirdTouch
                 Console.WriteLine("*******Error webclient data save changes error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
-                Snackbar.Make(fab, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(fab_menu, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
 
             }
             else
@@ -306,6 +325,12 @@ namespace BirdTouch
             }
         }
 
+
+        public static void CheckVisibilityMode() //ovde treba dodati i za business i celebrity eventualno...
+        {
+            if (Fragment1_Private.switchVisibility.Checked) visibilityMode = 1;
+            else visibilityMode = 0;
+        }
         //public override bool OnCreateOptionsMenu(IMenu menu)
         //{
         //    var inflater = MenuInflater;
@@ -327,10 +352,24 @@ namespace BirdTouch
         //    return base.OnOptionsItemSelected(item);
         //}
 
+
+        //fab.Click += (o, e) => //o is sender, sender is button, button is a view
+        //{
+        //    //adapter.AddFragment(new Fragment3_Celebrity(), "TEST");
+        //   // adapter.Fragments[1]=new Fragment3_Celebrity();
+        //   // adapter.NotifyDataSetChanged();
+        //    View anchor = o as View;
+        //    Snackbar.Make(anchor, "Yay Snackbar!!", Snackbar.LengthLong).SetAction("Action", v =>
+        //    {
+        //        //Do something here
+        //        //Intent intent new Intent();
+        //    }).Show();
+        //};
+
     }
 
 
-    
+
 
 
 }

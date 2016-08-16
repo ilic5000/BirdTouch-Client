@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace BirdTouch.Models
 {
-    class User
+    public class User
     {
         public int Id { get; set; }
         public string Username { get; set; }
