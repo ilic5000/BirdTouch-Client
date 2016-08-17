@@ -23,4 +23,6 @@
   <string name="server_ip_changePrivateUser">http://192.168.0.101:80/BirdTouchServer/rest/changeUserPrivateInfo"</string>
   <string name="server_ip_changeBusinessUser">http://192.168.0.101:80/BirdTouchServer/rest/changeUserBusinessInfo"</string>
   <string name="server_ip_makeUserVisible">http://192.168.0.101:80/BirdTouchServer/rest/makeUserVisible"</string>
+  <string name="server_ip_makeUserInvisible">http://192.168.0.101:80/BirdTouchServer/rest/makeUserInvisible"</string>
+  <string name="server_ip_getPrivateUsersNearMe">http://192.168.0.101:80/BirdTouchServer/rest/getPrivateUsersNearMe"</string>
 </resources>

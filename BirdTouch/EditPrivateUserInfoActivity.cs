@@ -37,6 +37,7 @@ namespace BirdTouch
         private FloatingActionButton fabSaveChanges;
         private FloatingActionButton fabInsertPhoto;
         private WebClient webClient;
+
         private Uri uri;
         protected override void OnCreate(Bundle savedInstanceState)
         {

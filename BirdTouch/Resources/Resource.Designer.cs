@@ -3233,8 +3233,14 @@ namespace BirdTouch
 			// aapt resource value: 0x7f090022
 			public const int server_ip_getBusiness = 2131296290;
 			
+			// aapt resource value: 0x7f090027
+			public const int server_ip_getPrivateUsersNearMe = 2131296295;
+			
 			// aapt resource value: 0x7f09001f
 			public const int server_ip_getUserLogin = 2131296287;
+			
+			// aapt resource value: 0x7f090026
+			public const int server_ip_makeUserInvisible = 2131296294;
 			
 			// aapt resource value: 0x7f090025
 			public const int server_ip_makeUserVisible = 2131296293;
