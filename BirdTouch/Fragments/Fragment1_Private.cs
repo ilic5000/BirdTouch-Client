@@ -20,17 +20,23 @@ using System.Collections.Specialized;
 using Android.Text;
 using System.Text;
 using BirdTouch.Models;
+using Android.Views.Animations;
 
 namespace BirdTouch.Fragments
 {
     public class Fragment1_Private : SupportFragment, ILocationListener
     {
+        //private Clans.Fab.FloatingActionButton fab_menu_refresh;
+        //private Clans.Fab.FloatingActionButton fab_menu_automatically;
+        //private Clans.Fab.FloatingActionButton fab_menu_gps;
+        //private Clans.Fab.FloatingActionMenu fab_menu;
 
         private RecyclerView recycleView;
         public static SwitchCompat switchVisibility;
         private Location currLocation;
         private LocationManager locationManager;
         private ProgressBar progressBarLocation;
+        private ProgressBar progressBarGetPrivateUsers;
         string _locationProvider;
 
         private WebClient webClientMakeUserVisible;
@@ -39,7 +45,7 @@ namespace BirdTouch.Fragments
         private Uri uri;
 
         private bool visible = false;
-
+        private List<User> listOfUsersAroundMe;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -55,6 +61,7 @@ namespace BirdTouch.Fragments
             recycleView = view.FindViewById<RecyclerView>(Resource.Id.recyclerViewPrivate);
             switchVisibility = view.FindViewById<SwitchCompat>(Resource.Id.activatePrivateSwitch);
             progressBarLocation = view.FindViewById<ProgressBar>(Resource.Id.progressBarGetLocation);
+            progressBarGetPrivateUsers = view.FindViewById<ProgressBar>(Resource.Id.progressBarGetPrivateUsers);
             switchVisibility.CheckedChange += SwitchVisibility_CheckedChange;
             webClientMakeUserVisible = new WebClient();
             webClientMakeUserInvisible = new WebClient();
@@ -64,14 +71,23 @@ namespace BirdTouch.Fragments
             webClientMakeUserInvisible.DownloadDataCompleted += WebClientMakeUserInvisible_DownloadDataCompleted;
             webClientGetPrivateUsersNearMe.DownloadDataCompleted += WebClientGetPrivateUsersNearMe_DownloadDataCompleted;
 
-            SetUpRecyclerView(recycleView);
-            
+
+            listOfUsersAroundMe = new List<User>();
+
+
+           
+
+           // fab_menu.Visibility = ViewStates.Gone;
+           // fab_menu.Enabled = false;
+
 
             return view;
         }
 
 
-        private void SwitchVisibility_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
+   
+
+    private void SwitchVisibility_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
         {
             if (e.IsChecked)
             {
@@ -91,7 +107,9 @@ namespace BirdTouch.Fragments
             }
             else
             {
-              //  Snackbar.Make(switchVisibility, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Off</font>"), Snackbar.LengthLong).Show();
+                //  Snackbar.Make(switchVisibility, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Off</font>"), Snackbar.LengthLong).Show();
+               // fab_menu.Visibility = ViewStates.Gone;
+                //fab_menu.Enabled = false;
                 locationManager.RemoveUpdates(this);
                 GoInvisible();
                 progressBarLocation.Visibility = ViewStates.Invisible;
@@ -174,7 +192,7 @@ namespace BirdTouch.Fragments
             else
             {
 
-                Snackbar.Make(recycleView, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(switchVisibility, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
 
             }
         }
@@ -190,7 +208,7 @@ namespace BirdTouch.Fragments
                 Console.WriteLine("*******Error webclient data save changes error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
-                Snackbar.Make(recycleView, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(switchVisibility, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
                 visible = false;
             }
             else
@@ -201,7 +219,8 @@ namespace BirdTouch.Fragments
                 Console.Out.WriteLine(jsonResult);
                 visible = true;
                 progressBarLocation.Visibility = ViewStates.Invisible;
-                Snackbar.Make(recycleView, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now visible in private mode</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(switchVisibility, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now visible in private mode</font>"), Snackbar.LengthLong).Show();
+                
                 GetPrivateUsersNearMe();//privremeno odavde pozivam
             }
         }
@@ -217,7 +236,7 @@ namespace BirdTouch.Fragments
                 //insert parameters for header for web request
                 NameValueCollection parameters = new NameValueCollection();
                 StartPageActivity.CheckVisibilityMode();
-                parameters.Add("mode", StartPageActivity.visibilityMode.ToString());
+                parameters.Add("mode", "1");
                 parameters.Add("id", StartPageActivity.user.Id.ToString());
 
                 String restUriString = GetString(Resource.String.server_ip_makeUserInvisible);
@@ -231,7 +250,7 @@ namespace BirdTouch.Fragments
             else
             {
 
-                Snackbar.Make(recycleView, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(switchVisibility, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
 
             }
         }
@@ -247,7 +266,7 @@ namespace BirdTouch.Fragments
                 Console.WriteLine("*******Error webclient data save changes error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
-                Snackbar.Make(recycleView, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(switchVisibility, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
                 visible = true;
             }
             else
@@ -257,7 +276,7 @@ namespace BirdTouch.Fragments
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
                 Console.Out.WriteLine(jsonResult);
                 visible = false;
-                Snackbar.Make(recycleView, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now invisible in private mode</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(switchVisibility, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now invisible in private mode</font>"), Snackbar.LengthLong).Show();
             }
         }
 
@@ -269,8 +288,11 @@ namespace BirdTouch.Fragments
             if (Reachability.isOnline(Activity) && !webClientGetPrivateUsersNearMe.IsBusy)
             {
 
+
                 if (visible) { //ako je korisnik visible tj. u active_users bazi upisan
-                //insert parameters for header for web request
+
+                progressBarGetPrivateUsers.Visibility = ViewStates.Visible;
+                               //insert parameters for header for web request
                 NameValueCollection parameters = new NameValueCollection();
                 parameters.Add("id", StartPageActivity.user.Id.ToString());
 
@@ -283,7 +305,7 @@ namespace BirdTouch.Fragments
                 }
                 else
                 {
-                    Snackbar.Make(recycleView, Html.FromHtml("<font color=\"#ffffff\">You are not visible to others</font>"), Snackbar.LengthLong).Show();
+                    Snackbar.Make(switchVisibility, Html.FromHtml("<font color=\"#ffffff\">You are not visible to others</font>"), Snackbar.LengthLong).Show();
 
                 }
 
@@ -291,7 +313,7 @@ namespace BirdTouch.Fragments
             else
             {
 
-                Snackbar.Make(recycleView, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(switchVisibility, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
 
             }
 
@@ -309,18 +331,33 @@ namespace BirdTouch.Fragments
                 Console.WriteLine("*******Error webclient data error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
-                Snackbar.Make(recycleView, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
-                
+                Snackbar.Make(switchVisibility, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
+                progressBarGetPrivateUsers.Visibility = ViewStates.Gone;
             }
             else
             {
 
                 Console.WriteLine("Success!");
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
-                
-                List<User> listOfUsersAroundMe = Newtonsoft.Json.JsonConvert.DeserializeObject<List<User>>(jsonResult);
+
+                List<User> newListOfUsersAroundMe = Newtonsoft.Json.JsonConvert.DeserializeObject<List<User>>(jsonResult);
+
+                //SimpleStringRecyclerViewAdapter adapterUsersFromRecyclerView = (SimpleStringRecyclerViewAdapter)recycleView.GetAdapter();
+                //adapterUsersFromRecyclerView.changeData(newListOfUsersAroundMe);
+
+                //if (recycleView.GetAdapter() != null)
+                //{
+                //    SimpleStringRecyclerViewAdapter adapterUsersFromRecyclerView = (SimpleStringRecyclerViewAdapter)recycleView.GetAdapter();
+                //    adapterUsersFromRecyclerView.clearData();
+                //    recycleView.RemoveAllViews();
+                //    recycleView.RemoveAllViewsInLayout();
+                //}
+                SetUpRecyclerView(recycleView, newListOfUsersAroundMe);
 
 
+               //  fab_menu.Visibility = ViewStates.Visible;
+                //fab_menu.Enabled = true;
+                progressBarGetPrivateUsers.Visibility = ViewStates.Gone;
             }
         }
 
@@ -333,6 +370,17 @@ namespace BirdTouch.Fragments
         // return inflater.Inflate(Resource.Layout.YourFragment, container, false);
         //   RecyclerView recyclerView = inflater.Inflate(Resource.Layout.Fragment1_private, container, false) as RecyclerView;
         // return recyclerView;
+
+
+
+
+
+
+
+
+
+
+
 
 
      
@@ -374,48 +422,46 @@ namespace BirdTouch.Fragments
         //RecycleView setup
 
 
-        private void SetUpRecyclerView(RecyclerView recyclerView) //ovde da se napravi lista dobijenih korisnika
+        private void SetUpRecyclerView(RecyclerView recyclerView, List<User> listOfUsersAroundMe) //ovde da se napravi lista dobijenih korisnika
         {
-            var values = GetRandomSubList(CheeseHelper.Cheeses.CheeseStrings, 30);
-            recyclerView.SetLayoutManager(new LinearLayoutManager(recyclerView.Context));
-            recyclerView.SetAdapter(new SimpleStringRecyclerViewAdapter(recyclerView.Context, values, Activity.Resources));
             
-            recyclerView.SetItemClickListener((rv,position,view) =>
-            {
-                Context context = view.Context;
-                Intent intent = new Intent(context, typeof(UserDetailActivity));
-                intent.PutExtra(UserDetailActivity.EXTRA_NAME, values[position]);
-                context.StartActivity(intent);
-            });
+
+            recyclerView.SetLayoutManager(new LinearLayoutManager(recyclerView.Context));
+
+            recyclerView.SetAdapter(new SimpleStringRecyclerViewAdapter(recyclerView.Context, listOfUsersAroundMe, Activity.Resources, recycleView));
+
+            
+            //recycleView.SetItemClickListener((rv, position, view) =>
+            //{
+            //    Context context = view.Context;
+            //    Intent intent = new Intent(context, typeof(UserDetailActivity));
+            //    intent.PutExtra("userInformation", Newtonsoft.Json.JsonConvert.SerializeObject(listOfUsersAroundMe[position]));
+            //    context.StartActivity(intent);
+            //});
+
         }
 
-        private List<string> GetRandomSubList(List<string> items, int amount)
-        {
-            List<string> list = new List<string>();
-            Random random = new Random();
-            while(list.Count < amount)
-            {
-                list.Add(items[random.Next(items.Count)]);
-            }
-            return list;
-        }
 
-      
+
         public class SimpleStringRecyclerViewAdapter : RecyclerView.Adapter
         {
             private readonly TypedValue mTypedValue = new TypedValue();
             private int mBackground;
-            private List<string> mValues;
+            private List<User> mValues;
+            private RecyclerView recycleView;
             Resources mResource;
-            private Dictionary<int, int> mCalculatedSizes;
+            //private Dictionary<int, int> mCalculatedSizes;
 
-            public SimpleStringRecyclerViewAdapter(Context context, List<string> items, Resources res)
+            public SimpleStringRecyclerViewAdapter(Context context, List<User> items, Resources res, RecyclerView rv)
             {
                 context.Theme.ResolveAttribute(Resource.Attribute.selectableItemBackground, mTypedValue, true);
                 mBackground = mTypedValue.ResourceId;
+                
                 mValues = items;
                 mResource = res;
-                mCalculatedSizes = new Dictionary<int, int>();
+
+                recycleView = rv;
+               // mCalculatedSizes = new Dictionary<int, int>();
             }
 
             public override int ItemCount
@@ -426,37 +472,112 @@ namespace BirdTouch.Fragments
                 }
             }
 
+
+            //public void clearData()
+            //{
+            //        //int prevCount = mValues.Count;
+            //        //mValues.Clear();
+            //        //NotifyItemRangeRemoved(0, prevCount);
+            //        //NotifyDataSetChanged();
+                    
+            //}
+
+            ////public void changeData(List<User> newUsers)
+            ////{
+
+            ////    mValues = newUsers;
+            ////    NotifyDataSetChanged();
+            ////    NotifyItemRangeChanged(0, mValues.Count);
+            ////}
+
             public override async void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
                 var simpleHolder = holder as SimpleViewHolder;
 
-                simpleHolder.mBoundString = mValues[position];
-                simpleHolder.mTxtView.Text = mValues[position];
+                simpleHolder.mBoundString = mValues[position].Id.ToString();
+                simpleHolder.mTxtView.Text = mValues[position].FirstName + " " + mValues[position].LastName;
 
-                int drawableID = Cheeses.RandomCheeseDrawable;
-                BitmapFactory.Options options = new BitmapFactory.Options();
 
-                if (mCalculatedSizes.ContainsKey(drawableID))
+
+                if (mValues[position].ProfilePictureData != null)
                 {
-                    options.InSampleSize = mCalculatedSizes[drawableID];
+                    Bitmap bm = BitmapFactory.DecodeByteArrayAsync(mValues[position].ProfilePictureData, 0, mValues[position].ProfilePictureData.Length).Result;
+                    simpleHolder.mImageView.SetImageBitmap(Bitmap.CreateScaledBitmap(bm,200,100,false));// mozda treba malo da se igra sa ovim
                 }
-
                 else
                 {
+                    //ako korisnik nije postavio profilnu sliku
+
+                    BitmapFactory.Options options = new BitmapFactory.Options();
                     options.InJustDecodeBounds = true;
 
-                    BitmapFactory.DecodeResource(mResource, drawableID, options);
+                    BitmapFactory.DecodeResource(mResource, Resource.Drawable.blank_user_profile, options);
 
-                    options.InSampleSize = Cheeses.CalculateInSampleSize(options, 100, 100);
+                    options.InSampleSize = CalculateInSampleSize(options, 100, 100);
                     options.InJustDecodeBounds = false;
 
-                    mCalculatedSizes.Add(drawableID, options.InSampleSize);
+                    var bitMap = await BitmapFactory.DecodeResourceAsync(mResource, Resource.Drawable.blank_user_profile, options);
+
+                    simpleHolder.mImageView.SetImageBitmap(bitMap);
                 }
 
+                simpleHolder.mView.Click += MView_Click;
 
-                var bitMap = await BitmapFactory.DecodeResourceAsync(mResource, drawableID, options);
+                Random rand = new Random();
+                if(rand.Next() % 2 ==1)
+                setScaleAnimation(holder.ItemView);
+                else setFadeAnimation(holder.ItemView);
+            }
 
-                simpleHolder.mImageView.SetImageBitmap(bitMap);
+            private void setFadeAnimation(View view)
+            {
+                int FADE_DURATION = 1400; // in milliseconds
+                AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
+                anim.Duration=FADE_DURATION;
+                view.StartAnimation(anim);
+            }
+
+            private void setScaleAnimation(View view)
+            {
+                int FADE_DURATION = 1000; // in milliseconds
+                ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f);
+                anim.Duration = FADE_DURATION;
+                view.StartAnimation(anim);
+            }
+
+            private void MView_Click(object sender, EventArgs e)
+            {
+                int position = recycleView.GetChildAdapterPosition((View)sender);
+
+                Context context = recycleView.Context;
+                Intent intent = new Intent(context, typeof(UserDetailActivity));
+                intent.PutExtra("userInformation", Newtonsoft.Json.JsonConvert.SerializeObject(mValues[position]));
+                context.StartActivity(intent);
+
+            }
+
+            private int CalculateInSampleSize(BitmapFactory.Options options, int requestedWidth, int requestedHeight)
+            {
+                //Raw height and width of image
+                int height = options.OutHeight;
+                int width = options.OutWidth;
+                int inSampleSize = 1;
+
+                if (height > requestedHeight || width > requestedWidth)
+                {
+                    //slika je veca nego sto nam treba
+                    int halfHeight = height / 2;
+                    int halfWidth = width / 2;
+
+                    while ((halfHeight / inSampleSize) >= requestedHeight && (halfWidth / inSampleSize) >= requestedWidth)
+                    {
+                        inSampleSize *= 2;
+                    }
+                }
+                Console.WriteLine();
+                Console.WriteLine("SampleSizeBitmap: " + inSampleSize.ToString());
+                Console.WriteLine();
+                return inSampleSize;
             }
 
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -478,8 +599,8 @@ namespace BirdTouch.Fragments
             public SimpleViewHolder(View view) : base(view)
             {
                 mView = view;
-                mImageView = view.FindViewById<ImageView>(Resource.Id.avatar);
-                mTxtView = view.FindViewById<TextView>(Resource.Id.text1);
+                mImageView = view.FindViewById<ImageView>(Resource.Id.avatar); //profilna slika usera
+                mTxtView = view.FindViewById<TextView>(Resource.Id.text1); //ime + prezime usera
             }
 
             public override string ToString()
@@ -488,5 +609,35 @@ namespace BirdTouch.Fragments
             }
         }
 
+
+        
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//private List<string> GetRandomSubList(List<string> items, int amount)
+//{
+//    List<string> list = new List<string>();
+//    Random random = new Random();
+//    while (list.Count < amount)
+//    {
+//        list.Add(items[random.Next(items.Count)]);
+//    }
+//    return list;
+//}

@@ -78,7 +78,7 @@ namespace BirdTouch
             SetSupportActionBar(toolBar);
 
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
-            
+
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             profilePictureNavigationHeader = navigationView.GetHeaderView(0).FindViewById<ImageView>(Resource.Id.nav_header_imgViewHeader);
 
@@ -94,12 +94,13 @@ namespace BirdTouch
 
             if (user.ProfilePictureData != null)
             {
-               Bitmap bm = BitmapFactory.DecodeByteArrayAsync(user.ProfilePictureData, 0, user.ProfilePictureData.Length).Result;
-               profilePictureNavigationHeader.SetImageBitmap(bm);
+                Bitmap bm = BitmapFactory.DecodeByteArrayAsync(user.ProfilePictureData, 0, user.ProfilePictureData.Length).Result;
+                profilePictureNavigationHeader.SetImageBitmap(bm);
             }
 
-            
-           
+
+
+
 
             if (navigationView != null)
             {
@@ -109,10 +110,12 @@ namespace BirdTouch
             navigationView.GetHeaderView(0).FindViewById<Android.Support.V7.Widget.AppCompatTextView>(Resource.Id.nav_header_username_textView).Text = user.Username;
             tabs = FindViewById<TabLayout>(Resource.Id.tabs);
             viewPager = FindViewById<ViewPager>(Resource.Id.viewpager);
+            viewPager.OffscreenPageLimit = 4; //jer po defaultu je 2 i onda uvek se pravi novi fragment i opet uzima gps koordinate, ovako je u memoriji vise fragmenta, ali ne poziva svaki cas server
 
             SetUpViewPager(viewPager);
 
             tabs.SetupWithViewPager(viewPager);
+
 
             fab_menu_refresh = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh);
             fab_menu_automatically = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_automatically);
@@ -123,6 +126,7 @@ namespace BirdTouch
             fab_menu_automatically.Click += Fab_menu_automatically_Click;
             fab_menu_gps.Click += Fab_menu_gps_Click;
         }
+
 
         private void Fab_menu_gps_Click(object sender, EventArgs e)
         {
@@ -141,13 +145,13 @@ namespace BirdTouch
             Snackbar.Make(fab_menu, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Clicked on Refresh</font>"), Snackbar.LengthLong).Show();
 
         }
-
         private void SetUpViewPager(ViewPager viewPager)
         {
             /*TabAdapter */adapter = new TabAdapter(SupportFragmentManager);
             adapter.AddFragment(new Fragment1_Private(), "Private");
             adapter.AddFragment(new Fragment1_Private(), "Business");
             adapter.AddFragment(new Fragment3_Celebrity(), "Celebrity");
+            adapter.AddFragment(new Fragment3_Celebrity(), "Celebrity2");
             viewPager.Adapter = adapter;
         }
 

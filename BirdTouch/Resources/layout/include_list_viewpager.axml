@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -27,14 +26,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    <!--<android.support.design.widget.FloatingActionButton
+<!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_done" />-->
-<!--<android.support.design.widget.FloatingActionButton
+        android:src="@drawable/ic_done" />
+<android.support.design.widget.FloatingActionButton
         android:id="@+id/fab2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,49 +41,35 @@
         android:layout_marginTop="200dp"
         android:src="@drawable/ic_done"
         app:layout_anchor="@id/fab" />-->
-
- <com.github.clans.fab.FloatingActionMenu
+    <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-       fab:menu_shadowColor="#444"
-       
+        app:menu_shadowColor="#444"
         android:layout_margin="16dp"
-        fab:menu_fab_label="Close"
-        
-        >
-
-    <com.github.clans.fab.FloatingActionButton
-       android:id="@+id/fab_menu_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_forum"
-        fab:fab_label="Refresh"
-       fab:fab_size="mini"
-       
-         />
-
-    <com.github.clans.fab.FloatingActionButton
-      android:id="@+id/fab_menu_automatically"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_discuss"
-        fab:fab_label="Automatically refresh"
-      fab:fab_size="mini"
-        />
-
-    <com.github.clans.fab.FloatingActionButton
-      android:id="@+id/fab_menu_gps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_event"
-      fab:fab_label="Update GPS position"
-      fab:fab_size="mini"
-        
-         />
-
-
-  </com.github.clans.fab.FloatingActionMenu>
+        app:menu_fab_label="Close">
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_menu_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_forum"
+            app:fab_label="Refresh"
+            app:fab_size="mini" />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_menu_automatically"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_discuss"
+            app:fab_label="Automatically refresh"
+            app:fab_size="mini" />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_menu_gps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_event"
+            app:fab_label="Update GPS position"
+            app:fab_size="mini" />
+    </com.github.clans.fab.FloatingActionMenu>
 </android.support.design.widget.CoordinatorLayout>

@@ -171,7 +171,7 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\List_Item.axml" />
-    <AndroidResource Include="Resources\layout\Activity_Detail.axml">
+    <AndroidResource Include="Resources\layout\UserDetailActivity.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\Activity_EditPrivateUserInfo.axml">

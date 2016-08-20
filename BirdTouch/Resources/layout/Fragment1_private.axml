@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical">
-  <LinearLayout
-      android:id="@+id/wrapper"
-      android:orientation="vertical"
-      android:gravity="center"
+    android:layout_height="match_parent">
+
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 xmlns:app="http://schemas.android.com/apk/res-auto"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-    >
-  <!--<TextView
+      android:layout_height="match_parent"
+      android:padding="16dp"
+      android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/wrapper"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+      <!--<TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
@@ -20,41 +27,85 @@
       android:textSize="30sp"
       android:textColor="#333333"
       android:layout_gravity="top" />-->
+      <android.support.v7.widget.SwitchCompat
+          android:thumbTextPadding="150dp"
+          android:layout_centerInParent="true"
+          android:id="@+id/activatePrivateSwitch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Visibility"
+          android:showText="true"
+          android:textOff="Off"
+          android:textOn="On" />
+      <ProgressBar
+          android:id="@+id/progressBarGetLocation"
+          android:visibility="gone"
+          android:indeterminateOnly="true"
+          android:minHeight="24dip"
+          android:maxHeight="24dip"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_below="@id/wrapper"
+        android:orientation="vertical">
+      <ProgressBar
+           android:id="@+id/progressBarGetPrivateUsers"
+           android:visibility="gone"
+           android:indeterminateOnly="true"
+           android:minHeight="24dip"
+           android:maxHeight="24dip"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content" />
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/recyclerViewPrivate"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="1" />
 
 
-    <android.support.v7.widget.SwitchCompat
-        android:thumbTextPadding="150dp"
-        android:layout_centerInParent="true"
-        android:id="@+id/activatePrivateSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Visibility"
-        android:showText="true"
-        android:textOff="Off"
-        android:textOn="On"/>
-    <ProgressBar
-    android:id="@+id/progressBarGetLocation"
-    android:visibility="gone"
-    android:indeterminateOnly="true"
-    android:minHeight="24dip"
-    android:maxHeight="24dip"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"/>
-     
+
+
+
+
+
+    </LinearLayout>
+
+
+    <!--<com.github.clans.fab.FloatingActionMenu
+          android:id="@+id/fab_menu_private"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_alignParentBottom="true"
+          android:layout_alignParentRight="true"
+          app:menu_shadowColor="#444"
+          android:layout_marginBottom="150dp"
+          app:menu_fab_label="Close">
+      <com.github.clans.fab.FloatingActionButton
+          android:id="@+id/fab_menu_refresh_private"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/ic_forum"
+          app:fab_label="Refresh"
+          app:fab_size="mini" />
+      <com.github.clans.fab.FloatingActionButton
+          android:id="@+id/fab_menu_automatically_private"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/ic_discuss"
+          app:fab_label="Automatically refresh"
+          app:fab_size="mini" />
+      <com.github.clans.fab.FloatingActionButton
+          android:id="@+id/fab_menu_gps_private"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/ic_event"
+          app:fab_label="Update GPS position"
+          app:fab_size="mini" />
+    </com.github.clans.fab.FloatingActionMenu>-->
   </LinearLayout>
-  <LinearLayout   
-    android:layout_width="match_parent"
-    android:layout_weight="1"
-    android:layout_height="match_parent"
-    android:layout_below="@id/wrapper"
-    android:orientation="vertical">
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recyclerViewPrivate"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="1"/>
 
-  </LinearLayout>
-</LinearLayout>
-
-
+</android.support.design.widget.CoordinatorLayout>
