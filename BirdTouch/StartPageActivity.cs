@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using BirdTouch.Models;
@@ -24,28 +21,23 @@ using BirdTouch.Fragments;
 using System.Net;
 using Android.Text;
 using Android.Graphics;
-using System.IO;
-using Clans.Fab;
 
 namespace BirdTouch
 {
     [Activity(Label = "StartPageActivity", Theme = "@style/Theme.DesignDemo")]
     public class StartPageActivity : AppCompatActivity //zbog design library nije obican activity
     {
-
-
-        //public static List<SupportFragment> listOfActiveFragments;
+        public static SupportActionBar ab;
+        public static ImageView profilePictureNavigationHeader;
+        public static TabAdapter adapter;
 
         private DrawerLayout drawerLayout;
         private NavigationView navigationView;
         private SupportToolbar toolBar;
-        public static SupportActionBar ab;
-        public static ImageView profilePictureNavigationHeader;
         private TabLayout tabs;
         private ViewPager viewPager;
 
         public static User user;
-        public static int visibilityMode = 0;
         private Business business;
         private System.String userPassword;
 
@@ -53,19 +45,13 @@ namespace BirdTouch
         private WebClient webClientUserBusinessDataUponOpeningEditDataActivity;
         private Uri uri;
 
-
-        public static TabAdapter adapter;
-
-
-
-
+        
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.StartPage);
 
-          //  listOfActiveFragments = new List<Android.Support.V4.App.Fragment>();
-
+        
             webClientUserPrivateDataUponOpeningEditDataActivity = new WebClient();
             webClientUserPrivateDataUponOpeningEditDataActivity.DownloadDataCompleted += WebClientUserPrivateDataUponOpeningEditDataActivity_DownloadDataCompleted;
 
@@ -109,18 +95,7 @@ namespace BirdTouch
             viewPager.OffscreenPageLimit = 5; //jer po defaultu je 2 i onda uvek se pravi novi fragment i opet uzima gps koordinate, ovako je u memoriji vise fragmenta, ali ne poziva svaki cas server
 
             SetUpViewPager(viewPager);
-
             tabs.SetupWithViewPager(viewPager);
-
-
-            //fab_menu_refresh = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh);
-            //fab_menu_automatically = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_automatically);
-            //fab_menu_gps = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_gps);
-            //fab_menu = FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu);
-
-            //fab_menu_refresh.Click += Fab_menu_refresh_Click;
-            //fab_menu_automatically.Click += Fab_menu_automatically_Click;
-            //fab_menu_gps.Click += Fab_menu_gps_Click;
         }
 
 
@@ -128,9 +103,7 @@ namespace BirdTouch
         private void SetUpViewPager(ViewPager viewPager)
         {
 
-         
-
-            /*TabAdapter */adapter = new TabAdapter(SupportFragmentManager);
+            adapter = new TabAdapter(SupportFragmentManager);
             adapter.AddFragment(new Fragment1_Private(), "Private");
             adapter.AddFragment(new Fragment1_PrivateSavedUsers(), "Private saved");
             adapter.AddFragment(new Fragment3_Celebrity(), "Business");
@@ -140,7 +113,8 @@ namespace BirdTouch
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
-        {//kada se klikne na hamburger, sta se dogadja
+        {
+            //kada se klikne na hamburger, sta se dogadja
             switch (item.ItemId)
             {
                 case Android.Resource.Id.Home:
@@ -158,7 +132,6 @@ namespace BirdTouch
             navigationView.NavigationItemSelected += (object sender, NavigationView.NavigationItemSelectedEventArgs e) =>
              {
                  
-
                  e.MenuItem.SetChecked(false); //za sada mi ne treba, jer kada se otvori neki drugi activity hamburger menu nestaje, pa nije potrebno highlightovano gde se nalazimo u navigaciji
                  
                  switch (e.MenuItem.ItemId)
@@ -211,11 +184,8 @@ namespace BirdTouch
 
                  }
 
-
                  drawerLayout.CloseDrawers();
-             };
-
-            
+             };         
         }
 
 
@@ -279,7 +249,6 @@ namespace BirdTouch
         {
 
             public List<SupportFragment> Fragments { get; set; }
-
             public List<string> FragmentNames { get; set; }
 
             public TabAdapter(SupportFragmentManager sfm) : base(sfm)
@@ -314,11 +283,7 @@ namespace BirdTouch
         }
 
 
-        public static void CheckVisibilityMode() //ovde treba dodati i za business i celebrity eventualno...
-        {
-            if (Fragment1_Private.switchVisibility.Checked) visibilityMode = 1;
-            else visibilityMode = 0;
-        }
+
         //public override bool OnCreateOptionsMenu(IMenu menu)
         //{
         //    var inflater = MenuInflater;

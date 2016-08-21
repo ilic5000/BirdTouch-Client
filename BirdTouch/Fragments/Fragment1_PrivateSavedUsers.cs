@@ -7,18 +7,8 @@ using Android.Views;
 using Android.Widget;
 using SupportFragment = Android.Support.V4.App.Fragment;
 using Android.Support.V7.Widget;
-using BirdTouch.Fragments.CheeseHelper;
 using Android.Graphics;
 using Android.Content.Res;
-using Android.Support.Design.Widget;
-using Android.Locations;
-using System.Linq;
-using Android.Nfc;
-using Android.Runtime;
-using System.Net;
-using System.Collections.Specialized;
-using Android.Text;
-using System.Text;
 using BirdTouch.Models;
 using Android.Views.Animations;
 
@@ -32,8 +22,6 @@ namespace BirdTouch.Fragments
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
-            // Create your fragment here
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -57,7 +45,6 @@ namespace BirdTouch.Fragments
 
             if (pref.Contains("SavedUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
             {
-
                 string serializedDictionary = pref.GetString("SavedUsersDictionary", String.Empty);
                 if (serializedDictionary != String.Empty)
                 {
@@ -74,7 +61,6 @@ namespace BirdTouch.Fragments
                 }
 
             }
-
 
             recycleView.SetLayoutManager(new LinearLayoutManager(recycleView.Context));
             recycleView.SetAdapter(new SimpleStringRecyclerViewAdapter(recycleView.Context, listSavedPrivateUsers, Activity.Resources, recycleView));
@@ -156,6 +142,7 @@ namespace BirdTouch.Fragments
 
                 simpleHolder.checkbox.Checked = true;
                 simpleHolder.checkbox.Tag = simpleHolder.mView; //kako bih prosledio poziciju checkboxu
+                simpleHolder.checkbox.CheckedChange -= Checkbox_CheckedChange;
                 simpleHolder.checkbox.CheckedChange += Checkbox_CheckedChange;
             }
 
@@ -171,14 +158,11 @@ namespace BirdTouch.Fragments
                 ISharedPreferences pref = vsender.Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
                 ISharedPreferencesEditor edit = pref.Edit();
 
-
                 if (e.IsChecked)
                 {//checked
 
                     if (!pref.Contains("SavedUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
-                    {
-                        // Snackbar.Make((View)sender, Android.Text.Html.FromHtml("<font color=\"#ffffff\">does not contain</font>"), Snackbar.LengthLong).Show();
-
+                    {       
                         Dictionary<int, Dictionary<int, List<User>>> dictionary = new Dictionary<int, Dictionary<int, List<User>>>();
                         dictionary.Add(userId, new Dictionary<int, List<User>>());
                         dictionary[userId].Add(1, new List<User>());// 1 je private mode

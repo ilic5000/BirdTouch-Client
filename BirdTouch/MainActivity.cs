@@ -18,7 +18,7 @@ namespace BirdTouch
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-          //  ActionBar.Hide();
+            //  ActionBar.Hide();
             
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
@@ -40,13 +40,7 @@ namespace BirdTouch
                 dialog_SignIn dialogSignIn = new dialog_SignIn();
                 dialogSignIn.Show(fm, "Dialog fragment");
             };
-
-
-            
-
         }
-
-
     }
 }
 

@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -10,7 +9,6 @@ using System.Net;
 using BirdTouch.Models;
 using Android.Widget;
 using Android.Text;
-using Newtonsoft.Json.Linq;
 
 namespace BirdTouch
 {
@@ -80,10 +78,6 @@ namespace BirdTouch
                 String jsonResult = Encoding.UTF8.GetString(e.Result);
                 Console.Out.WriteLine(jsonResult);
 
-                //JObject obj = JObject.Parse(jsonResult);
-                //string name = (string)obj["ProfilPictureDataEncoded"];
-                //byte[] slika = Convert.FromBase64String(name);
-
                 User user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(jsonResult);
 
                 Console.WriteLine("*******Deserialized user");
@@ -110,9 +104,7 @@ namespace BirdTouch
          }
 
        
-
-
-        
+  
     }
 
 

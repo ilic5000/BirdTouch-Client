@@ -7,13 +7,11 @@ using Android.Views;
 using Android.Widget;
 using SupportFragment = Android.Support.V4.App.Fragment;
 using Android.Support.V7.Widget;
-using BirdTouch.Fragments.CheeseHelper;
 using Android.Graphics;
 using Android.Content.Res;
 using Android.Support.Design.Widget;
 using Android.Locations;
 using System.Linq;
-using Android.Nfc;
 using Android.Runtime;
 using System.Net;
 using System.Collections.Specialized;
@@ -26,15 +24,16 @@ namespace BirdTouch.Fragments
 {
     public class Fragment1_Private : SupportFragment, ILocationListener
     {
+        public static SwitchCompat switchVisibility;
+
         private Clans.Fab.FloatingActionButton fab_menu_refresh;
         private Clans.Fab.FloatingActionButton fab_menu_automatically;
         private Clans.Fab.FloatingActionButton fab_menu_gps;
         private Clans.Fab.FloatingActionMenu fab_menu;
 
         private FrameLayout frameLay;
-
         private RecyclerView recycleView;
-        public static SwitchCompat switchVisibility;
+        
         private Location currLocation;
         private LocationManager locationManager;
         private ProgressBar progressBarLocation;
@@ -53,19 +52,19 @@ namespace BirdTouch.Fragments
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            
-            // Create your fragment here
+                        
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
            
             View view = inflater.Inflate(Resource.Layout.Fragment1_private, container, false);
+
             recycleView = view.FindViewById<RecyclerView>(Resource.Id.recyclerViewPrivate);
-            switchVisibility = view.FindViewById<SwitchCompat>(Resource.Id.activatePrivateSwitch);
             progressBarLocation = view.FindViewById<ProgressBar>(Resource.Id.progressBarGetLocation);
             progressBarGetPrivateUsers = view.FindViewById<ProgressBar>(Resource.Id.progressBarGetPrivateUsers);
-            switchVisibility.CheckedChange += SwitchVisibility_CheckedChange;
+            frameLay = view.FindViewById<FrameLayout>(Resource.Id.coordinatorLayoutPrivate);
+
             webClientMakeUserVisible = new WebClient();
             webClientMakeUserInvisible = new WebClient();
             webClientGetPrivateUsersNearMe = new WebClient();
@@ -77,73 +76,64 @@ namespace BirdTouch.Fragments
 
             listOfUsersAroundMe = new List<User>();
 
-            frameLay = view.FindViewById<FrameLayout>(Resource.Id.coordinatorLayoutPrivate);
-
+            switchVisibility = view.FindViewById<SwitchCompat>(Resource.Id.activatePrivateSwitch);
             fab_menu_refresh = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh_private);
             fab_menu_automatically = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_automatically_private);
             fab_menu_gps = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_gps_private);
             fab_menu = view.FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu_private);
 
-            fab_menu_refresh.Click += Fab_menu_refresh_Click1;
-            fab_menu_automatically.Click += Fab_menu_automatically_Click1;
-            fab_menu_gps.Click += Fab_menu_gps_Click1;
+            switchVisibility.CheckedChange += SwitchVisibility_CheckedChange;
+            fab_menu_refresh.Click += Fab_menu_refresh_Click;
+            fab_menu_automatically.Click += Fab_menu_automatically_Click;
+            fab_menu_gps.Click += Fab_menu_gps_Click;
 
             fab_menu.MenuToggle += Fab_menu_MenuToggle;
 
             fab_menu.Visibility = ViewStates.Gone;
 
-            SetUpRecyclerView(recycleView, listOfUsersAroundMe);
+            SetUpRecyclerView(recycleView, listOfUsersAroundMe);//inicijalizacija, nema veze to sto je lista Usera prazna
 
             return view;
         }
 
         private void Fab_menu_MenuToggle(object sender, Clans.Fab.FloatingActionMenu.MenuToggleEventArgs e)
         {
-            if (e.Opened)
+            if (e.Opened) //kada se otvori fab menu, recycle view da se sakrije, kako se ne bi kliknulo greskom. a i zbog preglednosti
             {
-                //fab_menu.Click += Fab_menu_Click;
                 recycleView.Visibility = ViewStates.Invisible;
-                //switchVisibility.Visibility = ViewStates.Invisible;
             }
             else
             {
                 recycleView.Visibility = ViewStates.Visible;
-                //switchVisibility.Visibility = ViewStates.Visible;
             }
-
         }
 
        
-
-        private void Fab_menu_gps_Click1(object sender, EventArgs e)
+        private void Fab_menu_gps_Click(object sender, EventArgs e)
         {
             if (GpsUpdateIndeterminate) //ako je u toku trazenje GPS a hocemo da odustanemo
             {
                 fab_menu_gps.SetIndeterminate(false);
                 locationManager.RemoveUpdates(this);
                 GpsUpdateIndeterminate = false;
-            }else {
+            }
+            else
+            {
             GpsUpdateIndeterminate = true;
             fab_menu_gps.SetIndeterminate(true);
             locationManager.RequestLocationUpdates(_locationProvider, 0, 0, this);
-            }
-           
-
+            }          
         }
 
-        private void Fab_menu_automatically_Click1(object sender, EventArgs e)
+        private void Fab_menu_automatically_Click(object sender, EventArgs e) //treba implementirati logiku, ali treba videti i razmisliti dobro sta i kako
         {
-            //Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">Fragment1:Clicked on Automatically</font>"), Snackbar.LengthLong).Show();
-
-
-            fab_menu.Close(true);
-            
+       
+            fab_menu.Close(true);          
         }
 
-        private void Fab_menu_refresh_Click1(object sender, EventArgs e)
+        private void Fab_menu_refresh_Click(object sender, EventArgs e)
         {
             GetPrivateUsersNearMe();
-            // Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">Fragment1:Clicked on Refresh</font>"), Snackbar.LengthLong).Show();
             fab_menu.Close(true);
         }
 
@@ -153,7 +143,7 @@ namespace BirdTouch.Fragments
             if (e.IsChecked)
             {
                 InitializeLocationManager(); //svaki put kada se promeni switch na ON, da se vidi da li postoji GPS ili NETWORK location
-                if (!_locationProvider.Equals(string.Empty))
+                if (!_locationProvider.Equals(string.Empty))//ako postoje provideri za lokaciju koje smo dobili u InitializeLocationManager()
                 {
                     locationManager.RequestLocationUpdates(_locationProvider, 0, 0, this);
                     progressBarLocation.Visibility = ViewStates.Visible;
@@ -161,24 +151,20 @@ namespace BirdTouch.Fragments
                 else
                 {
                     Snackbar.Make(frameLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No GPS or Network Geolocation available</font>"), Snackbar.LengthLong).Show();
-
-
                 }
 
             }
             else
             {
-                //  Snackbar.Make(coordLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Off</font>"), Snackbar.LengthLong).Show();
-
-                fab_menu.Visibility = ViewStates.Gone;
                 
+                fab_menu.Visibility = ViewStates.Gone;
                 locationManager.RemoveUpdates(this);
                 GoInvisible();
                 progressBarLocation.Visibility = ViewStates.Invisible;
             }
         }
 
-        private void InitializeLocationManager()//ovde treba videti kako uzeti lepo lokaciju sa mreze ako nema gps, ali to je za kraj
+        private void InitializeLocationManager()//ovde treba videti kako uzeti lepo lokaciju sa mreze ako nema gps, ali to nije za betu
         {
             locationManager = (LocationManager)Activity.GetSystemService(Context.LocationService);
             Criteria criteriaForLocationService = new Criteria
@@ -222,7 +208,6 @@ namespace BirdTouch.Fragments
             }
             else
             {
-                //  Snackbar.Make(coordLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">"+location.Provider +": " + string.Format("{0:f6},{1:f6}", location.Latitude, location.Longitude)+ " " +location.Time.ToString()+"</font>"), Snackbar.LengthLong).Show();
                 SendLocationToDatabase();
             }
             locationManager.RemoveUpdates(this); //samo jednom da uzme gps koordinate, da ne refreshuje stalno
@@ -233,13 +218,11 @@ namespace BirdTouch.Fragments
         {
             if (Reachability.isOnline(Activity) && !webClientMakeUserVisible.IsBusy)
             {
-
-               
+              
                 //insert parameters for header for web request
                 NameValueCollection parameters = new NameValueCollection();
                 parameters.Add("latitude", currLocation.Latitude.ToString());
                 parameters.Add("longitude", currLocation.Longitude.ToString());
-                StartPageActivity.CheckVisibilityMode();//provera sta je sve ukljuceno i updatevoanje visibility mode po potrebi
                 parameters.Add("mode", "1"); // mozda treba mode globalni, ali videcemo 
                 parameters.Add("id", StartPageActivity.user.Id.ToString());
 
@@ -266,7 +249,6 @@ namespace BirdTouch.Fragments
             {
                 //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
 
-
                 Console.WriteLine("*******Error webclient data save changes error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
@@ -288,9 +270,9 @@ namespace BirdTouch.Fragments
                 GpsUpdateIndeterminate = false;
                 fab_menu.Close(true);
 
-                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now visible in private mode</font>"), Snackbar.LengthLong).Show();
+               //Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now visible in private mode</font>"), Snackbar.LengthLong).Show();
                 
-                GetPrivateUsersNearMe();//privremeno odavde pozivam
+                GetPrivateUsersNearMe();//nakon uspesnog postavljanja lokacije, a mozda i da se skloni odavde, pa samo po potrebi
             }
         }
 
@@ -301,10 +283,8 @@ namespace BirdTouch.Fragments
             if (Reachability.isOnline(Activity) && !webClientMakeUserInvisible.IsBusy)
             {
 
-
                 //insert parameters for header for web request
                 NameValueCollection parameters = new NameValueCollection();
-                StartPageActivity.CheckVisibilityMode();
                 parameters.Add("mode", "1");
                 parameters.Add("id", StartPageActivity.user.Id.ToString());
 
@@ -331,7 +311,6 @@ namespace BirdTouch.Fragments
             {
                 //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
 
-
                 Console.WriteLine("*******Error webclient data save changes error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
@@ -345,10 +324,9 @@ namespace BirdTouch.Fragments
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
                 Console.Out.WriteLine(jsonResult);
                 visible = false;
-                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now invisible in private mode</font>"), Snackbar.LengthLong).Show();
+              //  Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now invisible in private mode</font>"), Snackbar.LengthLong).Show();
             }
         }
-
 
 
         private void GetPrivateUsersNearMe()
@@ -361,7 +339,8 @@ namespace BirdTouch.Fragments
                 if (visible) { //ako je korisnik visible tj. u active_users bazi upisan
 
                 progressBarGetPrivateUsers.Visibility = ViewStates.Visible;
-                               //insert parameters for header for web request
+                
+                //insert parameters for header for web request
                 NameValueCollection parameters = new NameValueCollection();
                 parameters.Add("id", StartPageActivity.user.Id.ToString());
 
@@ -396,7 +375,6 @@ namespace BirdTouch.Fragments
             {
                 //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
 
-
                 Console.WriteLine("*******Error webclient data error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
@@ -410,22 +388,9 @@ namespace BirdTouch.Fragments
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
 
                 List<User> newListOfUsersAroundMe = Newtonsoft.Json.JsonConvert.DeserializeObject<List<User>>(jsonResult);
-
-                //SimpleStringRecyclerViewAdapter adapterUsersFromRecyclerView = (SimpleStringRecyclerViewAdapter)recycleView.GetAdapter();
-                //adapterUsersFromRecyclerView.changeData(newListOfUsersAroundMe);
-
-                //if (recycleView.GetAdapter() != null)
-                //{
-                //    SimpleStringRecyclerViewAdapter adapterUsersFromRecyclerView = (SimpleStringRecyclerViewAdapter)recycleView.GetAdapter();
-                //    adapterUsersFromRecyclerView.clearData();
-                //    recycleView.RemoveAllViews();
-                //    recycleView.RemoveAllViewsInLayout();
-                //}
                 SetUpRecyclerView(recycleView, newListOfUsersAroundMe);
 
-
                 fab_menu.Visibility = ViewStates.Visible;
-              
                 progressBarGetPrivateUsers.Visibility = ViewStates.Gone;
             }
         }
@@ -435,24 +400,7 @@ namespace BirdTouch.Fragments
 
 
 
-        // Use this to return your custom view for this Fragment
-        // return inflater.Inflate(Resource.Layout.YourFragment, container, false);
-        //   RecyclerView recyclerView = inflater.Inflate(Resource.Layout.Fragment1_private, container, false) as RecyclerView;
-        // return recyclerView;
-
-
-
-
-
-
-
-
-
-
-
-
-
-     
+        
             
         //*********************************************************
         //LocationListener interfejs, mozda nekad implementirati
@@ -487,6 +435,10 @@ namespace BirdTouch.Fragments
         //}
 
 
+
+
+
+
         //*********************************************
         //RecycleView setup
 
@@ -494,20 +446,9 @@ namespace BirdTouch.Fragments
         private void SetUpRecyclerView(RecyclerView recyclerView, List<User> listOfUsersAroundMe) //ovde da se napravi lista dobijenih korisnika
         {
             
-
             recyclerView.SetLayoutManager(new LinearLayoutManager(recyclerView.Context));
-
             recyclerView.SetAdapter(new SimpleStringRecyclerViewAdapter(recyclerView.Context, listOfUsersAroundMe, Activity.Resources, recycleView));
-
-            
-            //recycleView.SetItemClickListener((rv, position, view) =>
-            //{
-            //    Context context = view.Context;
-            //    Intent intent = new Intent(context, typeof(UserDetailActivity));
-            //    intent.PutExtra("userInformation", Newtonsoft.Json.JsonConvert.SerializeObject(listOfUsersAroundMe[position]));
-            //    context.StartActivity(intent);
-            //});
-
+          
         }
 
 
@@ -517,38 +458,22 @@ namespace BirdTouch.Fragments
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         public class SimpleStringRecyclerViewAdapter : RecyclerView.Adapter
         {
             private readonly TypedValue mTypedValue = new TypedValue();
             private int mBackground;
             private List<User> mValues;
             private RecyclerView recycleView;
-            Resources mResource;
-            //private Dictionary<int, int> mCalculatedSizes;
+            Resources mResource;          
 
             public SimpleStringRecyclerViewAdapter(Context context, List<User> items, Resources res, RecyclerView rv)
             {
                 context.Theme.ResolveAttribute(Resource.Attribute.selectableItemBackground, mTypedValue, true);
                 mBackground = mTypedValue.ResourceId;
-                
                 mValues = items;
                 mResource = res;
-
                 recycleView = rv;
-               // mCalculatedSizes = new Dictionary<int, int>();
+               
             }
 
             public override int ItemCount
@@ -560,23 +485,6 @@ namespace BirdTouch.Fragments
             }
 
 
-            //public void clearData()
-            //{
-            //        //int prevCount = mValues.Count;
-            //        //mValues.Clear();
-            //        //NotifyItemRangeRemoved(0, prevCount);
-            //        //NotifyDataSetChanged();
-                    
-            //}
-
-            ////public void changeData(List<User> newUsers)
-            ////{
-
-            ////    mValues = newUsers;
-            ////    NotifyDataSetChanged();
-            ////    NotifyItemRangeChanged(0, mValues.Count);
-            ////}
-
             public override async void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
                 var simpleHolder = holder as SimpleViewHolder;
@@ -584,8 +492,6 @@ namespace BirdTouch.Fragments
                 simpleHolder.mBoundString = mValues[position].Id.ToString();
                 simpleHolder.mTxtView.Text = mValues[position].FirstName + " " + mValues[position].LastName;
                 
-
-
                 if (mValues[position].ProfilePictureData != null)
                 {
                     Bitmap bm = BitmapFactory.DecodeByteArrayAsync(mValues[position].ProfilePictureData, 0, mValues[position].ProfilePictureData.Length).Result;
@@ -611,22 +517,19 @@ namespace BirdTouch.Fragments
                 simpleHolder.mView.Click -= MView_Click; //da se ne bi gomilali delegati
                 simpleHolder.mView.Click += MView_Click;
 
-                Random rand = new Random();
-                if(rand.Next() % 2 ==1)
+                Random rand = new Random(); //igramo se
+                if(rand.Next() % 2 == 1)
                 setScaleAnimation(holder.ItemView);
                 else setFadeAnimation(holder.ItemView);
 
-                simpleHolder.checkbox.CheckedChange -= Checkbox_CheckedChange;
+                simpleHolder.checkbox.CheckedChange -= Checkbox_CheckedChange;//stavljeno ovde da ne bi redovi ispod izazvali pozivanje event listenera
 
                 if (isUserInSavedContacts(mValues[position].Id, simpleHolder)) simpleHolder.checkbox.Checked = true; //da li je vec u saved contacts
                 else simpleHolder.checkbox.Checked = false;
 
-                simpleHolder.checkbox.Tag = simpleHolder.mView;
-
-                
+                simpleHolder.checkbox.Tag = simpleHolder.mView; //potrebno zbog pozicije u adapteru koja nam je potrebna u Checkbox_CheckedChange
                 simpleHolder.checkbox.CheckedChange += Checkbox_CheckedChange;
             }
-
 
 
             private bool isUserInSavedContacts(int userIdRecyclerView, SimpleViewHolder svh)
@@ -638,14 +541,11 @@ namespace BirdTouch.Fragments
 
                 List<User> listSavedPrivateUsers = new List<User>();
                 
-
                 if (pref.Contains("SavedUsersDictionary")) 
                 {
-
                     string serializedDictionary = pref.GetString("SavedUsersDictionary", String.Empty);
                     if (serializedDictionary != String.Empty)
                     {
-
                         Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
                         if (dictionary.ContainsKey(userId))
                         {//ako je user dodavao usere
@@ -673,15 +573,13 @@ namespace BirdTouch.Fragments
 
                 ISharedPreferences pref = vsender.Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
                 ISharedPreferencesEditor edit = pref.Edit();
-
                 
                 if (e.IsChecked)
                 {//checked
                     
                     if (!pref.Contains("SavedUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
                     {
-                        // Snackbar.Make((View)sender, Android.Text.Html.FromHtml("<font color=\"#ffffff\">does not contain</font>"), Snackbar.LengthLong).Show();
-
+                        
                         Dictionary<int, Dictionary<int, List<User>>> dictionary = new Dictionary<int, Dictionary<int, List<User>>>();
                         dictionary.Add(userId, new Dictionary<int, List<User>>());
                         dictionary[userId].Add(1, new List<User>());// 1 je private mode
@@ -717,7 +615,6 @@ namespace BirdTouch.Fragments
                             edit.Apply();
                             Fragment1_PrivateSavedUsers refToSavedUsersFragment =(Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
                             refToSavedUsersFragment.SetUpRecyclerView();
-
                         }
 
                     }
@@ -808,7 +705,6 @@ namespace BirdTouch.Fragments
             public string mBoundString;
             public readonly View mView;
             public readonly ImageView mImageView;
-           // public readonly ImageView mImageViewSavedContact;
             public readonly TextView mTxtView;
             public readonly CheckBox checkbox;
 
@@ -817,9 +713,7 @@ namespace BirdTouch.Fragments
                 mView = view;
                 mImageView = view.FindViewById<ImageView>(Resource.Id.avatar); //profilna slika usera
                 mTxtView = view.FindViewById<TextView>(Resource.Id.text1); //ime + prezime usera
-                checkbox = view.FindViewById<CheckBox>(Resource.Id.checkboxSaveUserRecycleViewRow);
-               
-               // mImageViewSavedContact = view.FindViewById<ImageView>(Resource.Id.saveContactRecycleViewRow);
+                checkbox = view.FindViewById<CheckBox>(Resource.Id.checkboxSaveUserRecycleViewRow);                           
             }
 
             public override string ToString()
