@@ -31,7 +31,7 @@ namespace BirdTouch.Fragments
         private Clans.Fab.FloatingActionButton fab_menu_gps;
         private Clans.Fab.FloatingActionMenu fab_menu;
 
-        private FrameLayout coordLay;
+        private FrameLayout frameLay;
 
         private RecyclerView recycleView;
         public static SwitchCompat switchVisibility;
@@ -47,6 +47,7 @@ namespace BirdTouch.Fragments
         private Uri uri;
 
         private bool visible = false;
+        private bool GpsUpdateIndeterminate = false;
         private List<User> listOfUsersAroundMe;
 
         public override void OnCreate(Bundle savedInstanceState)
@@ -76,7 +77,7 @@ namespace BirdTouch.Fragments
 
             listOfUsersAroundMe = new List<User>();
 
-            coordLay = view.FindViewById<FrameLayout>(Resource.Id.coordinatorLayoutPrivate);
+            frameLay = view.FindViewById<FrameLayout>(Resource.Id.coordinatorLayoutPrivate);
 
             fab_menu_refresh = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh_private);
             fab_menu_automatically = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_automatically_private);
@@ -91,7 +92,7 @@ namespace BirdTouch.Fragments
 
             fab_menu.Visibility = ViewStates.Gone;
 
-
+            SetUpRecyclerView(recycleView, listOfUsersAroundMe);
 
             return view;
         }
@@ -116,12 +117,18 @@ namespace BirdTouch.Fragments
 
         private void Fab_menu_gps_Click1(object sender, EventArgs e)
         {
-            
-           
+            if (GpsUpdateIndeterminate) //ako je u toku trazenje GPS a hocemo da odustanemo
+            {
+                fab_menu_gps.SetIndeterminate(false);
+                locationManager.RemoveUpdates(this);
+                GpsUpdateIndeterminate = false;
+            }else {
+            GpsUpdateIndeterminate = true;
+            fab_menu_gps.SetIndeterminate(true);
             locationManager.RequestLocationUpdates(_locationProvider, 0, 0, this);
-            // Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">Fragment1:Clicked on GPS</font>"), Snackbar.LengthLong).Show();
-            fab_menu.Close(true);
-            
+            }
+           
+
         }
 
         private void Fab_menu_automatically_Click1(object sender, EventArgs e)
@@ -153,7 +160,7 @@ namespace BirdTouch.Fragments
                 }
                 else
                 {
-                    Snackbar.Make(coordLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No GPS or Network Geolocation available</font>"), Snackbar.LengthLong).Show();
+                    Snackbar.Make(frameLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No GPS or Network Geolocation available</font>"), Snackbar.LengthLong).Show();
 
 
                 }
@@ -210,7 +217,7 @@ namespace BirdTouch.Fragments
             currLocation = location;
             if (this.currLocation == null)
             {
-                Snackbar.Make(coordLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Unable to determine location</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(frameLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Unable to determine location</font>"), Snackbar.LengthLong).Show();
 
             }
             else
@@ -247,7 +254,7 @@ namespace BirdTouch.Fragments
             else
             {
 
-                Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
 
             }
         }
@@ -263,8 +270,10 @@ namespace BirdTouch.Fragments
                 Console.WriteLine("*******Error webclient data save changes error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
-                Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
                 visible = false;
+                fab_menu_gps.SetIndeterminate(false);
+                fab_menu.Close(true);
             }
             else
             {
@@ -274,7 +283,12 @@ namespace BirdTouch.Fragments
                 Console.Out.WriteLine(jsonResult);
                 visible = true;
                 progressBarLocation.Visibility = ViewStates.Invisible;
-                Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now visible in private mode</font>"), Snackbar.LengthLong).Show();
+               
+                fab_menu_gps.SetIndeterminate(false);
+                GpsUpdateIndeterminate = false;
+                fab_menu.Close(true);
+
+                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now visible in private mode</font>"), Snackbar.LengthLong).Show();
                 
                 GetPrivateUsersNearMe();//privremeno odavde pozivam
             }
@@ -305,7 +319,7 @@ namespace BirdTouch.Fragments
             else
             {
 
-                Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
 
             }
         }
@@ -321,7 +335,7 @@ namespace BirdTouch.Fragments
                 Console.WriteLine("*******Error webclient data save changes error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
-                Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
                 visible = true;
             }
             else
@@ -331,7 +345,7 @@ namespace BirdTouch.Fragments
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
                 Console.Out.WriteLine(jsonResult);
                 visible = false;
-                Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now invisible in private mode</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now invisible in private mode</font>"), Snackbar.LengthLong).Show();
             }
         }
 
@@ -360,7 +374,7 @@ namespace BirdTouch.Fragments
                 }
                 else
                 {
-                    Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">You are not visible to others</font>"), Snackbar.LengthLong).Show();
+                    Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">You are not visible to others</font>"), Snackbar.LengthLong).Show();
 
                 }
 
@@ -368,7 +382,7 @@ namespace BirdTouch.Fragments
             else
             {
 
-                Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
 
             }
 
@@ -386,7 +400,7 @@ namespace BirdTouch.Fragments
                 Console.WriteLine("*******Error webclient data error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
-                Snackbar.Make(coordLay, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
                 progressBarGetPrivateUsers.Visibility = ViewStates.Gone;
             }
             else
@@ -445,13 +459,13 @@ namespace BirdTouch.Fragments
 
         public void OnProviderDisabled(string provider)
         {
-            Snackbar.Make(coordLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">" + provider + " is disabled</font>"), Snackbar.LengthLong).Show();
+            Snackbar.Make(frameLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">" + provider + " is disabled</font>"), Snackbar.LengthLong).Show();
 
         }
 
         public void OnProviderEnabled(string provider)
         {
-            Snackbar.Make(coordLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">" + provider + " is enabled</font>"), Snackbar.LengthLong).Show();
+            Snackbar.Make(frameLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">" + provider + " is enabled</font>"), Snackbar.LengthLong).Show();
 
         }
 
@@ -495,6 +509,24 @@ namespace BirdTouch.Fragments
             //});
 
         }
+
+
+        public void NotifyDataSetChangedFromAnotherFragment()
+        {
+            recycleView.GetAdapter().NotifyDataSetChanged();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -584,17 +616,60 @@ namespace BirdTouch.Fragments
                 setScaleAnimation(holder.ItemView);
                 else setFadeAnimation(holder.ItemView);
 
-                simpleHolder.checkbox.Tag = position;
+                simpleHolder.checkbox.CheckedChange -= Checkbox_CheckedChange;
+
+                if (isUserInSavedContacts(mValues[position].Id, simpleHolder)) simpleHolder.checkbox.Checked = true; //da li je vec u saved contacts
+                else simpleHolder.checkbox.Checked = false;
+
+                simpleHolder.checkbox.Tag = simpleHolder.mView;
+
+                
                 simpleHolder.checkbox.CheckedChange += Checkbox_CheckedChange;
+            }
+
+
+
+            private bool isUserInSavedContacts(int userIdRecyclerView, SimpleViewHolder svh)
+            {
+                int userId = StartPageActivity.user.Id;
+
+                ISharedPreferences pref = svh.ItemView.Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
+                ISharedPreferencesEditor edit = pref.Edit();
+
+                List<User> listSavedPrivateUsers = new List<User>();
+                
+
+                if (pref.Contains("SavedUsersDictionary")) 
+                {
+
+                    string serializedDictionary = pref.GetString("SavedUsersDictionary", String.Empty);
+                    if (serializedDictionary != String.Empty)
+                    {
+
+                        Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
+                        if (dictionary.ContainsKey(userId))
+                        {//ako je user dodavao usere
+                            if (dictionary[userId].ContainsKey(1))
+                            {//ako je dodavao private usere
+                                listSavedPrivateUsers = dictionary[userId][1];
+                            }
+                        }
+
+                    }
+
+                }
+
+                if (!(listSavedPrivateUsers.Find(a => a.Id == userIdRecyclerView) == null)) return true;
+                else return false;
             }
 
             private void Checkbox_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
             {
-                //Newtonsoft.Json.JsonConvert.SerializeObject(mValues[position])
                 CheckBox vsender = sender as CheckBox;
-                int position = (int)vsender.Tag;
+
+                View mView = (View)vsender.Tag;
+                int position = recycleView.GetChildAdapterPosition(mView);
                 int userId = StartPageActivity.user.Id;
-               // View vsender = sender as View;
 
                 ISharedPreferences pref = vsender.Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
                 ISharedPreferencesEditor edit = pref.Edit();
@@ -615,6 +690,8 @@ namespace BirdTouch.Fragments
                         edit.Clear();
                         edit.PutString("SavedUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();
+                        Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+                        refToSavedUsersFragment.SetUpRecyclerView();
 
                     }
                     else //vec postoji dictionary
@@ -638,6 +715,8 @@ namespace BirdTouch.Fragments
                             edit.Clear();
                             edit.PutString("SavedUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                             edit.Apply();
+                            Fragment1_PrivateSavedUsers refToSavedUsersFragment =(Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+                            refToSavedUsersFragment.SetUpRecyclerView();
 
                         }
 
@@ -655,6 +734,8 @@ namespace BirdTouch.Fragments
                         edit.Clear();
                         edit.PutString("SavedUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();
+                        Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+                        refToSavedUsersFragment.SetUpRecyclerView();
                     }
 
                 }
@@ -679,10 +760,12 @@ namespace BirdTouch.Fragments
             private void MView_Click(object sender, EventArgs e)
             {
                 int position = recycleView.GetChildAdapterPosition((View)sender);
+                SimpleViewHolder svh = (SimpleViewHolder)recycleView.GetChildViewHolder((View)sender);
 
                 Context context = recycleView.Context;
                 Intent intent = new Intent(context, typeof(UserDetailActivity));
                 intent.PutExtra("userInformation", Newtonsoft.Json.JsonConvert.SerializeObject(mValues[position]));
+                intent.PutExtra("isSaved", (svh.checkbox.Checked));
                 context.StartActivity(intent);
 
             }

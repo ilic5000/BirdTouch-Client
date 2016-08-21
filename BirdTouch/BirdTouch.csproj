@@ -128,6 +128,7 @@
     <Compile Include="Fragments\CheeseHelper\Cheeses.cs" />
     <Compile Include="Fragments\ExtensionMethods.cs" />
     <Compile Include="Fragments\Fragment1_Private.cs" />
+    <Compile Include="Fragments\Fragment1_PrivateSavedUsers.cs" />
     <Compile Include="Fragments\Fragment3_Celebrity.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Models\Business.cs" />
@@ -184,6 +185,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\Activity_EditCelebrityUserInfo.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\Fragment1_private_savedUsers.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

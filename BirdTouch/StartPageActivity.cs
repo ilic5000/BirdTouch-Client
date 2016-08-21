@@ -31,13 +31,10 @@ namespace BirdTouch
 {
     [Activity(Label = "StartPageActivity", Theme = "@style/Theme.DesignDemo")]
     public class StartPageActivity : AppCompatActivity //zbog design library nije obican activity
-    {  
-        //private FloatingActionButton
+    {
 
-        private Clans.Fab.FloatingActionButton fab_menu_refresh;
-        private Clans.Fab.FloatingActionButton fab_menu_automatically;
-        private Clans.Fab.FloatingActionButton fab_menu_gps;
-        private Clans.Fab.FloatingActionMenu fab_menu;
+
+        //public static List<SupportFragment> listOfActiveFragments;
 
         private DrawerLayout drawerLayout;
         private NavigationView navigationView;
@@ -57,7 +54,7 @@ namespace BirdTouch
         private Uri uri;
 
 
-        private TabAdapter adapter;
+        public static TabAdapter adapter;
 
 
 
@@ -66,6 +63,8 @@ namespace BirdTouch
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.StartPage);
+
+          //  listOfActiveFragments = new List<Android.Support.V4.App.Fragment>();
 
             webClientUserPrivateDataUponOpeningEditDataActivity = new WebClient();
             webClientUserPrivateDataUponOpeningEditDataActivity.DownloadDataCompleted += WebClientUserPrivateDataUponOpeningEditDataActivity_DownloadDataCompleted;
@@ -99,9 +98,6 @@ namespace BirdTouch
             }
 
 
-
-
-
             if (navigationView != null)
             {
                 SetUpDrawerContent(navigationView);
@@ -128,28 +124,15 @@ namespace BirdTouch
         }
 
 
-        private void Fab_menu_gps_Click(object sender, EventArgs e)
-        {
-            
-            Snackbar.Make(fab_menu, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Clicked on GPS</font>"), Snackbar.LengthLong).Show();
-        }
-
-        private void Fab_menu_automatically_Click(object sender, EventArgs e)
-        {
-            Snackbar.Make(fab_menu, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Clicked on Automatically</font>"), Snackbar.LengthLong).Show();
-
-        }
-
-        private void Fab_menu_refresh_Click(object sender, EventArgs e)
-        {
-            Snackbar.Make(fab_menu, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Clicked on Refresh</font>"), Snackbar.LengthLong).Show();
-
-        }
+       
         private void SetUpViewPager(ViewPager viewPager)
         {
+
+         
+
             /*TabAdapter */adapter = new TabAdapter(SupportFragmentManager);
             adapter.AddFragment(new Fragment1_Private(), "Private");
-            adapter.AddFragment(new Fragment3_Celebrity(), "Private saved");
+            adapter.AddFragment(new Fragment1_PrivateSavedUsers(), "Private saved");
             adapter.AddFragment(new Fragment3_Celebrity(), "Business");
             adapter.AddFragment(new Fragment3_Celebrity(), "Business saved");
             adapter.AddFragment(new Fragment3_Celebrity(), "Celebrity");
@@ -189,7 +172,7 @@ namespace BirdTouch
                          }
                          else
                          {
-                             Snackbar.Make(fab_menu, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+                             Snackbar.Make(navigationView, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
                          }
                       break;
 
@@ -203,7 +186,7 @@ namespace BirdTouch
                          }
                          else
                          {
-                             Snackbar.Make(fab_menu, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+                             Snackbar.Make(navigationView, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
                          }
                      break;
 
@@ -244,7 +227,7 @@ namespace BirdTouch
                 Console.WriteLine("*******Error webclient data save changes error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
-                Snackbar.Make(fab_menu, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(navigationView, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
 
             }
             else
@@ -271,7 +254,7 @@ namespace BirdTouch
                 Console.WriteLine("*******Error webclient data save changes error");
                 Console.WriteLine(e.Error.Message);
                 Console.WriteLine("******************************************************");
-                Snackbar.Make(fab_menu, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
+                Snackbar.Make(navigationView, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
 
             }
             else
