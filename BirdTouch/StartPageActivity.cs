@@ -110,21 +110,21 @@ namespace BirdTouch
             navigationView.GetHeaderView(0).FindViewById<Android.Support.V7.Widget.AppCompatTextView>(Resource.Id.nav_header_username_textView).Text = user.Username;
             tabs = FindViewById<TabLayout>(Resource.Id.tabs);
             viewPager = FindViewById<ViewPager>(Resource.Id.viewpager);
-            viewPager.OffscreenPageLimit = 4; //jer po defaultu je 2 i onda uvek se pravi novi fragment i opet uzima gps koordinate, ovako je u memoriji vise fragmenta, ali ne poziva svaki cas server
+            viewPager.OffscreenPageLimit = 5; //jer po defaultu je 2 i onda uvek se pravi novi fragment i opet uzima gps koordinate, ovako je u memoriji vise fragmenta, ali ne poziva svaki cas server
 
             SetUpViewPager(viewPager);
 
             tabs.SetupWithViewPager(viewPager);
 
 
-            fab_menu_refresh = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh);
-            fab_menu_automatically = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_automatically);
-            fab_menu_gps = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_gps);
-            fab_menu = FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu);
+            //fab_menu_refresh = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh);
+            //fab_menu_automatically = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_automatically);
+            //fab_menu_gps = FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_gps);
+            //fab_menu = FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu);
 
-            fab_menu_refresh.Click += Fab_menu_refresh_Click;
-            fab_menu_automatically.Click += Fab_menu_automatically_Click;
-            fab_menu_gps.Click += Fab_menu_gps_Click;
+            //fab_menu_refresh.Click += Fab_menu_refresh_Click;
+            //fab_menu_automatically.Click += Fab_menu_automatically_Click;
+            //fab_menu_gps.Click += Fab_menu_gps_Click;
         }
 
 
@@ -149,9 +149,10 @@ namespace BirdTouch
         {
             /*TabAdapter */adapter = new TabAdapter(SupportFragmentManager);
             adapter.AddFragment(new Fragment1_Private(), "Private");
-            adapter.AddFragment(new Fragment1_Private(), "Business");
+            adapter.AddFragment(new Fragment3_Celebrity(), "Private saved");
+            adapter.AddFragment(new Fragment3_Celebrity(), "Business");
+            adapter.AddFragment(new Fragment3_Celebrity(), "Business saved");
             adapter.AddFragment(new Fragment3_Celebrity(), "Celebrity");
-            adapter.AddFragment(new Fragment3_Celebrity(), "Celebrity2");
             viewPager.Adapter = adapter;
         }
 

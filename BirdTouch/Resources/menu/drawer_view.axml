@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-  <group android:checkableBehavior="single">
+  <group >
     <item
         android:id="@+id/nav_home"
-        android:icon="@drawable/ic_dashboard"
+        android:icon="@drawable/ic_home_black_24dp"
         android:title="Home" />
 
 
     <item android:title="Update info">
       <menu>
-        <group android:checkableBehavior="single">
+        <group >
           <item
               android:id="@+id/nav_private"
-              android:icon="@drawable/ic_event"
+              android:icon="@drawable/ic_people_black_24dp"
               android:title="Private" />
           <item
               android:id="@+id/nav_business"
-              android:icon="@drawable/ic_headset"
+              android:icon="@drawable/ic_business_center_black_24dp"
               android:title="Business" />
           <item
               android:id="@+id/nav_celebrity"
-              android:icon="@drawable/ic_forum"
+              android:icon="@drawable/ic_star_black_24dp"
               android:title="Celebrity" />
         </group>
         </menu>
@@ -29,22 +29,19 @@
     </group>
   <item android:title="More options">
     <menu>
-      <group android:checkableBehavior="single">
-      <item
-        android:id="@+id/nav_saved_contacts" 
-        android:icon="@drawable/ic_dashboard"
-          android:title="Saved contacts" />
+      <group >
+     
       <item
            android:id="@+id/nav_settings"
-          android:icon="@drawable/ic_forum"
+          android:icon="@drawable/ic_settings_black_24dp"
           android:title="Settings" />
         <item
                  android:id="@+id/nav_about"
-                android:icon="@drawable/ic_event"
+                android:icon="@drawable/ic_info_outline_black_24dp"
                 android:title="About" />
         <item
            android:id="@+id/nav_logout"
-          android:icon="@drawable/ic_headset"
+          android:icon="@drawable/ic_power_settings_new_black_24dp"
           android:title="Log Out" />
         
 
@@ -53,3 +50,11 @@
   </item>
     
 </menu>
+
+
+<!-- <group android:checkableBehavior="single" >-->
+
+<!--<item
+        android:id="@+id/nav_saved_contacts" 
+        android:icon="@drawable/ic_dashboard"
+          android:title="Saved contacts" />-->

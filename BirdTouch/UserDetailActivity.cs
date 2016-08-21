@@ -61,7 +61,7 @@ namespace BirdTouch
             }
             else
             {   //defaultni image kada korisnik jos uvek nije promenio, mada moze i u axml da se postavi
-                imageView.SetImageResource(Resource.Drawable.blank_user_profile);
+                imageView.SetImageResource(Resource.Drawable.blank_navigation);
             }
 
 
