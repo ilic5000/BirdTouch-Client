@@ -1,20 +1,8 @@
-using System;
-using System.Text;
 using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
-using Android.Widget;
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 using Android.Support.V7.App;
-using Android.Support.Design.Widget;
-using BirdTouch.Models;
-using Android.Text;
-using System.Net;
-using System.Collections.Specialized;
-using Android.Graphics;
-using System.IO;
 
 namespace BirdTouch
 {

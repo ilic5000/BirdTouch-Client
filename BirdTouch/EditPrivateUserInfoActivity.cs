@@ -39,6 +39,8 @@ namespace BirdTouch
         private WebClient webClient;
 
         private Uri uri;
+
+        private bool pictureChanged=false;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -112,17 +114,26 @@ namespace BirdTouch
                     //zbog parametara mora da postoje sva polja kada se salju, makar privremeno 
                     checkIfEditTextsAreEmptyAndTurnThemToNULLString();
 
-                   
+                    
                     //get ImageView (profileImage) as  array of bytes
                     imageView.BuildDrawingCache(true);
                     Bitmap bitmap = imageView.GetDrawingCache(true);
+                    
                     MemoryStream memStream = new MemoryStream();
                     bitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, memStream); //moze i drugi format //max img size je 61kB
                     byte[] picData = memStream.ToArray();
                     //String picDataEncoded = Convert.ToBase64String(picData);
                     imageView.DestroyDrawingCache();
 
-
+                    if (!pictureChanged)
+                    {
+                        picData = new byte[1]; //server pita, ako je duzine 1 ovaj niz, onda ne upisuje sliku jer nije bilo promene od strane korisnika
+                    
+                    }
+                    else
+                    {
+                    StartPageActivity.picDataProfileNavigation = picData;                   
+                    }
 
                     //insert parameters for header for web request
                     NameValueCollection parameters = new NameValueCollection();
@@ -187,7 +198,13 @@ namespace BirdTouch
                 Console.Out.WriteLine(jsonResult);
                 Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">Changes saved successfully</font>"), Snackbar.LengthLong).Show();
                 StartPageActivity.ab.Title = firstNameWrapper.EditText.Text + " " + lastNameWrapper.EditText.Text; //update title u glavnoj activity, jer je ime i prezime sada promenjeno
-           //   StartPageActivity.profilePictureNavigationHeader.SetImageBitmap(DecodeBitmapFromStream(data.Data, 400, 300));
+
+                if (pictureChanged)
+                {
+
+                    StartPageActivity.UpdateProfileImage();
+                }
+
             }
         }
 
@@ -208,7 +225,7 @@ namespace BirdTouch
                 System.IO.Stream stream = ContentResolver.OpenInputStream(data.Data);
             //  imageView.SetImageBitmap(BitmapFactory.DecodeStream(stream)); neefikasan nacin ucitavanja slika, nema skaliranja
                 imageView.SetImageBitmap(DecodeBitmapFromStream(data.Data, 400, 300)); //mozda su prevelike dimenzije, moze da se podesi
-            
+                pictureChanged = true;
             }
         }
 

@@ -247,7 +247,7 @@ namespace BirdTouch.Fragments
                 SimpleViewHolder svh = (SimpleViewHolder)recycleView.GetChildViewHolder((View)sender);
 
                 Context context = recycleView.Context;
-                Intent intent = new Intent(context, typeof(BusinessDetailActivity));
+                Intent intent = new Intent(context, typeof(UserDetailActivity));
                 intent.PutExtra("userInformation", Newtonsoft.Json.JsonConvert.SerializeObject(mValues[position]));
                 intent.PutExtra("isSaved", (svh.checkbox.Checked));
                 context.StartActivity(intent);

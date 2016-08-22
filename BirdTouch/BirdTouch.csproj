@@ -126,7 +126,7 @@
     <Compile Include="EditBusinessUserInfoActivity.cs" />
     <Compile Include="EditCelebrityUserInfoActivity.cs" />
     <Compile Include="EditPrivateUserInfoActivity.cs" />
-    <Compile Include="Fragments\CheeseHelper\Cheeses.cs" />
+    <Compile Include="Fragments\ActiveModes.cs" />
     <Compile Include="Fragments\ExtensionMethods.cs" />
     <Compile Include="Fragments\Fragment1_Private.cs" />
     <Compile Include="Fragments\Fragment1_PrivateSavedUsers.cs" />

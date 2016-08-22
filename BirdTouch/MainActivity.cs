@@ -2,13 +2,11 @@
 using Android.Widget;
 using Android.OS;
 using Android.Support.V4.App;
-using Android.Support.V7.App;
 using Android.App;
-using Android.Net;
 
 namespace BirdTouch
 {
-    [Activity(Label = "BirdTouch v0.01", MainLauncher = true, Icon = "@drawable/Logo", Theme = "@style/Theme.DesignDemo")]
+    [Activity(Label = "BirdTouch v0.3", MainLauncher = true, Icon = "@drawable/Logo", Theme = "@style/Theme.DesignDemo")]
     public class MainActivity : FragmentActivity
     {
 
@@ -35,7 +33,7 @@ namespace BirdTouch
             btnSignIn = FindViewById<Button>(Resource.Id.btnSignIn);
             btnSignIn.Click += (object sender, EventArgs e) =>
             {
-                //poziva dijalog za SIGNin
+                //poziva dijalog za SignIn
                 Android.Support.V4.App.FragmentManager fm = SupportFragmentManager;
                 dialog_SignIn dialogSignIn = new dialog_SignIn();
                 dialogSignIn.Show(fm, "Dialog fragment");

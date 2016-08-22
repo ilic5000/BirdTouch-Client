@@ -21,6 +21,7 @@ using BirdTouch.Fragments;
 using System.Net;
 using Android.Text;
 using Android.Graphics;
+using System.Collections.Specialized;
 
 namespace BirdTouch
 {
@@ -31,6 +32,8 @@ namespace BirdTouch
         public static ImageView profilePictureNavigationHeader;
         public static TabAdapter adapter;
 
+        public static byte[] picDataProfileNavigation;
+
         private DrawerLayout drawerLayout;
         private NavigationView navigationView;
         private SupportToolbar toolBar;
@@ -38,14 +41,15 @@ namespace BirdTouch
         private ViewPager viewPager;
 
         public static User user;
+        public static Bitmap navBitmap;
         private Business business;
         private System.String userPassword;
 
         private WebClient webClientUserPrivateDataUponOpeningEditDataActivity;
         private WebClient webClientUserBusinessDataUponOpeningEditDataActivity;
         private Uri uri;
-
         
+
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -99,7 +103,15 @@ namespace BirdTouch
         }
 
 
-       
+        public static void UpdateProfileImage()
+        {
+            if (picDataProfileNavigation != null)
+            {
+                Bitmap bm = BitmapFactory.DecodeByteArrayAsync(picDataProfileNavigation, 0, picDataProfileNavigation.Length).Result;
+                profilePictureNavigationHeader.SetImageBitmap(bm);
+
+            }
+        }
         private void SetUpViewPager(ViewPager viewPager)
         {
 
@@ -139,8 +151,15 @@ namespace BirdTouch
                      case Resource.Id.nav_private: //kada se klikne na private user edit info
                          if (Reachability.isOnline(this))
                          {
-                             System.String restUriString = GetString(Resource.String.server_ip_getUserLogin) + user.Username + "/" + userPassword;
+                             System.String restUriString = GetString(Resource.String.server_ip_getUserLogin);
                              uri = new Uri(restUriString);
+
+                             NameValueCollection parameters = new NameValueCollection();
+                             parameters.Add("username", user.Username);
+                             parameters.Add("password", userPassword);
+
+                             webClientUserPrivateDataUponOpeningEditDataActivity.Headers.Clear();
+                             webClientUserPrivateDataUponOpeningEditDataActivity.Headers.Add(parameters);
                              webClientUserPrivateDataUponOpeningEditDataActivity.DownloadDataAsync(uri);
                          }
                          else

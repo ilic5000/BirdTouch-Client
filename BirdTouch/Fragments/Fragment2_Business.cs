@@ -225,7 +225,7 @@ namespace BirdTouch.Fragments
                 NameValueCollection parameters = new NameValueCollection();
                 parameters.Add("latitude", currLocation.Latitude.ToString());
                 parameters.Add("longitude", currLocation.Longitude.ToString());
-                parameters.Add("mode", "2"); // mozda treba mode globalni, ali videcemo 
+                parameters.Add("mode", ActiveModes.BUSINESS); // mozda treba mode globalni, ali videcemo 
                 parameters.Add("id", StartPageActivity.user.Id.ToString());
 
                 String restUriString = GetString(Resource.String.server_ip_makeUserVisible);

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -186,36 +185,7 @@ namespace BirdTouch
                 isSaved = true;
             }
 
-           
-
-            //if (pref.Contains("SavedPrivateUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
-            //{
-            //    string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
-            //    if (serializedDictionary != String.Empty)
-            //    {
-
-            //        Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
-            //        if (!dictionary.ContainsKey(userId))
-            //        {//ako user nije uopste dodavao usere
-            //            dictionary.Add(userId, new Dictionary<int, List<User>>());
-            //        }
-            //        if (!dictionary[userId].ContainsKey(1))
-            //        {//ako nije dodavao private usere
-            //            dictionary[userId].Add(1, new List<User>());
-            //        }
-
-            //        //samo dodamo private usera iz recyclerViewa
-            //        dictionary[userId][1].Add(mValues[position]);
-            //        edit.Remove("SavedPrivateUsersDictionary");
-            //        edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
-            //        edit.Apply();
-            //        Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
-            //        refToSavedUsersFragment.SetUpRecyclerView();
-
-            //    }
-            //}
-
-
+         
 
         }
 
@@ -236,3 +206,38 @@ namespace BirdTouch
        
     }
 }
+
+
+
+
+
+
+
+
+
+//if (pref.Contains("SavedPrivateUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
+//{
+//    string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
+//    if (serializedDictionary != String.Empty)
+//    {
+
+//        Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
+//        if (!dictionary.ContainsKey(userId))
+//        {//ako user nije uopste dodavao usere
+//            dictionary.Add(userId, new Dictionary<int, List<User>>());
+//        }
+//        if (!dictionary[userId].ContainsKey(1))
+//        {//ako nije dodavao private usere
+//            dictionary[userId].Add(1, new List<User>());
+//        }
+
+//        //samo dodamo private usera iz recyclerViewa
+//        dictionary[userId][1].Add(mValues[position]);
+//        edit.Remove("SavedPrivateUsersDictionary");
+//        edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
+//        edit.Apply();
+//        Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+//        refToSavedUsersFragment.SetUpRecyclerView();
+
+//    }
+//}

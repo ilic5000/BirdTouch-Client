@@ -223,7 +223,7 @@ namespace BirdTouch.Fragments
                 NameValueCollection parameters = new NameValueCollection();
                 parameters.Add("latitude", currLocation.Latitude.ToString());
                 parameters.Add("longitude", currLocation.Longitude.ToString());
-                parameters.Add("mode", "1"); // mozda treba mode globalni, ali videcemo 
+                parameters.Add("mode", ActiveModes.PRIVATE); // mozda treba mode globalni, ali videcemo 
                 parameters.Add("id", StartPageActivity.user.Id.ToString());
 
                 String restUriString = GetString(Resource.String.server_ip_makeUserVisible);
@@ -660,7 +660,7 @@ namespace BirdTouch.Fragments
                 SimpleViewHolder svh = (SimpleViewHolder)recycleView.GetChildViewHolder((View)sender);
 
                 Context context = recycleView.Context;
-                Intent intent = new Intent(context, typeof(BusinessDetailActivity));
+                Intent intent = new Intent(context, typeof(UserDetailActivity));
                 intent.PutExtra("userInformation", Newtonsoft.Json.JsonConvert.SerializeObject(mValues[position]));
                 intent.PutExtra("isSaved", (svh.checkbox.Checked));
                 context.StartActivity(intent);

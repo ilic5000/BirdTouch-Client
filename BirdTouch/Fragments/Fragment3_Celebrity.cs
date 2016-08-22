@@ -1,15 +1,6 @@
-using System;
-using System.Collections.Generic;
-using Android.Content;
 using Android.OS;
-using Android.Util;
 using Android.Views;
-using Android.Widget;
 using SupportFragment = Android.Support.V4.App.Fragment;
-using Android.Support.V7.Widget;
-using BirdTouch.Fragments.CheeseHelper;
-using Android.Graphics;
-using Android.Content.Res;
 
 namespace BirdTouch.Fragments
 {

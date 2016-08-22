@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -57,7 +56,7 @@ namespace BirdTouch
             }
             else
             {   //defaultni image kada korisnik jos uvek nije promenio, mada moze i u axml da se postavi
-                imageView.SetImageResource(Resource.Drawable.blank_navigation);
+                imageView.SetImageResource(Resource.Drawable.blank_business);
             }
 
 
@@ -130,7 +129,7 @@ namespace BirdTouch
 
                     Dictionary<int, Dictionary<int, List<Business>>> dictionary = new Dictionary<int, Dictionary<int, List<Business>>>();
                     dictionary.Add(userId, new Dictionary<int, List<Business>>());
-                    dictionary[userId].Add(1, new List<Business>());// 1 je private mode
+                    dictionary[userId].Add(1, new List<Business>());// 1 je private mode, zbog drugog dictionaryja, sada je to visak, ali mozda u buducnosti bude neko sortiranje private korisnika, za svaki slucaj
                     dictionary[userId][1].Add(user);
 
                     edit.Remove("SavedBusinessUsersDictionary");

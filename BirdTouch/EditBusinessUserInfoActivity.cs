@@ -35,6 +35,8 @@ namespace BirdTouch
         private FloatingActionButton fabInsertPhoto;
         private WebClient webClient;
         private Uri uri;
+
+        private bool pictureChanged = false;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             
@@ -107,7 +109,10 @@ namespace BirdTouch
                     //String picDataEncoded = Convert.ToBase64String(picData);
                     imageView.DestroyDrawingCache();
 
-
+                    if (!pictureChanged)
+                    {
+                        picData = new byte[1]; //server pita, ako je duzine 1 ovaj niz, onda ne upisuje sliku jer nije bilo promene od strane korisnika
+                    }
 
                     //insert parameters for header for web request
                     NameValueCollection parameters = new NameValueCollection();
@@ -187,7 +192,7 @@ namespace BirdTouch
                 System.IO.Stream stream = ContentResolver.OpenInputStream(data.Data);
                 //  imageView.SetImageBitmap(BitmapFactory.DecodeStream(stream)); neefikasan nacin ucitavanja slika, nema skaliranja
                 imageView.SetImageBitmap(DecodeBitmapFromStream(data.Data, 400, 300)); //mozda su prevelike dimenzije, moze da se podesi
-
+                pictureChanged = true;
             }
         }
 
