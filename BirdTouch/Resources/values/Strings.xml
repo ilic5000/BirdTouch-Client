@@ -14,7 +14,7 @@
 
   <string name="author">Nenad Ilic</string>
   <string name="author_email">nenad.ilic@pmf.edu.rs</string>
-  <string name="program_version">Beta 0.3</string>
+  <string name="program_version">Beta 1.0.5</string>
   
   <string name="server_ip_getUserLogin">http://192.168.0.103:80/BirdTouchServer/rest/getUserLogin"</string>
   <string name="server_ip_doesUsernameExist">http://192.168.0.103:80/BirdTouchServer/rest/doesUsernameExist"</string>

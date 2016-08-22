@@ -229,8 +229,9 @@ namespace BirdTouch
                 Context context = navigationView.Context;
                 Intent intent = new Intent(context, typeof(EditPrivateUserInfoActivity));
                 string userSerialized = Newtonsoft.Json.JsonConvert.SerializeObject(user);
-                intent.PutExtra("userLoggedInJson", userSerialized);
-                
+
+
+                intent.PutExtra("userLoggedInJson", userSerialized);           
                 context.StartActivity(intent);
             }
         }

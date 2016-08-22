@@ -55,9 +55,8 @@
                 android:id="@+id/progressBarGetBusinessUsers"
                 android:visibility="gone"
                 android:indeterminateOnly="true"
-                android:minHeight="24dip"
-                android:maxHeight="24dip"
-                android:layout_width="fill_parent"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerViewBusiness"
@@ -110,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/getgps_24dp"
-            app:fab_label="Update GPS position"
+            app:fab_label="Update Geolocation"
             app:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
 </FrameLayout>

@@ -221,8 +221,8 @@ namespace BirdTouch.Fragments
               
                 //insert parameters for header for web request
                 NameValueCollection parameters = new NameValueCollection();
-                parameters.Add("latitude", currLocation.Latitude.ToString());
-                parameters.Add("longitude", currLocation.Longitude.ToString());
+                parameters.Add("latitude", currLocation.Latitude.ToString().Replace(',','.'));
+                parameters.Add("longitude", currLocation.Longitude.ToString().Replace(',', '.'));
                 parameters.Add("mode", ActiveModes.PRIVATE); // mozda treba mode globalni, ali videcemo 
                 parameters.Add("id", StartPageActivity.user.Id.ToString());
 

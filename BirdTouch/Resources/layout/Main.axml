@@ -27,7 +27,7 @@
             android:id="@+id/btnSignIn"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:textSize="35dp"
+            android:textSize="24dp"
             android:layout_marginTop="60dp"
             android:background="@drawable/buttonSignInStyle"
             android:textColor="@android:color/white" />
@@ -41,7 +41,7 @@
             android:textColor="#512DA8"
             android:gravity="center"
             android:textStyle="normal"
-            android:textSize="25dp"
+            android:textSize="24dp"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:shadowColor="#b4b4b4ff" />
@@ -54,7 +54,7 @@
             android:id="@+id/btnRegister"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:textSize="35dp"
+            android:textSize="25dp"
             android:background="@drawable/buttonregisterstyle"
             android:textColor="@android:color/white" />
         <RelativeLayout

@@ -55,8 +55,8 @@ namespace BirdTouch
             SupportActionBar.Title = "";
 
             //popunjavanje polja iz baze
+            
             user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("userLoggedInJson"));
-
 
             if (user.ProfilePictureData != null)
             {
@@ -120,7 +120,7 @@ namespace BirdTouch
                     Bitmap bitmap = imageView.GetDrawingCache(true);
                     
                     MemoryStream memStream = new MemoryStream();
-                    bitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, memStream); //moze i drugi format //max img size je 61kB
+                    bitmap.Compress(Bitmap.CompressFormat.Jpeg, 70, memStream); //moze i drugi format //max img size je 61kB
                     byte[] picData = memStream.ToArray();
                     //String picDataEncoded = Convert.ToBase64String(picData);
                     imageView.DestroyDrawingCache();
