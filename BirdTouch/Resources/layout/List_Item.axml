@@ -10,68 +10,62 @@
     android:layout_marginTop="4dp"
     android:weightSum="100"
     android:gravity="center_vertical">
-
-
-  <LinearLayout
-         android:layout_width="0dp"
-         android:layout_height="match_parent"
-         android:layout_weight="25"
-         android:orientation="vertical"
-         android:minWidth="25px"
-         android:minHeight="25px"
-         android:paddingRight="5dp">
-
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="30"
+        android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:paddingRight="5dp">
     <!--android:layout_width="@dimen/list_item_avatar_size"
     android:layout_height="@dimen/list_item_avatar_size"-->
-    <refractored.controls.CircleImageView
+        <refractored.controls.CircleImageView
           
-          android:id="@+id/avatar"
-          android:layout_width="@dimen/list_item_avatar_size"
-    android:layout_height="@dimen/list_item_avatar_size"
-          android:layout_marginRight="16dp"
-          app:civ_border_width="1dp"
-          app:civ_border_color="#FF000000" />
-
-  </LinearLayout>
-
-  <LinearLayout
-         android:layout_width="0dp"
-         android:layout_height="match_parent"
-         android:layout_weight="64"
-         android:orientation="vertical"
-         android:minWidth="25px"
-         android:minHeight="25px"
-         android:paddingRight="5dp"
-         android:gravity="center_vertical">
-
-    <TextView
-      android:gravity="center_vertical"
-        android:id="@+id/text1"
-        android:textSize="20dp"
-        android:layout_width="match_parent"
+            android:id="@+id/avatar"
+             android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_width="@dimen/list_item_avatar_size"
+            android:layout_height="@dimen/list_item_avatar_size"      
+            android:layout_marginRight="5dp"
+            app:civ_border_width="1dp"
+            app:civ_border_color="#FF000000" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:textAppearance="?attr/textAppearanceListItem" />
-  </LinearLayout>
-  <!--<ImageView
+        android:layout_weight="59"
+        android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:paddingRight="5dp"
+        android:gravity="center_vertical">
+        <TextView
+            android:gravity="center_vertical"
+            android:id="@+id/text1"
+            android:textSize="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?attr/textAppearanceListItem" />
+    </LinearLayout>
+<!--<ImageView
         android:id="@+id/saveContactRecycleViewRow"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_account_box_black_24dp" />-->
-
-  <LinearLayout
-       android:layout_width="0dp"
-       android:layout_height="match_parent"
-       android:layout_weight="20"
-       android:orientation="vertical"
-       android:minWidth="25px"
-       android:minHeight="25px"
-       android:paddingRight="5dp"
-       android:gravity="center_vertical">
-    <CheckBox
-                android:gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/checkboxSaveUserRecycleViewRow"
-                android:button="@android:drawable/btn_star" />
-  </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="20"
+        android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:paddingRight="5dp"
+        android:gravity="center_vertical">
+        <CheckBox
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkboxSaveUserRecycleViewRow"
+            android:button="@android:drawable/btn_star" />
+    </LinearLayout>
 </LinearLayout>

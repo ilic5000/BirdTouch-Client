@@ -55,8 +55,7 @@
                 android:id="@+id/progressBarGetPrivateUsers"
                 android:visibility="gone"
                 android:indeterminateOnly="true"
-                
-               android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_gravity="center_vertical|center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <android.support.v7.widget.RecyclerView
