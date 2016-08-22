@@ -1,5 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recyclerViewBusiness"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorLayoutBusiness"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:layout_marginBottom="50dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/wrapper2"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <!--<TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:gravity="center"
+      android:text="Enable"
+      android:textSize="30sp"
+      android:textColor="#333333"
+      android:layout_gravity="top" />-->
+            <android.support.v7.widget.SwitchCompat
+                android:thumbTextPadding="150dp"
+                android:layout_centerInParent="true"
+                android:id="@+id/activateBusinessSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Make me visible"
+                android:showText="true"
+                android:textOff="Off"
+                android:textOn="On" />
+            <ProgressBar
+                android:id="@+id/progressBarGetLocationBusiness"
+                android:visibility="gone"
+                android:indeterminateOnly="true"
+                android:minHeight="24dip"
+                android:maxHeight="24dip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_below="@id/wrapper2"
+            android:orientation="vertical">
+            <ProgressBar
+                android:id="@+id/progressBarGetBusinessUsers"
+                android:visibility="gone"
+                android:indeterminateOnly="true"
+                android:minHeight="24dip"
+                android:maxHeight="24dip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewBusiness"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+<!--android:layout_gravity="bottom|right"
+  android:layout_alignParentBottom="true"
+         android:layout_alignParentRight="true"
+         app:layout_anchor="@id/progressBarGetLocation"
+         app:layout_anchorGravity="bottom|left|end"
+         android:layout_marginBottom="10dp"-->
+    <com.github.clans.fab.FloatingActionMenu
+        android:layout_marginBottom="12dp"
+        android:layout_marginRight="16dp"
+        app:menu_colorNormal="#FF4081"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/fab_menu_business"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:menu_colorPressed="#512DA8"
+        app:menu_shadowColor="#444"
+        app:menu_icon="@drawable/ic_more_horiz_white_24dp"
+        app:layout_anchor="@+id/recyclerViewBusiness"
+        app:layout_anchorGravity="bottom|end"
+        app:menu_backgroundColor="#CCFFFFFF"
+        app:menu_fab_label="Close">
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_menu_refresh_business"
+            app:fab_colorNormal="#FF4081"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/refresh_24dp"
+            app:fab_label="Refresh"
+            app:fab_size="mini" />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_menu_automatically_business"
+            app:fab_colorNormal="#FF4081"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/automatic_24dp"
+            app:fab_label="Automatically refresh"
+            app:fab_size="mini" />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_menu_gps_business"
+            app:fab_colorNormal="#FF4081"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/getgps_24dp"
+            app:fab_label="Update GPS position"
+            app:fab_size="mini" />
+    </com.github.clans.fab.FloatingActionMenu>
+</FrameLayout>

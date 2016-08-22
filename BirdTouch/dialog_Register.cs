@@ -7,6 +7,7 @@ using Android.Views;
 using Android.Widget;
 using BirdTouch.Models;
 using System;
+using System.Collections.Specialized;
 using System.Net;
 using System.Text;
 
@@ -61,9 +62,18 @@ namespace BirdTouch
                     if ((usernameWrapper.Error=="" || usernameWrapper.Error==null) && (passwordCheckWrapper.Error=="" || passwordWrapper.Error == null) && usernameWrapper.EditText.Text!="" && passwordCheckWrapper.EditText.Text != "" && passwordWrapper.EditText.Text != "" && passwordCheckWrapper.EditText.Text.Equals(passwordWrapper.EditText.Text))
                     {
                         progressBar.Visibility = ViewStates.Visible;
-                        String restUriString = GetString(Resource.String.server_ip_registerUser) + usernameWrapper.EditText.Text + "/" + passwordCheckWrapper.EditText.Text;
+                        String restUriString = GetString(Resource.String.server_ip_registerUser);
                         uri = new System.Uri(restUriString);
+
+
+                        NameValueCollection parameters = new NameValueCollection();
+                        parameters.Add("username", usernameWrapper.EditText.Text);
+                        parameters.Add("password", passwordCheckWrapper.EditText.Text);
+
+                        webClientRegister.Headers.Clear();
+                        webClientRegister.Headers.Add(parameters);
                         webClientRegister.DownloadDataAsync(uri);
+
                         Snackbar.Make(view, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Welcome to BirdTouch</font>"), Snackbar.LengthLong).Show();
 
                     }
@@ -106,8 +116,14 @@ namespace BirdTouch
             if (Reachability.isOnline(Activity) && !webClient.IsBusy)
             { //provera da li je aplikaciji dostupan net
 
-                String restUriString = GetString(Resource.String.server_ip_doesUsernameExist) + usernameWrapper.EditText.Text;
+                String restUriString = GetString(Resource.String.server_ip_doesUsernameExist);
                 uri = new System.Uri(restUriString);
+
+                NameValueCollection parameters = new NameValueCollection();
+                parameters.Add("username", usernameWrapper.EditText.Text);
+
+                webClient.Headers.Clear();
+                webClient.Headers.Add(parameters);
                 webClient.DownloadDataAsync(uri);
                 
             }

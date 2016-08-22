@@ -106,8 +106,8 @@ namespace BirdTouch
             adapter = new TabAdapter(SupportFragmentManager);
             adapter.AddFragment(new Fragment1_Private(), "Private");
             adapter.AddFragment(new Fragment1_PrivateSavedUsers(), "Private saved");
-            adapter.AddFragment(new Fragment3_Celebrity(), "Business");
-            adapter.AddFragment(new Fragment3_Celebrity(), "Business saved");
+            adapter.AddFragment(new Fragment2_Business(), "Business");
+            adapter.AddFragment(new Fragment2_BusinessSavedUsers(), "Business saved");
             adapter.AddFragment(new Fragment3_Celebrity(), "Celebrity");
             viewPager.Adapter = adapter;
         }

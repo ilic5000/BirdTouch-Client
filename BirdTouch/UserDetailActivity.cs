@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
@@ -115,13 +112,13 @@ namespace BirdTouch
             if (isSaved)
             {
 
-                string serializedDictionary = pref.GetString("SavedUsersDictionary", String.Empty);
+                string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
                 if (serializedDictionary != String.Empty)
                 {
                     Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
                     dictionary[userId][1].RemoveAll(a => a.Id == user.Id);
-                    edit.Clear();
-                    edit.PutString("SavedUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
+                    edit.Remove("SavedPrivateUsersDictionary");
+                    edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                     edit.Apply();
                     
                     
@@ -137,7 +134,7 @@ namespace BirdTouch
             {
 
 
-                if (!pref.Contains("SavedUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
+                if (!pref.Contains("SavedPrivateUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
                 {
                     // Snackbar.Make((View)sender, Android.Text.Html.FromHtml("<font color=\"#ffffff\">does not contain</font>"), Snackbar.LengthLong).Show();
 
@@ -146,8 +143,8 @@ namespace BirdTouch
                     dictionary[userId].Add(1, new List<User>());// 1 je private mode
                     dictionary[userId][1].Add(user);
 
-                    edit.Clear();
-                    edit.PutString("SavedUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
+                    edit.Remove("SavedPrivateUsersDictionary");
+                    edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                     edit.Apply();
                     Fragment1_Private refToSavedUsersFragment = (Fragment1_Private)StartPageActivity.adapter.GetItem(0);
                     refToSavedUsersFragment.NotifyDataSetChangedFromAnotherFragment();
@@ -157,7 +154,7 @@ namespace BirdTouch
                 }
                 else //vec postoji dictionary
                 {
-                    string serializedDictionary = pref.GetString("SavedUsersDictionary", String.Empty);
+                    string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
                     if (serializedDictionary != String.Empty)
                     {
 
@@ -173,8 +170,8 @@ namespace BirdTouch
 
                         //samo dodamo private usera iz recyclerViewa
                         dictionary[userId][1].Add(user);
-                        edit.Clear();
-                        edit.PutString("SavedUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
+                        edit.Remove("SavedPrivateUsersDictionary");
+                        edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();
                         Fragment1_Private refToSavedUsersFragment = (Fragment1_Private)StartPageActivity.adapter.GetItem(0);
                         refToSavedUsersFragment.NotifyDataSetChangedFromAnotherFragment();
@@ -191,9 +188,9 @@ namespace BirdTouch
 
            
 
-            //if (pref.Contains("SavedUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
+            //if (pref.Contains("SavedPrivateUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
             //{
-            //    string serializedDictionary = pref.GetString("SavedUsersDictionary", String.Empty);
+            //    string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
             //    if (serializedDictionary != String.Empty)
             //    {
 
@@ -209,8 +206,8 @@ namespace BirdTouch
 
             //        //samo dodamo private usera iz recyclerViewa
             //        dictionary[userId][1].Add(mValues[position]);
-            //        edit.Clear();
-            //        edit.PutString("SavedUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
+            //        edit.Remove("SavedPrivateUsersDictionary");
+            //        edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
             //        edit.Apply();
             //        Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
             //        refToSavedUsersFragment.SetUpRecyclerView();

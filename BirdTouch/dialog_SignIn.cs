@@ -9,6 +9,7 @@ using System.Net;
 using BirdTouch.Models;
 using Android.Widget;
 using Android.Text;
+using System.Collections.Specialized;
 
 namespace BirdTouch
 {
@@ -46,9 +47,20 @@ namespace BirdTouch
                 if (Reachability.isOnline(Activity) && !webClient.IsBusy) { //provera da li je aplikaciji dostupan net
 
                 progressBar.Visibility=ViewStates.Visible;
-                String restUriString = GetString(Resource.String.server_ip_getUserLogin) + editTxtUsername.Text + "/" + editTxtPassword.Text;
+
+                String restUriString = GetString(Resource.String.server_ip_getUserLogin);
                 uri = new Uri(restUriString);
-                webClient.DownloadDataAsync(uri);
+
+                    //insert parameters for header for web request
+                    NameValueCollection parameters = new NameValueCollection();
+                    parameters.Add("username", editTxtUsername.Text);
+                    parameters.Add("password", editTxtPassword.Text);
+                    
+
+                  
+                    webClient.Headers.Clear();
+                    webClient.Headers.Add(parameters);
+                    webClient.DownloadDataAsync(uri);
                 }
                 else {
 

@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace BirdTouch.Models
 {
-    class Business
+    public class Business
     {
 
         public int IdBusinessOwner { get; set; }

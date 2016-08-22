@@ -14,7 +14,7 @@ using Android.Views.Animations;
 
 namespace BirdTouch.Fragments
 {
-    public class Fragment1_PrivateSavedUsers : SupportFragment
+    public class Fragment2_BusinessSavedUsers : SupportFragment
     {
         private FrameLayout frameLay;
         private RecyclerView recycleView;
@@ -26,9 +26,9 @@ namespace BirdTouch.Fragments
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            View view = inflater.Inflate(Resource.Layout.Fragment1_private_savedUsers, container, false);
-            recycleView = view.FindViewById<RecyclerView>(Resource.Id.recyclerViewPrivateSavedUsers);
-            frameLay = view.FindViewById<FrameLayout>(Resource.Id.coordinatorLayoutPrivateSavedUsers);
+            View view = inflater.Inflate(Resource.Layout.Fragment2_business_savedUsers, container, false);
+            recycleView = view.FindViewById<RecyclerView>(Resource.Id.recyclerViewBusinessSavedUsers);
+            frameLay = view.FindViewById<FrameLayout>(Resource.Id.coordinatorLayoutBusinessSavedUsers);
 
             SetUpRecyclerView();
             return view;
@@ -38,32 +38,32 @@ namespace BirdTouch.Fragments
         public void SetUpRecyclerView() //ovde da se napravi lista dobijenih korisnika
         {
             int userId = StartPageActivity.user.Id;
-            List<User> listSavedPrivateUsers = new List<User>();
+            List<Business> listSavedBusinessUsers = new List<Business>();
 
             ISharedPreferences pref = Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
             ISharedPreferencesEditor edit = pref.Edit();
 
-            if (pref.Contains("SavedPrivateUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
+            if (pref.Contains("SavedBusinessUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
             {
-                string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
+                string serializedDictionary = pref.GetString("SavedBusinessUsersDictionary", String.Empty);
                 if (serializedDictionary != String.Empty)
                 {
 
-                    Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
+                    Dictionary<int, Dictionary<int, List<Business>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<Business>>>>(serializedDictionary);
                     if (dictionary.ContainsKey(userId))
                     {//ako je user dodavao usere
                         if (dictionary[userId].ContainsKey(1))
                         {//ako je dodavao private usere
-                           listSavedPrivateUsers = dictionary[userId][1];
+                            listSavedBusinessUsers = dictionary[userId][1];
                         }
                     }
-                                     
+
                 }
 
             }
 
             recycleView.SetLayoutManager(new LinearLayoutManager(recycleView.Context));
-            recycleView.SetAdapter(new SimpleStringRecyclerViewAdapter(recycleView.Context, listSavedPrivateUsers, Activity.Resources, recycleView));
+            recycleView.SetAdapter(new SimpleStringRecyclerViewAdapter(recycleView.Context, listSavedBusinessUsers, Activity.Resources, recycleView));
 
         }
 
@@ -79,18 +79,18 @@ namespace BirdTouch.Fragments
         {
             private readonly TypedValue mTypedValue = new TypedValue();
             private int mBackground;
-            private List<User> mValues;
+            private List<Business> mValues;
             private RecyclerView recycleView;
             Resources mResource;
-            
-            public SimpleStringRecyclerViewAdapter(Context context, List<User> items, Resources res, RecyclerView rv)
+
+            public SimpleStringRecyclerViewAdapter(Context context, List<Business> items, Resources res, RecyclerView rv)
             {
                 context.Theme.ResolveAttribute(Resource.Attribute.selectableItemBackground, mTypedValue, true);
                 mBackground = mTypedValue.ResourceId;
                 mValues = items;
                 mResource = res;
                 recycleView = rv;
-                
+
             }
 
             public override int ItemCount
@@ -106,8 +106,8 @@ namespace BirdTouch.Fragments
             {
                 var simpleHolder = holder as SimpleViewHolder;
 
-                simpleHolder.mBoundString = mValues[position].Id.ToString();
-                simpleHolder.mTxtView.Text = mValues[position].FirstName + " " + mValues[position].LastName;
+                simpleHolder.mBoundString = mValues[position].IdBusinessOwner.ToString();
+                simpleHolder.mTxtView.Text = mValues[position].CompanyName;
 
 
                 if (mValues[position].ProfilePictureData != null)
@@ -122,12 +122,12 @@ namespace BirdTouch.Fragments
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.InJustDecodeBounds = true;
 
-                    BitmapFactory.DecodeResource(mResource, Resource.Drawable.blank_navigation, options);
+                    BitmapFactory.DecodeResource(mResource, Resource.Drawable.blank_business, options);
 
                     options.InSampleSize = CalculateInSampleSize(options, 100, 100);
                     options.InJustDecodeBounds = false;
 
-                    var bitMap = await BitmapFactory.DecodeResourceAsync(mResource, Resource.Drawable.blank_navigation, options);
+                    var bitMap = await BitmapFactory.DecodeResourceAsync(mResource, Resource.Drawable.blank_business, options);
 
                     simpleHolder.mImageView.SetImageBitmap(bitMap);
                 }
@@ -154,49 +154,49 @@ namespace BirdTouch.Fragments
                 View mView = (View)vsender.Tag;
                 int position = recycleView.GetChildAdapterPosition(mView);
                 int userId = StartPageActivity.user.Id;
-              
+
                 ISharedPreferences pref = vsender.Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
                 ISharedPreferencesEditor edit = pref.Edit();
 
                 if (e.IsChecked)
                 {//checked
 
-                    if (!pref.Contains("SavedPrivateUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
-                    {       
-                        Dictionary<int, Dictionary<int, List<User>>> dictionary = new Dictionary<int, Dictionary<int, List<User>>>();
-                        dictionary.Add(userId, new Dictionary<int, List<User>>());
-                        dictionary[userId].Add(1, new List<User>());// 1 je private mode
+                    if (!pref.Contains("SavedBusinessUsersDictionary")) //prvi put u aplikaciji dodajemo business usera u saved
+                    {
+                        Dictionary<int, Dictionary<int, List<Business>>> dictionary = new Dictionary<int, Dictionary<int, List<Business>>>();
+                        dictionary.Add(userId, new Dictionary<int, List<Business>>());
+                        dictionary[userId].Add(1, new List<Business>());//jedinica zbog eventualnih modova
                         dictionary[userId][1].Add(mValues[position]);
 
-                        edit.Remove("SavedPrivateUsersDictionary");
-                        edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
+                        edit.Remove("SavedBusinessUsersDictionary");
+                        edit.PutString("SavedBusinessUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();
-                        Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+                        Fragment2_BusinessSavedUsers refToSavedUsersFragment = (Fragment2_BusinessSavedUsers)StartPageActivity.adapter.GetItem(3);
                         refToSavedUsersFragment.SetUpRecyclerView();
 
                     }
                     else //vec postoji dictionary
                     {
-                        string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
+                        string serializedDictionary = pref.GetString("SavedBusinessUsersDictionary", String.Empty);
                         if (serializedDictionary != String.Empty)
                         {
 
-                            Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
+                            Dictionary<int, Dictionary<int, List<Business>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<Business>>>>(serializedDictionary);
                             if (!dictionary.ContainsKey(userId))
                             {//ako user nije uopste dodavao usere
-                                dictionary.Add(userId, new Dictionary<int, List<User>>());
+                                dictionary.Add(userId, new Dictionary<int, List<Business>>());
                             }
                             if (!dictionary[userId].ContainsKey(1))
-                            {//ako nije dodavao private usere
-                                dictionary[userId].Add(1, new List<User>());
+                            {//jedinica zbog eventualnih modova
+                                dictionary[userId].Add(1, new List<Business>());
                             }
 
                             //samo dodamo private usera iz recyclerViewa
                             dictionary[userId][1].Add(mValues[position]);
-                            edit.Remove("SavedPrivateUsersDictionary");
-                            edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
+                            edit.Remove("SavedBusinessUsersDictionary");
+                            edit.PutString("SavedBusinessUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                             edit.Apply();
-                            Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+                            Fragment2_BusinessSavedUsers refToSavedUsersFragment = (Fragment2_BusinessSavedUsers)StartPageActivity.adapter.GetItem(3);
                             refToSavedUsersFragment.SetUpRecyclerView();
 
                         }
@@ -207,19 +207,19 @@ namespace BirdTouch.Fragments
                 else
                 {//unchecked
 
-                    string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
+                    string serializedDictionary = pref.GetString("SavedBusinessUsersDictionary", String.Empty);
                     if (serializedDictionary != String.Empty)
                     {
-                        Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
-                        dictionary[userId][1].RemoveAll(a => a.Id == mValues[position].Id);
-                        edit.Remove("SavedPrivateUsersDictionary");
-                        edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
+                        Dictionary<int, Dictionary<int, List<Business>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<Business>>>>(serializedDictionary);
+                        dictionary[userId][1].RemoveAll(a => a.IdBusinessOwner == mValues[position].IdBusinessOwner);
+                        edit.Remove("SavedBusinessUsersDictionary");
+                        edit.PutString("SavedBusinessUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();
                         mValues = dictionary[userId][1];
                         NotifyItemRemoved(position);
-                        Fragment1_Private refToSavedUsersFragment = (Fragment1_Private)StartPageActivity.adapter.GetItem(0);
+                        Fragment2_Business refToSavedUsersFragment = (Fragment2_Business)StartPageActivity.adapter.GetItem(2);
                         refToSavedUsersFragment.NotifyDataSetChangedFromAnotherFragment();
-                       
+
                     }
 
                 }
@@ -301,7 +301,7 @@ namespace BirdTouch.Fragments
                 mImageView = view.FindViewById<ImageView>(Resource.Id.avatar); //profilna slika usera
                 mTxtView = view.FindViewById<TextView>(Resource.Id.text1); //ime + prezime usera
                 checkbox = view.FindViewById<CheckBox>(Resource.Id.checkboxSaveUserRecycleViewRow);
-              
+
             }
 
             public override string ToString()
