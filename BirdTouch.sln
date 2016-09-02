@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirdTouch", "BirdTouch\BirdTouch.csproj", "{14CF648B-23D9-46CA-B5EF-983822124568}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirdTouch Server", "..\BirdTouch Server\BirdTouch Server\BirdTouch Server.csproj", "{514F22A9-7B73-46B3-AD89-016038DF03AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirdTouch Server", "BirdTouch Server\BirdTouch Server.csproj", "{514F22A9-7B73-46B3-AD89-016038DF03AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
