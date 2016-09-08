@@ -307,6 +307,17 @@ namespace BirdTouch
             MoveTaskToBack(true);
         }
 
+
+
+
+
+
+
+
+
+
+
+
         //public override bool OnCreateOptionsMenu(IMenu menu)
         //{
         //    var inflater = MenuInflater;

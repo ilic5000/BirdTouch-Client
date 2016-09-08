@@ -15,7 +15,7 @@ namespace BirdTouch
 {
     abstract class  Reachability
     {
-        //Klasa koja mi sluzi za proveru da li je dostupan net
+        //Klasa koja sluzi za proveru da li je dostupan net
         public static bool isOnline(Activity activity)
         {
             Android.Net.ConnectivityManager connectivityManager = (Android.Net.ConnectivityManager)activity.GetSystemService(Context.ConnectivityService);
