@@ -27,12 +27,12 @@ namespace BirdTouch.Fragments
         public static SwitchCompat switchVisibility;
 
         private Clans.Fab.FloatingActionButton fab_menu_refresh;
-        private Clans.Fab.FloatingActionButton fab_menu_automatically;
         private Clans.Fab.FloatingActionButton fab_menu_gps;
         private Clans.Fab.FloatingActionMenu fab_menu;
         
 
         private FrameLayout frameLay;
+        private LinearLayout linearLayout;
         private RecyclerView recycleView;
 
         private Location currLocation;
@@ -65,6 +65,7 @@ namespace BirdTouch.Fragments
             progressBarLocation = view.FindViewById<ProgressBar>(Resource.Id.progressBarGetLocationBusiness);
             progressBarGetBusinessUsers = view.FindViewById<ProgressBar>(Resource.Id.progressBarGetBusinessUsers);
             frameLay = view.FindViewById<FrameLayout>(Resource.Id.coordinatorLayoutBusiness);
+            linearLayout = view.FindViewById<LinearLayout>(Resource.Id.fragment2LinearLayoutWrapper);
 
             webClientMakeUserVisible = new WebClient();
             webClientMakeUserInvisible = new WebClient();
@@ -79,13 +80,14 @@ namespace BirdTouch.Fragments
 
             switchVisibility = view.FindViewById<SwitchCompat>(Resource.Id.activateBusinessSwitch);
             fab_menu_refresh = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh_business);
-            fab_menu_automatically = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_automatically_business);
+            
             fab_menu_gps = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_gps_business);
             fab_menu = view.FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu_business);
 
             switchVisibility.CheckedChange += SwitchVisibility_CheckedChange;
+
             fab_menu_refresh.Click += Fab_menu_refresh_Click;
-            fab_menu_automatically.Click += Fab_menu_automatically_Click;
+         
             fab_menu_gps.Click += Fab_menu_gps_Click;
 
             fab_menu.MenuToggle += Fab_menu_MenuToggle;
@@ -97,18 +99,26 @@ namespace BirdTouch.Fragments
             return view;
         }
 
+        
+
         private void Fab_menu_MenuToggle(object sender, Clans.Fab.FloatingActionMenu.MenuToggleEventArgs e)
         {
             if (e.Opened) //kada se otvori fab menu, recycle view da se sakrije, kako se ne bi kliknulo greskom. a i zbog preglednosti
             {
+                linearLayout.Click += linearLayoutClick;
                 recycleView.Visibility = ViewStates.Invisible;
             }
             else
             {
+                linearLayout.Click -= linearLayoutClick;
                 recycleView.Visibility = ViewStates.Visible;
             }
         }
 
+        private void linearLayoutClick(object sender, EventArgs e)
+        {
+            fab_menu.Close(true);
+        }
 
         private void Fab_menu_gps_Click(object sender, EventArgs e)
         {
@@ -126,7 +136,7 @@ namespace BirdTouch.Fragments
             }
         }
 
-        private void Fab_menu_automatically_Click(object sender, EventArgs e) //treba implementirati logiku, ali treba videti i razmisliti dobro sta i kako
+        private void Fab_menu_automatically_Click(object sender, EventArgs e) //treba implementirati logiku, ali treba videti i razmisliti dobro sta i kako, za sada nije vidljivo dugme, mozda u buducnosti
         {
 
             fab_menu.Close(true);

@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="50dp">
-    <LinearLayout
+  <LinearLayout
+    android:id="@+id/fragment1LinearLayoutWrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
@@ -95,14 +96,14 @@
             android:src="@drawable/refresh_24dp"
             app:fab_label="Refresh"
             app:fab_size="mini" />
-        <com.github.clans.fab.FloatingActionButton
+    <!--<com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab_menu_automatically_private"
             app:fab_colorNormal="#FF4081"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/automatic_24dp"
             app:fab_label="Automatically refresh"
-            app:fab_size="mini" />
+            app:fab_size="mini" />-->
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab_menu_gps_private"
             app:fab_colorNormal="#FF4081"

@@ -117,10 +117,10 @@ namespace BirdTouch
 
             adapter = new TabAdapter(SupportFragmentManager);
             adapter.AddFragment(new Fragment1_Private(), "Private");
-            adapter.AddFragment(new Fragment1_PrivateSavedUsers(), "Private saved");
+            adapter.AddFragment(new Fragment1_PrivateSavedUsers(), "Saved private");
             adapter.AddFragment(new Fragment2_Business(), "Business");
-            adapter.AddFragment(new Fragment2_BusinessSavedUsers(), "Business saved");
-            adapter.AddFragment(new Fragment3_Celebrity(), "Celebrity");
+            adapter.AddFragment(new Fragment2_BusinessSavedUsers(), "Saved business");
+           // adapter.AddFragment(new Fragment3_Celebrity(), "Celebrity"); not available in beta
             viewPager.Adapter = adapter;
         }
 
@@ -302,7 +302,10 @@ namespace BirdTouch
             }
         }
 
-
+        public override void OnBackPressed() //kada se pritisne back dugme da minimizuje aplikaciju. razmotriti da li da ostane ovako ili da se aplikacija iskljuci
+        {
+            MoveTaskToBack(true);
+        }
 
         //public override bool OnCreateOptionsMenu(IMenu menu)
         //{

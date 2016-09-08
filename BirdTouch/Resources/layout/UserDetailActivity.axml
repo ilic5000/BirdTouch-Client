@@ -48,6 +48,7 @@
             android:orientation="vertical"
             android:paddingTop="24dp">
             <android.support.v7.widget.CardView
+                android:id="@+id/cardViewFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/card_margin">
@@ -66,7 +67,8 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
+          <android.support.v7.widget.CardView
+                android:id="@+id/cardViewLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/card_margin"
@@ -87,7 +89,8 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
+          <android.support.v7.widget.CardView
+                android:id="@+id/cardViewEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/card_margin"
@@ -109,6 +112,7 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
+              android:id="@+id/cardViewPhoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/card_margin"
@@ -129,7 +133,8 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
+          <android.support.v7.widget.CardView
+            android:id="@+id/cardViewDateOfBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/card_margin"
@@ -151,6 +156,7 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
+              android:id="@+id/cardViewAdress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/card_margin"
@@ -171,7 +177,7 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
+        <!--<android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/card_margin"
@@ -254,7 +260,45 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+            </android.support.v7.widget.CardView>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:weightSum="100"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_weight="25"
+                    android:id="@+id/facebookLinkLogo"
+                    android:src="@drawable/fbLogoImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp" />
+                <ImageView
+                    android:layout_weight="25"
+                    android:id="@+id/twitterLinkLogo"
+                    android:src="@drawable/twLogoImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp" />
+                <ImageView
+                    android:layout_weight="25"
+                    android:id="@+id/gPlusLinkLogo"
+                    android:src="@drawable/googlePlusLogoImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp" />
+                <ImageView
+                    android:layout_weight="25"
+                    android:id="@+id/linkedInLinkLogo"
+                    android:src="@drawable/linkedInLogoImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp" />
+            </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
     <android.support.design.widget.FloatingActionButton

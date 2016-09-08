@@ -23,6 +23,7 @@ namespace BirdTouch
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_arrow_back_black_24dp);
           
             CollapsingToolbarLayout collapsingToolBar = FindViewById<CollapsingToolbarLayout>(Resource.Id.collapsing_toolbar_about);
+            collapsingToolBar.Title = "About";
 
             ImageView imageView = FindViewById<ImageView>(Resource.Id.author_picture);
             imageView.SetImageResource(Resource.Drawable.author);

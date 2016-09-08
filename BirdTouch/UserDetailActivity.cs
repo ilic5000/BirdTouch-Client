@@ -11,6 +11,7 @@ using Android.Support.Design.Widget;
 using BirdTouch.Models;
 using Android.Graphics;
 using BirdTouch.Fragments;
+using Android.Support.V7.Widget;
 
 namespace BirdTouch
 {
@@ -27,10 +28,21 @@ namespace BirdTouch
         private TextView adressWrapper;
         private TextView phoneWrapper;
         private TextView dateOfBirthWrapper;
-        private TextView facebookLinkWrapper;
-        private TextView twitterLinkWrapper;
-        private TextView gPlusLinkWrapper;
-        private TextView linkedInLinkWrapper;
+
+        private CardView firstNameCardView;
+        private CardView lastNameCardView;
+        private CardView emailCardView;
+        private CardView adressCardView;
+        private CardView phoneCardView;
+        private CardView dateOfBirthCardView;
+
+
+        private ImageView fbLogo;
+        private ImageView twLogo;
+        private ImageView gpLogo;
+        private ImageView liLogo;
+
+
         private FloatingActionButton fabSaveUser;
 
         private bool isSaved;
@@ -51,7 +63,7 @@ namespace BirdTouch
             fabSaveUser = FindViewById<FloatingActionButton>(Resource.Id.fabPrivateUserInfoSaveUser);
 
             user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("userInformation"));
-            isSaved = Intent.GetBooleanExtra("isSaved",false);
+            isSaved = Intent.GetBooleanExtra("isSaved", false);
 
             if (user.ProfilePictureData != null)
             {
@@ -64,40 +76,161 @@ namespace BirdTouch
             }
 
 
-            
+
             firstNameWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailFirstname);
             lastNameWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailLastname);
             emailWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailEmail);
             adressWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailAdress);
             phoneWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailPhoneNumber);
             dateOfBirthWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailDateOfBirth);
-            facebookLinkWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailFacebook);
-            twitterLinkWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailTwitter);
-            gPlusLinkWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailGooglePlus);
-            linkedInLinkWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailLinkedIn);
+
+            firstNameCardView = FindViewById<CardView>(Resource.Id.cardViewFirstName);
+            lastNameCardView = FindViewById<CardView>(Resource.Id.cardViewLastName);
+            emailCardView = FindViewById<CardView>(Resource.Id.cardViewEmail);
+            phoneCardView = FindViewById<CardView>(Resource.Id.cardViewPhoneNumber);
+            adressCardView = FindViewById<CardView>(Resource.Id.cardViewAdress);
+            dateOfBirthCardView = FindViewById<CardView>(Resource.Id.cardViewDateOfBirth);
 
 
-            firstNameWrapper.Text = user.FirstName;
-            lastNameWrapper.Text = user.LastName;
-            emailWrapper.Text = user.Email;
-            adressWrapper.Text = user.Adress;
-            phoneWrapper.Text = user.PhoneNumber;
-            dateOfBirthWrapper.Text = user.DateOfBirth;
-            facebookLinkWrapper.Text = user.FbLink;
-            twitterLinkWrapper.Text = user.TwitterLink;
-            gPlusLinkWrapper.Text = user.GPlusLink;
-            linkedInLinkWrapper.Text = user.LinkedInLink;
+            fbLogo = FindViewById<ImageView>(Resource.Id.facebookLinkLogo);
+            twLogo = FindViewById<ImageView>(Resource.Id.twitterLinkLogo);
+            gpLogo = FindViewById<ImageView>(Resource.Id.gPlusLinkLogo);
+            liLogo = FindViewById<ImageView>(Resource.Id.linkedInLinkLogo);
 
+            SetOnClickListenersAndFixUrls();
+
+            FillDataIfThereIsSomethingToFillWith();
 
             if (isSaved)
             {
                 fabSaveUser.SetImageResource(Resource.Drawable.ic_done);
-            }else
+            }
+            else
             {
                 fabSaveUser.SetImageResource(Resource.Drawable.ic_save_white_24dp);
             }
 
             fabSaveUser.Click += FabSaveUser_Click;
+        }
+
+        private void FillDataIfThereIsSomethingToFillWith()
+        {
+            if (user.FirstName != null && !user.FirstName.Equals(""))
+                firstNameWrapper.Text = user.FirstName;
+            else
+                firstNameCardView.Visibility = ViewStates.Gone;
+
+            if (user.LastName != null && !user.LastName.Equals(""))
+                lastNameWrapper.Text = user.LastName;
+            else
+                lastNameCardView.Visibility = ViewStates.Gone;
+
+            if (user.Email != null && !user.Email.Equals(""))
+                emailWrapper.Text = user.Email;
+            else
+                emailCardView.Visibility = ViewStates.Gone;
+
+            if (user.Adress != null && !user.Adress.Equals(""))
+                adressWrapper.Text = user.Adress;
+            else
+                adressCardView.Visibility = ViewStates.Gone;
+
+            if (user.PhoneNumber != null && !user.PhoneNumber.Equals(""))
+                phoneWrapper.Text = user.PhoneNumber;
+            else
+                phoneCardView.Visibility = ViewStates.Gone;
+
+            if (user.DateOfBirth != null && !user.DateOfBirth.Equals(""))
+                dateOfBirthWrapper.Text = user.DateOfBirth;
+            else
+                dateOfBirthCardView.Visibility = ViewStates.Gone;
+        }
+
+        private void SetOnClickListenersAndFixUrls()
+        {
+            if (user.FbLink != null && !user.FbLink.Equals(""))
+            {
+                if (!user.FbLink.Contains("https://"))
+                {
+                    user.FbLink = "https://" + user.FbLink;
+                }
+
+                fbLogo.Click += FbLogo_Click;
+            }
+            else
+            {
+                fbLogo.Visibility = ViewStates.Gone;
+            }
+
+            if (user.TwitterLink != null && !user.TwitterLink.Equals(""))
+            {
+                if (!user.TwitterLink.Contains("https://"))
+                {
+                    user.TwitterLink = "https://" + user.TwitterLink;
+                }
+
+                twLogo.Click += TwLogo_Click;
+            }
+            else
+            {
+                twLogo.Visibility = ViewStates.Gone;
+            }
+
+            if (user.GPlusLink != null && !user.GPlusLink.Equals(""))
+            {
+                if (!user.GPlusLink.Contains("https://"))
+                {
+                    user.GPlusLink = "https://" + user.GPlusLink;
+                }
+                gpLogo.Click += GpLogo_Click;
+            }
+            else
+            {
+                gpLogo.Visibility = ViewStates.Gone;
+            }
+
+            if (user.LinkedInLink != null && !user.LinkedInLink.Equals(""))
+            {
+                if (!user.LinkedInLink.Contains("https://") )
+                {
+                    user.LinkedInLink = "https://" + user.LinkedInLink;
+                }
+                liLogo.Click += LiLogo_Click;
+            }
+            else
+            {
+                liLogo.Visibility = ViewStates.Gone;
+            }
+        }
+
+        private void LiLogo_Click(object sender, EventArgs e)
+        {
+            var uri = Android.Net.Uri.Parse(user.LinkedInLink);
+            var intent = new Intent(Intent.ActionView, uri);
+            StartActivity(intent);
+        }
+
+        private void GpLogo_Click(object sender, EventArgs e)
+        {
+            var uri = Android.Net.Uri.Parse(user.GPlusLink);
+            var intent = new Intent(Intent.ActionView, uri);
+            StartActivity(intent);
+        }
+
+        private void TwLogo_Click(object sender, EventArgs e)
+        {
+            var uri = Android.Net.Uri.Parse(user.TwitterLink);
+            var intent = new Intent(Intent.ActionView, uri);
+            StartActivity(intent);
+        }
+
+        private void FbLogo_Click(object sender, EventArgs e)
+        {
+            
+                var uri = Android.Net.Uri.Parse(user.FbLink);
+                var intent = new Intent(Intent.ActionView, uri);
+                StartActivity(intent);
+            
         }
 
         private void FabSaveUser_Click(object sender, EventArgs e)

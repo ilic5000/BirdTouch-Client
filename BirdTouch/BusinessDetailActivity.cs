@@ -11,6 +11,7 @@ using Android.Support.Design.Widget;
 using BirdTouch.Models;
 using Android.Graphics;
 using BirdTouch.Fragments;
+using Android.Support.V7.Widget;
 
 namespace BirdTouch
 {
@@ -25,7 +26,13 @@ namespace BirdTouch
         private TextView emailWrapper;
         private TextView adressWrapper;
         private TextView phoneWrapper;
-        private TextView websiteOfBirthWrapper;
+        private TextView websiteWrapper;
+
+        private CardView companyNameCardView;      
+        private CardView emailCardView;
+        private CardView adressCardView;
+        private CardView phoneCardView;
+        private CardView websiteCardView;
 
         private FloatingActionButton fabSaveUser;
 
@@ -62,20 +69,18 @@ namespace BirdTouch
 
 
             companyNameWrapper = FindViewById<TextView>(Resource.Id.textViewBusinessCompanyNameShowDetail);
-            websiteOfBirthWrapper = FindViewById<TextView>(Resource.Id.textViewBusinessWebsiteShowDetail);
+            websiteWrapper = FindViewById<TextView>(Resource.Id.textViewBusinessWebsiteShowDetail);
             emailWrapper = FindViewById<TextView>(Resource.Id.textViewBusinessEmailShowDetail);
             adressWrapper = FindViewById<TextView>(Resource.Id.textViewBusinessAdressShowDetail);
             phoneWrapper = FindViewById<TextView>(Resource.Id.textViewBusinessPhoneNumberShowDetail);
 
+            companyNameCardView = FindViewById<CardView>(Resource.Id.cardViewBusinessCompanyName);          
+            emailCardView = FindViewById<CardView>(Resource.Id.cardViewBusinessEmail);
+            phoneCardView = FindViewById<CardView>(Resource.Id.cardViewBusinessPhoneNumber);
+            adressCardView = FindViewById<CardView>(Resource.Id.cardViewBusinessAdress);
+            websiteCardView = FindViewById<CardView>(Resource.Id.cardViewBusinessWebsite);
 
-
-            companyNameWrapper.Text = user.CompanyName;
-            websiteOfBirthWrapper.Text = user.Website;
-            emailWrapper.Text = user.Email;
-            adressWrapper.Text = user.Adress;
-            phoneWrapper.Text = user.PhoneNumber;
-            
-
+            FillDataIfThereIsSomethingToFillWith();
 
             if (isSaved)
             {
@@ -87,6 +92,50 @@ namespace BirdTouch
             }
 
             fabSaveUser.Click += FabSaveUser_Click;
+        }
+
+        private void FillDataIfThereIsSomethingToFillWith()
+        {
+            if (user.CompanyName != null && !user.CompanyName.Equals(""))
+                companyNameWrapper.Text = user.CompanyName;
+            else
+                companyNameCardView.Visibility = ViewStates.Gone;
+
+            if (user.Website != null && !user.Website.Equals(""))
+            {
+                websiteWrapper.Text = user.Website;
+                websiteCardView.Click += WebsiteCardView_Click;
+            }
+            else
+                websiteCardView.Visibility = ViewStates.Gone;
+
+            if (user.Email != null && !user.Email.Equals(""))
+                emailWrapper.Text = user.Email;
+            else
+                emailCardView.Visibility = ViewStates.Gone;
+
+            if (user.Adress != null && !user.Adress.Equals(""))
+                adressWrapper.Text = user.Adress;
+            else
+                adressCardView.Visibility = ViewStates.Gone;
+
+            if (user.PhoneNumber != null && !user.PhoneNumber.Equals(""))
+                phoneWrapper.Text = user.PhoneNumber;
+            else
+                phoneCardView.Visibility = ViewStates.Gone;
+        }
+
+        private void WebsiteCardView_Click(object sender, EventArgs e)
+        {
+            if (!user.Website.Contains("http"))
+            {
+                user.Website = "http://" + user.Website;
+            }
+
+            var uri = Android.Net.Uri.Parse(user.Website);
+            var intent = new Intent(Intent.ActionView, uri);
+            StartActivity(intent);
+
         }
 
         private void FabSaveUser_Click(object sender, EventArgs e)

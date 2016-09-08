@@ -24,6 +24,7 @@ namespace BirdTouch
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_arrow_back_black_24dp);
             SupportActionBar.Title = "";
+            
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)

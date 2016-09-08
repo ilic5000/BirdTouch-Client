@@ -80,6 +80,8 @@ namespace BirdTouch
             phoneWrapper.EditText.Text = business.PhoneNumber;
             websiteWrapper.EditText.Text = business.Website;
 
+            collapsingToolBar.Title = "Business info";
+
             imageView.Click += ImageView_Click;
 
             webClient = new WebClient();
