@@ -6,7 +6,7 @@ using Android.App;
 
 namespace BirdTouch
 {
-    [Activity(Label = "BirdTouch v1.0.6", MainLauncher = true, Icon = "@drawable/Logo", Theme = "@style/Theme.DesignDemo")]
+    [Activity(Label = "BirdTouch v1.0.7", MainLauncher = true, Icon = "@drawable/Logo", Theme = "@style/Theme.DesignDemo")]
     public class MainActivity : FragmentActivity
     {
 

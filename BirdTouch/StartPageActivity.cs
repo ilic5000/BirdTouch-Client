@@ -23,11 +23,13 @@ using Android.Text;
 using Android.Graphics;
 using System.Collections.Specialized;
 
+
 namespace BirdTouch
 {
     [Activity(Label = "StartPageActivity", Theme = "@style/Theme.DesignDemo")]
     public class StartPageActivity : AppCompatActivity //zbog design library nije obican activity
     {
+
         public static SupportActionBar ab;
         public static ImageView profilePictureNavigationHeader;
         public static TabAdapter adapter;
@@ -55,7 +57,7 @@ namespace BirdTouch
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.StartPage);
 
-        
+                 
             webClientUserPrivateDataUponOpeningEditDataActivity = new WebClient();
             webClientUserPrivateDataUponOpeningEditDataActivity.DownloadDataCompleted += WebClientUserPrivateDataUponOpeningEditDataActivity_DownloadDataCompleted;
 
@@ -100,6 +102,9 @@ namespace BirdTouch
 
             SetUpViewPager(viewPager);
             tabs.SetupWithViewPager(viewPager);
+
+
+            
         }
 
 
@@ -306,6 +311,8 @@ namespace BirdTouch
         {
             MoveTaskToBack(true);
         }
+
+       
 
 
 
