@@ -1,5 +1,9 @@
 # BirdTouch-Client
 
+ToDo List:
+
+- [x] OnClick event za linkove
+
 - [ ] Hash šifre
 
 - [ ] Welcome Page
