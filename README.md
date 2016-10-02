@@ -6,7 +6,7 @@ ToDo List:
 
 - [ ] Hash šifre
 
-- [ ] Welcome Page
+- [x] Welcome Page
 
 - [ ] Event za "odstrel" korisnika
 
