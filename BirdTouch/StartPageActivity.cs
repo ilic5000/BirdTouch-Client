@@ -22,12 +22,15 @@ using System.Net;
 using Android.Text;
 using Android.Graphics;
 using System.Collections.Specialized;
-
+using Com.Github.Amlcurran.Showcaseview;
+using Com.Github.Amlcurran.Showcaseview.Targets;
+using static Android.Support.Design.Widget.TabLayout;
+using Android.Support.V7.Widget;
 
 namespace BirdTouch
 {
     [Activity(Label = "StartPageActivity", Theme = "@style/Theme.DesignDemo")]
-    public class StartPageActivity : AppCompatActivity //zbog design library nije obican activity
+    public class StartPageActivity : AppCompatActivity, View.IOnClickListener //zbog design library nije obican activity
     {
 
         public static SupportActionBar ab;
@@ -50,7 +53,9 @@ namespace BirdTouch
         private WebClient webClientUserPrivateDataUponOpeningEditDataActivity;
         private WebClient webClientUserBusinessDataUponOpeningEditDataActivity;
         private Uri uri;
-        
+
+        private ShowcaseView showcaseView;
+        private int countShowcase = 0;
 
         protected override async void OnCreate(Bundle savedInstanceState)
         {
@@ -104,9 +109,30 @@ namespace BirdTouch
             tabs.SetupWithViewPager(viewPager);
 
 
-            
+            //****************
+            //Prvo pokretanje aplikacije - da li da pokaze tutorijal
+            //obratiti paznju na childview iz adaptera, ako se promeni redosled, tutorijal ce biti los ili ce biti null
+            ISharedPreferences pref = ApplicationContext.GetSharedPreferences("FirstTimeRun", FileCreationMode.Private);
+            if (pref.GetBoolean(user.Username + "FirstRodeo", true)){ //da li user prvi put pokrece aplikaciju, true je defaultno ako ne pronadje key sa ovim usernameom
+
+                var target = new ViewTarget(((SlidingTabStrip)tabs.GetChildAt(0)).GetChildAt(0));
+
+                showcaseView = new ShowcaseView.Builder(this)
+                  .SetTarget(target)
+                  .SetContentTitle("Private users")
+                  .SetContentText("Here you can see all users who are currently using application for social purposes")
+                  .SetStyle(Resource.Style.CustomShowcaseTheme)
+                  .HideOnTouchOutside()
+                  .Build();
+
+                showcaseView.OverrideButtonClick(this); //this jer ova aktivnost nasledjuje ionclicklistener koji ima zeljenjo ponasanje
+                pref.Edit().PutBoolean(user.Username + "FirstRodeo", false).Commit();
+            }
+
+
         }
 
+        
 
         public static void UpdateProfileImage()
         {
@@ -312,7 +338,84 @@ namespace BirdTouch
             MoveTaskToBack(true);
         }
 
-       
+
+
+        void View.IOnClickListener.OnClick(View v) //mora ovako jer c# ne dozvoljava pravljenje OnClickListenera unutar OverrideButtonClick kao sto bi trebalo. Zato sam nasledio taj interfejs i ovde ga overridovao i onda u overridebuttonclick ga povezem preko this.
+        {
+            countShowcase++;
+            showcaseView.Hide();
+            switch (countShowcase)
+            {
+                case 1:
+                    var target = new ViewTarget(((SlidingTabStrip)tabs.GetChildAt(0)).GetChildAt(1));
+                    showcaseView = new ShowcaseView.Builder(this)
+                  .SetTarget(target)
+                  .SetContentTitle("Saved private users")
+                  .SetContentText("You can save private users to have them for future use. Here you can find all private users that you saved. You can see them anytime.")
+                  .SetStyle(Resource.Style.CustomShowcaseTheme)
+                  .HideOnTouchOutside()
+                  .Build();
+                    showcaseView.OverrideButtonClick(this);
+
+                    break;
+
+                case 2:
+                    target = new ViewTarget(((SlidingTabStrip)tabs.GetChildAt(0)).GetChildAt(2));
+                    showcaseView = new ShowcaseView.Builder(this)
+                  .SetTarget(target)
+                  .SetContentTitle("Business users")
+                  .SetContentText("Here you can see all users who are currently using application for business purposes. If some user is using application for both social and business purposes, in this tab you will only see his business info.")
+                  .SetStyle(Resource.Style.CustomShowcaseTheme)
+                  .HideOnTouchOutside()
+                  .Build();
+                    showcaseView.OverrideButtonClick(this);
+                    break;
+
+                case 3:
+                    target = new ViewTarget(((SlidingTabStrip)tabs.GetChildAt(0)).GetChildAt(3));
+                    showcaseView = new ShowcaseView.Builder(this)
+                  .SetTarget(target)
+                  .SetContentTitle("Saved business users")
+                  .SetContentText("You can save business users to have them for future use. Here you can find all business users that you saved. You can see them anytime.")
+                  .SetStyle(Resource.Style.CustomShowcaseTheme)
+                  .HideOnTouchOutside()
+                  .Build();
+                    showcaseView.OverrideButtonClick(this);
+
+                    break;
+
+                case 4:
+                    target = new ViewTarget(viewPager.GetChildAt(0).FindViewById<SwitchCompat>(Resource.Id.activatePrivateSwitch));
+                    showcaseView = new ShowcaseView.Builder(this)
+                  .SetTarget(target)
+                  .SetContentTitle("Be visible")
+                  .SetContentText("Make yourself visible to others. You can also scan for nearby Birdtouch users. Remember: if you are not visible, they cannot find you. Also, you cannot find them.")
+                  .SetStyle(Resource.Style.CustomShowcaseTheme)
+                  .HideOnTouchOutside()
+                  .Build();
+                    showcaseView.OverrideButtonClick(this);
+
+                    break;
+                case 5:
+                    target = new ViewTarget(toolBar.GetChildAt(1));
+                    showcaseView = new ShowcaseView.Builder(this)
+                  .SetTarget(target)
+                  .SetContentTitle("Update your information")
+                  .SetContentText("Change your personal/business information")
+                  .SetStyle(Resource.Style.CustomShowcaseThemeFinalShowcase)
+                  .HideOnTouchOutside()
+                  .Build();
+
+                    break;
+
+
+                default:
+                    break;
+            }
+
+        }
+
+
 
 
 
