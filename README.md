@@ -12,4 +12,4 @@ ToDo List:
 
 - [ ] Settings
 
-- [ ] UTF8 slova (Ć,Č,Š,Đ)
+- [x] UTF8 slova (Ć,Č,Š,Đ)
