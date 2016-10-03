@@ -62,6 +62,7 @@ namespace BirdTouch.Fragments
 
             }
 
+            
             recycleView.SetLayoutManager(new LinearLayoutManager(recycleView.Context));
             recycleView.SetAdapter(new SimpleStringRecyclerViewAdapter(recycleView.Context, listSavedPrivateUsers, Activity.Resources, recycleView));
 
@@ -135,10 +136,10 @@ namespace BirdTouch.Fragments
                 simpleHolder.mView.Click -= MView_Click; //da se ne bi gomilali delegati
                 simpleHolder.mView.Click += MView_Click;
 
-                Random rand = new Random(); //igramo se
-                if (rand.Next() % 2 == 1)
-                    setScaleAnimation(holder.ItemView);
-                else setFadeAnimation(holder.ItemView);
+               // Random rand = new Random(); //igramo se, ali pravi probleme
+               // if (rand.Next() % 2 == 1)
+               //     setScaleAnimation(holder.ItemView);
+               // else setFadeAnimation(holder.ItemView);
 
                 simpleHolder.checkbox.Checked = true;
                 simpleHolder.checkbox.Tag = simpleHolder.mView; //kako bih prosledio poziciju checkboxu

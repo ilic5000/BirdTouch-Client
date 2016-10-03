@@ -91,7 +91,7 @@ namespace BirdTouch
             twitterLinkWrapper.EditText.Text=user.TwitterLink;
             gPlusLinkWrapper.EditText.Text=user.GPlusLink;
             linkedInLinkWrapper.EditText.Text=user.LinkedInLink;
-            collapsingToolBar.Title = "Private info";
+            collapsingToolBar.Title = "";
 
                   
             imageView.Click += ImageView_Click;

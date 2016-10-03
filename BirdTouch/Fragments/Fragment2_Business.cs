@@ -530,10 +530,11 @@ namespace BirdTouch.Fragments
                 simpleHolder.mView.Click -= MView_Click; //da se ne bi gomilali delegati
                 simpleHolder.mView.Click += MView_Click;
 
-                Random rand = new Random(); //igramo se
-                if (rand.Next() % 2 == 1)
-                    setScaleAnimation(holder.ItemView);
-                else setFadeAnimation(holder.ItemView);
+               //  Random rand = new Random(); //igramo se, ali pravi probleme
+               //  if (rand.Next() % 2 == 1)
+               //     setScaleAnimation(holder.ItemView);
+               // else 
+               // setFadeAnimation(holder.ItemView);
 
                 simpleHolder.checkbox.CheckedChange -= Checkbox_CheckedChange;//stavljeno ovde da ne bi redovi ispod izazvali pozivanje event listenera
 
