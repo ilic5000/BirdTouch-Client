@@ -11,6 +11,10 @@ using Android.Graphics;
 using Android.Content.Res;
 using BirdTouch.Models;
 using Android.Views.Animations;
+using System.Net;
+using System.Collections.Specialized;
+using Android.Support.Design.Widget;
+using Android.Text;
 
 namespace BirdTouch.Fragments
 {
@@ -18,6 +22,17 @@ namespace BirdTouch.Fragments
     {
         private FrameLayout frameLay;
         private RecyclerView recycleView;
+
+        private Clans.Fab.FloatingActionButton fab_menu_save;
+        private Clans.Fab.FloatingActionButton fab_menu_load;
+        private Clans.Fab.FloatingActionMenu fab_menu;
+
+        private WebClient webClientSaveList;
+        private WebClient webClientLoadList;
+        private Uri uri;
+
+        private List<User> listSavedPrivateUsers;
+
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -30,15 +45,91 @@ namespace BirdTouch.Fragments
             recycleView = view.FindViewById<RecyclerView>(Resource.Id.recyclerViewPrivateSavedUsers);
             frameLay = view.FindViewById<FrameLayout>(Resource.Id.coordinatorLayoutPrivateSavedUsers);
 
+            webClientLoadList = new WebClient();
+            webClientSaveList = new WebClient();
+
+            webClientLoadList.DownloadDataCompleted += WebClientLoadList_DownloadDataCompleted;
+            webClientSaveList.DownloadDataCompleted += WebClientSaveList_DownloadDataCompleted;
+
+            fab_menu_load = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_load_from_cloud);
+            fab_menu_save = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_save_to_cloud);
+            fab_menu = view.FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu_private_saved);
+
+            fab_menu_save.Click += Fab_menu_save_Click;
+            fab_menu_load.Click += Fab_menu_load_Click;
+
             SetUpRecyclerView();
             return view;
         }
 
+        private void Fab_menu_load_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Fab_menu_save_Click(object sender, EventArgs e)
+        {
+            SaveListToDatabase(); //snimamo u bazu kontakte kako bi birdtouch web aplikacija mogla da pristupi listi snimljenih kontakata
+            fab_menu.Close(true);
+        }
+
+        private void SaveListToDatabase()
+        {
+            if(listSavedPrivateUsers.Count > 0) { 
+            if (Reachability.isOnline(Activity) && !webClientSaveList.IsBusy)
+            {
+
+                List<int> listSavedContactsId = new List<int>();
+                foreach (User item in listSavedPrivateUsers)
+                {
+
+                    listSavedContactsId.Add(item.Id);
+                }
+
+                string listSavedIDSerialized = Newtonsoft.Json.JsonConvert.SerializeObject(listSavedContactsId);
+
+
+                //insert parameters for header for web request
+                    NameValueCollection parameters = new NameValueCollection();
+                    parameters.Add("id", StartPageActivity.user.Id.ToString());
+                    parameters.Add("listSavedContactsIDSerialized", listSavedIDSerialized);
+
+                    String restUriString = GetString(Resource.String.server_ip_savePrivateSavedList);
+                    uri = new Uri(restUriString);
+
+                    webClientSaveList.Headers.Clear();
+                    webClientSaveList.Headers.Add(parameters);
+                    webClientSaveList.DownloadDataAsync(uri);
+                
+               
+
+            }
+            else
+            {
+
+                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
+
+            }
+
+            }
+
+        }
+
+        private void WebClientSaveList_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        {
+            Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">Saved contacts list is sucessfully uploaded to cloud</font>"), Snackbar.LengthLong).Show();
+
+        }
+
+        private void WebClientLoadList_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         public void SetUpRecyclerView() //ovde da se napravi lista dobijenih korisnika
         {
             int userId = StartPageActivity.user.Id;
-            List<User> listSavedPrivateUsers = new List<User>();
+            listSavedPrivateUsers = new List<User>();
 
             ISharedPreferences pref = Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
             ISharedPreferencesEditor edit = pref.Edit();

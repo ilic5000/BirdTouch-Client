@@ -11,4 +11,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1" />
+    <com.github.clans.fab.FloatingActionMenu
+        android:layout_marginBottom="12dp"
+        android:layout_marginRight="16dp"
+        app:menu_colorNormal="#FF4081"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/fab_menu_business_saved"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:menu_colorPressed="#512DA8"
+        app:menu_shadowColor="#444"
+        app:menu_icon="@drawable/ic_more_horiz_white_24dp"
+        app:layout_anchor="@+id/recyclerViewBusinessSavedUsers"
+        app:layout_anchorGravity="bottom|end"
+        app:menu_backgroundColor="#CCFFFFFF"
+        app:menu_fab_label="Close">
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_menu_save_to_cloud_business"
+            app:fab_colorNormal="#FF4081"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/refresh_24dp"
+            app:fab_label="Make available to see from other devices"
+            app:fab_size="mini" />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_menu_load_from_cloud_business"
+            app:fab_colorNormal="#FF4081"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/getgps_24dp"
+            app:fab_label="Load saved contacts from cloud"
+            app:fab_size="mini" />
+    </com.github.clans.fab.FloatingActionMenu>
 </FrameLayout>
