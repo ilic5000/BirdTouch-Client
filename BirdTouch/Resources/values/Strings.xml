@@ -9,16 +9,16 @@
   <string name="author_email">nenad.ilic@pmf.edu.rs</string>
   <string name="program_version">Beta 1.0.7</string>
 
-  <string name="server_ip_getUserLogin">http://192.168.56.1:80/BirdTouchServer/rest/getUserLogin"</string>
-  <string name="server_ip_doesUsernameExist">http://192.168.56.1:80/BirdTouchServer/rest/doesUsernameExist"</string>
-  <string name="server_ip_registerUser">http://192.168.56.1:80/BirdTouchServer/rest/registerUser"</string>
-  <string name="server_ip_getBusiness">http://192.168.56.1:80/BirdTouchServer/rest/getBusiness/"</string>
-  <string name="server_ip_changePrivateUser">http://192.168.56.1:80/BirdTouchServer/rest/changeUserPrivateInfo"</string>
-  <string name="server_ip_changeBusinessUser">http://192.168.56.1:80/BirdTouchServer/rest/changeUserBusinessInfo"</string>
-  <string name="server_ip_makeUserVisible">http://192.168.56.1:80/BirdTouchServer/rest/makeUserVisible"</string>
-  <string name="server_ip_makeUserInvisible">http://192.168.56.1:80/BirdTouchServer/rest/makeUserInvisible"</string>
-  <string name="server_ip_getPrivateUsersNearMe">http://192.168.56.1:80/BirdTouchServer/rest/getPrivateUsersNearMe"</string>
-  <string name="server_ip_getBusinessUsersNearMe">http://192.168.56.1:80/BirdTouchServer/rest/getBusinessUsersNearMe"</string>
-  <string name="server_ip_savePrivateSavedList">http://192.168.56.1:80/BirdTouchServer/rest/savePrivateSavedList"</string>
-  <string name="server_ip_saveBusinessSavedList">http://192.168.56.1:80/BirdTouchServer/rest/saveBusinessSavedList"</string>
+  <string name="server_ip_getUserLogin">http://192.168.0.12:4356/BirdTouchServer/rest/getUserLogin"</string>
+  <string name="server_ip_doesUsernameExist">http://192.168.0.12:4356/BirdTouchServer/rest/doesUsernameExist"</string>
+  <string name="server_ip_registerUser">http://192.168.0.12:4356/BirdTouchServer/rest/registerUser"</string>
+  <string name="server_ip_getBusiness">http://192.168.0.12:4356/BirdTouchServer/rest/getBusiness/"</string>
+  <string name="server_ip_changePrivateUser">http://192.168.0.12:4356/BirdTouchServer/rest/changeUserPrivateInfo"</string>
+  <string name="server_ip_changeBusinessUser">http://192.168.0.12:4356/BirdTouchServer/rest/changeUserBusinessInfo"</string>
+  <string name="server_ip_makeUserVisible">http://192.168.0.12:4356/BirdTouchServer/rest/makeUserVisible"</string>
+  <string name="server_ip_makeUserInvisible">http://192.168.0.12:4356/BirdTouchServer/rest/makeUserInvisible"</string>
+  <string name="server_ip_getPrivateUsersNearMe">http://192.168.0.12:4356/BirdTouchServer/rest/getPrivateUsersNearMe"</string>
+  <string name="server_ip_getBusinessUsersNearMe">http://192.168.0.12:4356/BirdTouchServer/rest/getBusinessUsersNearMe"</string>
+  <string name="server_ip_savePrivateSavedList">http://192.168.0.12:43560/BirdTouchServer/rest/savePrivateSavedList"</string>
+  <string name="server_ip_saveBusinessSavedList">http://192.168.0.12:4356/BirdTouchServer/rest/saveBusinessSavedList"</string>
 </resources>

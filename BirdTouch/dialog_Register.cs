@@ -24,7 +24,7 @@ namespace BirdTouch
         private WebClient webClientRegister;
         private System.Uri uri;
         private Button btnRegister;
-       
+
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
 
@@ -39,7 +39,7 @@ namespace BirdTouch
             btnRegister = view.FindViewById<Button>(Resource.Id.btnDialogRegister);
 
             webClient = new WebClient();
-            webClientRegister = new WebClient(); 
+            webClientRegister = new WebClient();
 
             webClient.DownloadDataCompleted += WebClient_DownloadDataCompleted;
             webClientRegister.DownloadDataCompleted += WebClientRegister_DownloadDataCompleted;
@@ -57,7 +57,7 @@ namespace BirdTouch
 
                 //provera da li je aplikaciji dostupan net
                 if (Reachability.isOnline(Activity) && !webClientRegister.IsBusy)
-                { 
+                {
                     //provera da li je username i password ok i da nisu prazna polja
                     if ((usernameWrapper.Error=="" || usernameWrapper.Error==null) && (passwordCheckWrapper.Error=="" || passwordWrapper.Error == null) && usernameWrapper.EditText.Text!="" && passwordCheckWrapper.EditText.Text != "" && passwordWrapper.EditText.Text != "" && passwordCheckWrapper.EditText.Text.Equals(passwordWrapper.EditText.Text))
                     {
@@ -95,19 +95,19 @@ namespace BirdTouch
             return view;
         }
 
-        
+
 
         private void PasswordCheckEditText_AfterTextChanged(object sender, Android.Text.AfterTextChangedEventArgs e)
         {
             if (!passwordWrapper.EditText.Text.Equals(passwordCheckWrapper.EditText.Text))
             {
                 passwordCheckWrapper.Error = "Password missmatch";
-                
+
             }
             else
             {
                 passwordCheckWrapper.Error = "";
-                
+
             }
         }
 
@@ -125,9 +125,9 @@ namespace BirdTouch
                 webClient.Headers.Clear();
                 webClient.Headers.Add(parameters);
                 webClient.DownloadDataAsync(uri);
-                
+
             }
-           
+
         }
 
         private void WebClient_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
@@ -136,13 +136,13 @@ namespace BirdTouch
             {
                 //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
                 usernameWrapper.Error = "";
-                
+
             }
             else
             {
 
                 usernameWrapper.Error = "Username already exists";
-                
+
             }
         }
 

@@ -9,34 +9,32 @@ namespace BirdTouch
     [Activity(Label = "BirdTouch v1.0.7", MainLauncher = true, Icon = "@drawable/Logo", Theme = "@style/Theme.DesignDemo")]
     public class MainActivity : FragmentActivity
     {
+        private Button _btnRegister;
+        private Button _btnSignIn;
 
-        private Button btnRegister;
-        private Button btnSignIn;
-        
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            //  ActionBar.Hide();
-            
+
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
-            
-            btnRegister = FindViewById<Button>(Resource.Id.btnRegister);
-            btnRegister.Click += (object sender, EventArgs e) =>
-        {
-            //poziva dijalog za register
-            Android.Support.V4.App.FragmentManager fm = SupportFragmentManager;
-            dialog_Register dialogRegister = new dialog_Register();
-            dialogRegister.Show(fm, "Dialog fragment");
-        };
-            
-            btnSignIn = FindViewById<Button>(Resource.Id.btnSignIn);
-            btnSignIn.Click += (object sender, EventArgs e) =>
+
+            // Find buttons
+            _btnRegister = FindViewById<Button>(Resource.Id.btnRegister);
+            _btnSignIn = FindViewById<Button>(Resource.Id.btnSignIn);
+
+            // Add desired actions for buttons
+
+            // Shows dialog for signup
+            _btnRegister.Click += (object sender, EventArgs e) =>
             {
-                //poziva dijalog za SignIn
-                Android.Support.V4.App.FragmentManager fm = SupportFragmentManager;
-                dialog_SignIn dialogSignIn = new dialog_SignIn();
-                dialogSignIn.Show(fm, "Dialog fragment");
+                new dialog_Register().Show(SupportFragmentManager, "Dialog fragment");
+            };
+
+            // Shows dialog for signing in
+            _btnSignIn.Click += (object sender, EventArgs e) =>
+            {
+                new dialog_SignIn().Show(SupportFragmentManager, "Dialog fragment");
             };
         }
     }
