@@ -3434,11 +3434,11 @@ namespace BirdTouch
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f090019
-			public const int ApplicationName = 2131296281;
+			// aapt resource value: 0x7f090027
+			public const int ApplicationName = 2131296295;
 			
-			// aapt resource value: 0x7f090018
-			public const int Hello = 2131296280;
+			// aapt resource value: 0x7f090026
+			public const int Hello = 2131296294;
 			
 			// aapt resource value: 0x7f090000
 			public const int abc_action_bar_home_description = 2131296256;
@@ -3500,11 +3500,11 @@ namespace BirdTouch
 			// aapt resource value: 0x7f090014
 			public const int appbar_scrolling_view_behavior = 2131296276;
 			
-			// aapt resource value: 0x7f09001c
-			public const int author = 2131296284;
+			// aapt resource value: 0x7f09002a
+			public const int author = 2131296298;
 			
-			// aapt resource value: 0x7f09001d
-			public const int author_email = 2131296285;
+			// aapt resource value: 0x7f09002b
+			public const int author_email = 2131296299;
 			
 			// aapt resource value: 0x7f090015
 			public const int bottom_sheet_behavior = 2131296277;
@@ -3512,56 +3512,62 @@ namespace BirdTouch
 			// aapt resource value: 0x7f090016
 			public const int character_counter_pattern = 2131296278;
 			
-			// aapt resource value: 0x7f09001a
-			public const int checkin = 2131296282;
+			// aapt resource value: 0x7f090028
+			public const int checkin = 2131296296;
 			
-			// aapt resource value: 0x7f09001b
-			public const int menu_settings = 2131296283;
+			// aapt resource value: 0x7f090029
+			public const int menu_settings = 2131296297;
 			
 			// aapt resource value: 0x7f090017
 			public const int ok = 2131296279;
 			
-			// aapt resource value: 0x7f09001e
-			public const int program_version = 2131296286;
-			
-			// aapt resource value: 0x7f090024
-			public const int server_ip_changeBusinessUser = 2131296292;
-			
-			// aapt resource value: 0x7f090023
-			public const int server_ip_changePrivateUser = 2131296291;
-			
-			// aapt resource value: 0x7f090020
-			public const int server_ip_doesUsernameExist = 2131296288;
-			
-			// aapt resource value: 0x7f090022
-			public const int server_ip_getBusiness = 2131296290;
-			
-			// aapt resource value: 0x7f090028
-			public const int server_ip_getBusinessUsersNearMe = 2131296296;
-			
-			// aapt resource value: 0x7f090027
-			public const int server_ip_getPrivateUsersNearMe = 2131296295;
-			
-			// aapt resource value: 0x7f09001f
-			public const int server_ip_getUserLogin = 2131296287;
-			
-			// aapt resource value: 0x7f090026
-			public const int server_ip_makeUserInvisible = 2131296294;
-			
-			// aapt resource value: 0x7f090025
-			public const int server_ip_makeUserVisible = 2131296293;
-			
-			// aapt resource value: 0x7f090021
-			public const int server_ip_registerUser = 2131296289;
-			
-			// aapt resource value: 0x7f09002a
-			public const int server_ip_saveBusinessSavedList = 2131296298;
-			
-			// aapt resource value: 0x7f090029
-			public const int server_ip_savePrivateSavedList = 2131296297;
+			// aapt resource value: 0x7f09002c
+			public const int program_version = 2131296300;
 			
 			// aapt resource value: 0x7f090013
 			public const int status_bar_notification_info_overflow = 2131296275;
+			
+			// aapt resource value: 0x7f09001f
+			public const int webapi_endpoint_changeBusinessUser = 2131296287;
+			
+			// aapt resource value: 0x7f09001e
+			public const int webapi_endpoint_changePrivateUser = 2131296286;
+			
+			// aapt resource value: 0x7f09001c
+			public const int webapi_endpoint_doesUsernameExist = 2131296284;
+			
+			// aapt resource value: 0x7f09001d
+			public const int webapi_endpoint_getBusiness = 2131296285;
+			
+			// aapt resource value: 0x7f090023
+			public const int webapi_endpoint_getBusinessUsersNearMe = 2131296291;
+			
+			// aapt resource value: 0x7f090022
+			public const int webapi_endpoint_getPrivateUsersNearMe = 2131296290;
+			
+			// aapt resource value: 0x7f09001b
+			public const int webapi_endpoint_getUserLogin = 2131296283;
+			
+			// aapt resource value: 0x7f090021
+			public const int webapi_endpoint_makeUserInvisible = 2131296289;
+			
+			// aapt resource value: 0x7f090020
+			public const int webapi_endpoint_makeUserVisible = 2131296288;
+			
+			// aapt resource value: 0x7f09001a
+			public const int webapi_endpoint_registerUser = 2131296282;
+			
+			// aapt resource value: 0x7f090025
+			public const int webapi_endpoint_saveBusinessSavedList = 2131296293;
+			
+			// aapt resource value: 0x7f090024
+			public const int webapi_endpoint_savePrivateSavedList = 2131296292;
+			
+			// aapt resource value: 0x7f090018
+			public const int webapi_http_protocol = 2131296280;
+			
+			// aapt resource value: 0x7f090019
+			public const int webapi_ip_adress = 2131296281;
 			
 			static String()
 			{

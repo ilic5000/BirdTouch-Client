@@ -3,6 +3,8 @@ using Android.Widget;
 using Android.OS;
 using Android.Support.V4.App;
 using Android.App;
+using BirdTouch.Dialogs;
+using Android.Preferences;
 
 namespace BirdTouch
 {
@@ -25,17 +27,20 @@ namespace BirdTouch
 
             // Add desired actions for buttons
 
-            // Shows dialog for signup
+            // Show dialog for signing up
             _btnRegister.Click += (object sender, EventArgs e) =>
             {
-                new dialog_Register().Show(SupportFragmentManager, "Dialog fragment");
+                new SignUpDialog().Show(SupportFragmentManager, "Dialog fragment");
             };
 
-            // Shows dialog for signing in
+            // Show dialog for signing in
             _btnSignIn.Click += (object sender, EventArgs e) =>
             {
-                new dialog_SignIn().Show(SupportFragmentManager, "Dialog fragment");
+                new SignInDialog().Show(SupportFragmentManager, "Dialog fragment");
             };
+
+            PreferenceManager.GetDefaultSharedPreferences(this.ApplicationContext).Edit().Clear().Commit();
+
         }
     }
 }

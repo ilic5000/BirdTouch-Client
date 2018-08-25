@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<resources>
+  <string name="webapi_http_protocol">http://</string>
+  <string name="webapi_ip_adress">192.168.0.23:57400</string>
+  <string name="webapi_endpoint_registerUser">api/users</string>
+  <string name="webapi_endpoint_getUserLogin">api/login</string>
+  <string name="webapi_endpoint_doesUsernameExist">api/users/doesUsernameExist"</string>
+
+  <string name="webapi_endpoint_getBusiness">api/getBusiness/"</string>
+  <string name="webapi_endpoint_changePrivateUser">api/changeUserPrivateInfo"</string>
+  <string name="webapi_endpoint_changeBusinessUser">api/changeUserBusinessInfo"</string>
+  <string name="webapi_endpoint_makeUserVisible">api/makeUserVisible"</string>
+  <string name="webapi_endpoint_makeUserInvisible">api/makeUserInvisible"</string>
+  <string name="webapi_endpoint_getPrivateUsersNearMe">api/getPrivateUsersNearMe"</string>
+  <string name="webapi_endpoint_getBusinessUsersNearMe">api/getBusinessUsersNearMe"</string>
+  <string name="webapi_endpoint_savePrivateSavedList">api/savePrivateSavedList"</string>
+  <string name="webapi_endpoint_saveBusinessSavedList">api/saveBusinessSavedList"</string>
+</resources>

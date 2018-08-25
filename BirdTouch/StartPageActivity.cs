@@ -26,6 +26,7 @@ using Com.Github.Amlcurran.Showcaseview;
 using Com.Github.Amlcurran.Showcaseview.Targets;
 using static Android.Support.Design.Widget.TabLayout;
 using Android.Support.V7.Widget;
+using BirdTouch.Helpers;
 
 namespace BirdTouch
 {
@@ -45,9 +46,9 @@ namespace BirdTouch
         private TabLayout tabs;
         private ViewPager viewPager;
 
-        public static User user;
+        public static UserInfoModel user;
         public static Bitmap navBitmap;
-        private Business business;
+        private BusinessInfoModel business;
         private System.String userPassword;
 
         private WebClient webClientUserPrivateDataUponOpeningEditDataActivity;
@@ -62,7 +63,7 @@ namespace BirdTouch
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.StartPage);
 
-                 
+
             webClientUserPrivateDataUponOpeningEditDataActivity = new WebClient();
             webClientUserPrivateDataUponOpeningEditDataActivity.DownloadDataCompleted += WebClientUserPrivateDataUponOpeningEditDataActivity_DownloadDataCompleted;
 
@@ -83,7 +84,7 @@ namespace BirdTouch
             ab.SetDisplayHomeAsUpEnabled(true); //enablovan za home button
 
             userPassword = Intent.GetStringExtra("userPassword");//mozda ne treba ali zbog bolje zastite
-            user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("userLoggedInJson"));
+            user = Newtonsoft.Json.JsonConvert.DeserializeObject<UserInfoModel>(Intent.GetStringExtra("userLoggedInJson"));
 
             ab.Title = user.FirstName + " " + user.LastName;
             ab.SetIcon(Resource.Drawable.app_bar_logov2);
@@ -132,7 +133,7 @@ namespace BirdTouch
 
         }
 
-        
+
 
         public static void UpdateProfileImage()
         {
@@ -164,25 +165,25 @@ namespace BirdTouch
                     drawerLayout.OpenDrawer((int)GravityFlags.Left);
                     return true;
 
-                
+
                 default:
                     return base.OnOptionsItemSelected(item);
             }
-           
+
         }
         private void SetUpDrawerContent(NavigationView navigationView)
         {
             navigationView.NavigationItemSelected += (object sender, NavigationView.NavigationItemSelectedEventArgs e) =>
              {
-                 
+
                  e.MenuItem.SetChecked(false); //za sada mi ne treba, jer kada se otvori neki drugi activity hamburger menu nestaje, pa nije potrebno highlightovano gde se nalazimo u navigaciji
-                 
+
                  switch (e.MenuItem.ItemId)
                  {
                      case Resource.Id.nav_private: //kada se klikne na private user edit info
-                         if (Reachability.isOnline(this))
+                         if (Reachability.IsOnline(this))
                          {
-                             System.String restUriString = GetString(Resource.String.server_ip_getUserLogin);
+                             System.String restUriString = GetString(Resource.String.webapi_endpoint_getUserLogin);
                              uri = new Uri(restUriString);
 
                              NameValueCollection parameters = new NameValueCollection();
@@ -201,9 +202,9 @@ namespace BirdTouch
 
 
                      case Resource.Id.nav_business: //kada se klikne na business user edit info
-                         if (Reachability.isOnline(this))
+                         if (Reachability.IsOnline(this))
                          {
-                             System.String restUriString = GetString(Resource.String.server_ip_getBusiness) + user.Id;
+                             System.String restUriString = GetString(Resource.String.webapi_endpoint_getBusiness) + user.Id;
                              uri = new Uri(restUriString);
                              webClientUserBusinessDataUponOpeningEditDataActivity.DownloadDataAsync(uri);
                          }
@@ -235,7 +236,7 @@ namespace BirdTouch
                  }
 
                  drawerLayout.CloseDrawers();
-             };         
+             };
         }
 
 
@@ -251,18 +252,18 @@ namespace BirdTouch
 
             }
             else
-            {              
+            {
                 Console.WriteLine("Success!");
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
                 Console.Out.WriteLine(jsonResult);
-                user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(jsonResult);//menjamo usera koji je stigao iz signIn sa novim updateovanim
+                user = Newtonsoft.Json.JsonConvert.DeserializeObject<UserInfoModel>(jsonResult);//menjamo usera koji je stigao iz signIn sa novim updateovanim
 
                 Context context = navigationView.Context;
                 Intent intent = new Intent(context, typeof(EditPrivateUserInfoActivity));
                 string userSerialized = Newtonsoft.Json.JsonConvert.SerializeObject(user);
 
 
-                intent.PutExtra("userLoggedInJson", userSerialized);           
+                intent.PutExtra("userLoggedInJson", userSerialized);
                 context.StartActivity(intent);
             }
         }
@@ -283,7 +284,7 @@ namespace BirdTouch
                 Console.WriteLine("Success!");
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
                 Console.Out.WriteLine(jsonResult);
-                business = Newtonsoft.Json.JsonConvert.DeserializeObject<Business>(jsonResult);//ZBOG DEBUGA
+                business = Newtonsoft.Json.JsonConvert.DeserializeObject<BusinessInfoModel>(jsonResult);//ZBOG DEBUGA
 
                 Context context = navigationView.Context;
                 Intent intent = new Intent(context, typeof(EditBusinessUserInfoActivity));
@@ -296,7 +297,7 @@ namespace BirdTouch
 
 
 
-        public class TabAdapter : FragmentPagerAdapter //ovo poziva viewpager kako bi znao koji fragment u kom tabu 
+        public class TabAdapter : FragmentPagerAdapter //ovo poziva viewpager kako bi znao koji fragment u kom tabu
         {
 
             public List<SupportFragment> Fragments { get; set; }

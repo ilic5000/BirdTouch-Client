@@ -126,8 +126,8 @@
   <ItemGroup>
     <Compile Include="AboutActivity.cs" />
     <Compile Include="BusinessDetailActivity.cs" />
-    <Compile Include="dialog_Register.cs" />
-    <Compile Include="dialog_SignIn.cs" />
+    <Compile Include="Dialogs\SignUpDialog.cs" />
+    <Compile Include="Dialogs\SignInDialog.cs" />
     <Compile Include="EditBusinessUserInfoActivity.cs" />
     <Compile Include="EditCelebrityUserInfoActivity.cs" />
     <Compile Include="EditPrivateUserInfoActivity.cs" />
@@ -138,10 +138,13 @@
     <Compile Include="Fragments\Fragment2_Business.cs" />
     <Compile Include="Fragments\Fragment2_BusinessSavedUsers.cs" />
     <Compile Include="Fragments\Fragment3_Celebrity.cs" />
+    <Compile Include="Helpers\WebApiUrlGenerator.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="Models\Business.cs" />
-    <Compile Include="Models\User.cs" />
-    <Compile Include="Reachability.cs" />
+    <Compile Include="Models\BusinessInfoModel.cs" />
+    <Compile Include="Models\LoginCredentials.cs" />
+    <Compile Include="Models\UserInfoModel.cs" />
+    <Compile Include="Helpers\Reachability.cs" />
+    <Compile Include="Models\UserExistResponse.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartPageActivity.cs" />
@@ -588,6 +591,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\linkedInLogoImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\ApiEndpoints.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets')" />

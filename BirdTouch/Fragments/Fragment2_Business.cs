@@ -19,6 +19,7 @@ using Android.Text;
 using System.Text;
 using BirdTouch.Models;
 using Android.Views.Animations;
+using BirdTouch.Helpers;
 
 namespace BirdTouch.Fragments
 {
@@ -29,7 +30,7 @@ namespace BirdTouch.Fragments
         private Clans.Fab.FloatingActionButton fab_menu_refresh;
         private Clans.Fab.FloatingActionButton fab_menu_gps;
         private Clans.Fab.FloatingActionMenu fab_menu;
-        
+
 
         private FrameLayout frameLay;
         private LinearLayout linearLayout;
@@ -48,7 +49,7 @@ namespace BirdTouch.Fragments
 
         private bool visible = false;
         private bool GpsUpdateIndeterminate = false;
-        private List<Business> listOfUsersAroundMe;
+        private List<BusinessInfoModel> listOfUsersAroundMe;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -76,18 +77,18 @@ namespace BirdTouch.Fragments
             webClientGetBusinessUsersNearMe.DownloadDataCompleted += WebClientGetBusinessUsersNearMe_DownloadDataCompleted;
 
 
-            listOfUsersAroundMe = new List<Business>();
+            listOfUsersAroundMe = new List<BusinessInfoModel>();
 
             switchVisibility = view.FindViewById<SwitchCompat>(Resource.Id.activateBusinessSwitch);
             fab_menu_refresh = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh_business);
-            
+
             fab_menu_gps = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_gps_business);
             fab_menu = view.FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu_business);
 
             switchVisibility.CheckedChange += SwitchVisibility_CheckedChange;
 
             fab_menu_refresh.Click += Fab_menu_refresh_Click;
-         
+
             fab_menu_gps.Click += Fab_menu_gps_Click;
 
             fab_menu.MenuToggle += Fab_menu_MenuToggle;
@@ -99,7 +100,7 @@ namespace BirdTouch.Fragments
             return view;
         }
 
-        
+
 
         private void Fab_menu_MenuToggle(object sender, Clans.Fab.FloatingActionMenu.MenuToggleEventArgs e)
         {
@@ -228,17 +229,17 @@ namespace BirdTouch.Fragments
 
         private void SendLocationToDatabase()
         {
-            if (Reachability.isOnline(Activity) && !webClientMakeUserVisible.IsBusy)
+            if (Reachability.IsOnline(Activity) && !webClientMakeUserVisible.IsBusy)
             {
 
                 //insert parameters for header for web request
                 NameValueCollection parameters = new NameValueCollection();
                 parameters.Add("latitude", currLocation.Latitude.ToString().Replace(',', '.'));
                 parameters.Add("longitude", currLocation.Longitude.ToString().Replace(',', '.'));
-                parameters.Add("mode", ActiveModes.BUSINESS); // mozda treba mode globalni, ali videcemo 
+                parameters.Add("mode", ActiveModes.BUSINESS); // mozda treba mode globalni, ali videcemo
                 parameters.Add("id", StartPageActivity.user.Id.ToString());
 
-                String restUriString = GetString(Resource.String.server_ip_makeUserVisible);
+                String restUriString = GetString(Resource.String.webapi_endpoint_makeUserVisible);
                 uri = new Uri(restUriString);
 
                 webClientMakeUserVisible.Headers.Clear();
@@ -292,7 +293,7 @@ namespace BirdTouch.Fragments
 
         private void GoInvisible()
         {
-            if (Reachability.isOnline(Activity) && !webClientMakeUserInvisible.IsBusy)
+            if (Reachability.IsOnline(Activity) && !webClientMakeUserInvisible.IsBusy)
             {
 
                 //insert parameters for header for web request
@@ -300,7 +301,7 @@ namespace BirdTouch.Fragments
                 parameters.Add("mode", "2");
                 parameters.Add("id", StartPageActivity.user.Id.ToString());
 
-                String restUriString = GetString(Resource.String.server_ip_makeUserInvisible);
+                String restUriString = GetString(Resource.String.webapi_endpoint_makeUserInvisible);
                 uri = new Uri(restUriString);
 
                 webClientMakeUserInvisible.Headers.Clear();
@@ -344,7 +345,7 @@ namespace BirdTouch.Fragments
         private void GetBusinessUsersNearMe()
         {
 
-            if (Reachability.isOnline(Activity) && !webClientGetBusinessUsersNearMe.IsBusy)
+            if (Reachability.IsOnline(Activity) && !webClientGetBusinessUsersNearMe.IsBusy)
             {
 
 
@@ -357,7 +358,7 @@ namespace BirdTouch.Fragments
                     NameValueCollection parameters = new NameValueCollection();
                     parameters.Add("id", StartPageActivity.user.Id.ToString());
 
-                    String restUriString = GetString(Resource.String.server_ip_getBusinessUsersNearMe);
+                    String restUriString = GetString(Resource.String.webapi_endpoint_getBusinessUsersNearMe);
                     uri = new Uri(restUriString);
 
                     webClientGetBusinessUsersNearMe.Headers.Clear();
@@ -400,7 +401,7 @@ namespace BirdTouch.Fragments
                 Console.WriteLine("Success!");
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
 
-                List<Business> newListOfUsersAroundMe = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Business>>(jsonResult);
+                List<BusinessInfoModel> newListOfUsersAroundMe = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BusinessInfoModel>>(jsonResult);
                 SetUpRecyclerView(recycleView, newListOfUsersAroundMe);
 
                 fab_menu.Visibility = ViewStates.Visible;
@@ -456,7 +457,7 @@ namespace BirdTouch.Fragments
         //RecycleView setup
 
 
-        private void SetUpRecyclerView(RecyclerView recyclerView, List<Business> listOfUsersAroundMe) //ovde da se napravi lista dobijenih korisnika
+        private void SetUpRecyclerView(RecyclerView recyclerView, List<BusinessInfoModel> listOfUsersAroundMe) //ovde da se napravi lista dobijenih korisnika
         {
 
             recyclerView.SetLayoutManager(new LinearLayoutManager(recyclerView.Context));
@@ -475,11 +476,11 @@ namespace BirdTouch.Fragments
         {
             private readonly TypedValue mTypedValue = new TypedValue();
             private int mBackground;
-            private List<Business> mValues;
+            private List<BusinessInfoModel> mValues;
             private RecyclerView recycleView;
             Resources mResource;
 
-            public SimpleStringRecyclerViewAdapter(Context context, List<Business> items, Resources res, RecyclerView rv)
+            public SimpleStringRecyclerViewAdapter(Context context, List<BusinessInfoModel> items, Resources res, RecyclerView rv)
             {
                 context.Theme.ResolveAttribute(Resource.Attribute.selectableItemBackground, mTypedValue, true);
                 mBackground = mTypedValue.ResourceId;
@@ -533,7 +534,7 @@ namespace BirdTouch.Fragments
                //  Random rand = new Random(); //igramo se, ali pravi probleme
                //  if (rand.Next() % 2 == 1)
                //     setScaleAnimation(holder.ItemView);
-               // else 
+               // else
                // setFadeAnimation(holder.ItemView);
 
                 simpleHolder.checkbox.CheckedChange -= Checkbox_CheckedChange;//stavljeno ovde da ne bi redovi ispod izazvali pozivanje event listenera
@@ -546,21 +547,23 @@ namespace BirdTouch.Fragments
             }
 
 
-            private bool isUserInSavedContacts(int userIdRecyclerView, SimpleViewHolder svh)
+            private bool isUserInSavedContacts(Guid userIdRecyclerView, SimpleViewHolder svh)
             {
-                int userId = StartPageActivity.user.Id;
+                Guid userId = StartPageActivity.user.Id;
 
                 ISharedPreferences pref = svh.ItemView.Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
                 ISharedPreferencesEditor edit = pref.Edit();
 
-                List<Business> listSavedBusinessUsers = new List<Business>();
+                List<BusinessInfoModel> listSavedBusinessUsers = new List<BusinessInfoModel>();
 
                 if (pref.Contains("SavedBusinessUsersDictionary"))
                 {
                     string serializedDictionary = pref.GetString("SavedBusinessUsersDictionary", String.Empty);
                     if (serializedDictionary != String.Empty)
                     {
-                        Dictionary<int, Dictionary<int, List<Business>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<Business>>>>(serializedDictionary);
+                        var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                            <Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>>(serializedDictionary);
+
                         if (dictionary.ContainsKey(userId))
                         {//ako je user dodavao usere
                             if (dictionary[userId].ContainsKey(1))
@@ -583,7 +586,7 @@ namespace BirdTouch.Fragments
 
                 View mView = (View)vsender.Tag;
                 int position = recycleView.GetChildAdapterPosition(mView);
-                int userId = StartPageActivity.user.Id;
+                Guid userId = StartPageActivity.user.Id;
 
                 ISharedPreferences pref = vsender.Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
                 ISharedPreferencesEditor edit = pref.Edit();
@@ -594,9 +597,9 @@ namespace BirdTouch.Fragments
                     if (!pref.Contains("SavedBusinessUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
                     {
 
-                        Dictionary<int, Dictionary<int, List<Business>>> dictionary = new Dictionary<int, Dictionary<int, List<Business>>>();
-                        dictionary.Add(userId, new Dictionary<int, List<Business>>());
-                        dictionary[userId].Add(1, new List<Business>());// 1 je private mode
+                        var dictionary = new Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>();
+                        dictionary.Add(userId, new Dictionary<int, List<BusinessInfoModel>>());
+                        dictionary[userId].Add(1, new List<BusinessInfoModel>());// 1 je private mode
                         dictionary[userId][1].Add(mValues[position]);
 
                         edit.Remove("SavedBusinessUsersDictionary");
@@ -611,15 +614,16 @@ namespace BirdTouch.Fragments
                         string serializedDictionary = pref.GetString("SavedBusinessUsersDictionary", String.Empty);
                         if (serializedDictionary != String.Empty)
                         {
+                            var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                                <Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>>(serializedDictionary);
 
-                            Dictionary<int, Dictionary<int, List<Business>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<Business>>>>(serializedDictionary);
                             if (!dictionary.ContainsKey(userId))
                             {//ako user nije uopste dodavao usere
-                                dictionary.Add(userId, new Dictionary<int, List<Business>>());
+                                dictionary.Add(userId, new Dictionary<int, List<BusinessInfoModel>>());
                             }
                             if (!dictionary[userId].ContainsKey(1))
                             {//ako nije dodavao private usere
-                                dictionary[userId].Add(1, new List<Business>());
+                                dictionary[userId].Add(1, new List<BusinessInfoModel>());
                             }
 
                             //samo dodamo private usera iz recyclerViewa
@@ -640,7 +644,9 @@ namespace BirdTouch.Fragments
                     string serializedDictionary = pref.GetString("SavedBusinessUsersDictionary", String.Empty);
                     if (serializedDictionary != String.Empty)
                     {
-                        Dictionary<int, Dictionary<int, List<Business>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<Business>>>>(serializedDictionary);
+                        var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                            <Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>>(serializedDictionary);
+
                         dictionary[userId][1].RemoveAll(a => a.IdBusinessOwner == mValues[position].IdBusinessOwner);
                         edit.Remove("SavedBusinessUsersDictionary");
                         edit.PutString("SavedBusinessUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));

@@ -19,7 +19,7 @@ namespace BirdTouch
     public class BusinessDetailActivity : AppCompatActivity
     {
 
-        private Business user;
+        private BusinessInfoModel user;
         private ImageView imageView;
 
         private TextView companyNameWrapper;
@@ -28,7 +28,7 @@ namespace BirdTouch
         private TextView phoneWrapper;
         private TextView websiteWrapper;
 
-        private CardView companyNameCardView;      
+        private CardView companyNameCardView;
         private CardView emailCardView;
         private CardView adressCardView;
         private CardView phoneCardView;
@@ -53,7 +53,7 @@ namespace BirdTouch
 
             fabSaveUser = FindViewById<FloatingActionButton>(Resource.Id.fabBusinessUserInfoSaveUser);
 
-            user = Newtonsoft.Json.JsonConvert.DeserializeObject<Business>(Intent.GetStringExtra("userInformation"));
+            user = Newtonsoft.Json.JsonConvert.DeserializeObject<BusinessInfoModel>(Intent.GetStringExtra("userInformation"));
             isSaved = Intent.GetBooleanExtra("isSaved", false);
 
             if (user.ProfilePictureData != null)
@@ -74,7 +74,7 @@ namespace BirdTouch
             adressWrapper = FindViewById<TextView>(Resource.Id.textViewBusinessAdressShowDetail);
             phoneWrapper = FindViewById<TextView>(Resource.Id.textViewBusinessPhoneNumberShowDetail);
 
-            companyNameCardView = FindViewById<CardView>(Resource.Id.cardViewBusinessCompanyName);          
+            companyNameCardView = FindViewById<CardView>(Resource.Id.cardViewBusinessCompanyName);
             emailCardView = FindViewById<CardView>(Resource.Id.cardViewBusinessEmail);
             phoneCardView = FindViewById<CardView>(Resource.Id.cardViewBusinessPhoneNumber);
             adressCardView = FindViewById<CardView>(Resource.Id.cardViewBusinessAdress);
@@ -140,7 +140,7 @@ namespace BirdTouch
 
         private void FabSaveUser_Click(object sender, EventArgs e)
         {
-            int userId = StartPageActivity.user.Id;
+            Guid userId = StartPageActivity.user.Id;
 
             ISharedPreferences pref = ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
             ISharedPreferencesEditor edit = pref.Edit();
@@ -152,7 +152,9 @@ namespace BirdTouch
                 string serializedDictionary = pref.GetString("SavedBusinessUsersDictionary", String.Empty);
                 if (serializedDictionary != String.Empty)
                 {
-                    Dictionary<int, Dictionary<int, List<Business>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<Business>>>>(serializedDictionary);
+                    var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                        <Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>>(serializedDictionary);
+
                     dictionary[userId][1].RemoveAll(a => a.IdBusinessOwner == user.IdBusinessOwner);
                     edit.Remove("SavedBusinessUsersDictionary");
                     edit.PutString("SavedBusinessUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
@@ -176,9 +178,10 @@ namespace BirdTouch
                 {
                     // Snackbar.Make((View)sender, Android.Text.Html.FromHtml("<font color=\"#ffffff\">does not contain</font>"), Snackbar.LengthLong).Show();
 
-                    Dictionary<int, Dictionary<int, List<Business>>> dictionary = new Dictionary<int, Dictionary<int, List<Business>>>();
-                    dictionary.Add(userId, new Dictionary<int, List<Business>>());
-                    dictionary[userId].Add(1, new List<Business>());// 1 je private mode, zbog drugog dictionaryja, sada je to visak, ali mozda u buducnosti bude neko sortiranje private korisnika, za svaki slucaj
+                    var dictionary = new Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>();
+
+                    dictionary.Add(userId, new Dictionary<int, List<BusinessInfoModel>>());
+                    dictionary[userId].Add(1, new List<BusinessInfoModel>());// 1 je private mode, zbog drugog dictionaryja, sada je to visak, ali mozda u buducnosti bude neko sortiranje private korisnika, za svaki slucaj
                     dictionary[userId][1].Add(user);
 
                     edit.Remove("SavedBusinessUsersDictionary");
@@ -195,15 +198,16 @@ namespace BirdTouch
                     string serializedDictionary = pref.GetString("SavedBusinessUsersDictionary", String.Empty);
                     if (serializedDictionary != String.Empty)
                     {
+                        var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                            <Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>>(serializedDictionary);
 
-                        Dictionary<int, Dictionary<int, List<Business>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<Business>>>>(serializedDictionary);
                         if (!dictionary.ContainsKey(userId))
                         {//ako user nije uopste dodavao usere
-                            dictionary.Add(userId, new Dictionary<int, List<Business>>());
+                            dictionary.Add(userId, new Dictionary<int, List<BusinessInfoModel>>());
                         }
                         if (!dictionary[userId].ContainsKey(1))
                         {//ako nije dodavao private usere
-                            dictionary[userId].Add(1, new List<Business>());
+                            dictionary[userId].Add(1, new List<BusinessInfoModel>());
                         }
 
                         //samo dodamo private usera iz recyclerViewa

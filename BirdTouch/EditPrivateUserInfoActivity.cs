@@ -15,13 +15,14 @@ using System.Net;
 using System.Collections.Specialized;
 using Android.Graphics;
 using System.IO;
+using BirdTouch.Helpers;
 
 namespace BirdTouch
 {
     [Activity(Label = "EditUserInfoActivity", Theme = "@style/Theme.DesignDemo")]
     public class EditPrivateUserInfoActivity : AppCompatActivity
     {
-        private User user;
+        private UserInfoModel user;
         private ImageView imageView;
         private TextInputLayout firstNameWrapper;
         private TextInputLayout lastNameWrapper;
@@ -55,8 +56,8 @@ namespace BirdTouch
             SupportActionBar.Title = "";
 
             //popunjavanje polja iz baze
-            
-            user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("userLoggedInJson"));
+
+            user = Newtonsoft.Json.JsonConvert.DeserializeObject<UserInfoModel>(Intent.GetStringExtra("userLoggedInJson"));
 
             if (user.ProfilePictureData != null)
             {
@@ -80,7 +81,7 @@ namespace BirdTouch
             gPlusLinkWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserGPlusWrapper);
             linkedInLinkWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserLinkedInWrapper);
 
-            
+
             firstNameWrapper.EditText.Text=user.FirstName;
             lastNameWrapper.EditText.Text=user.LastName;
             emailWrapper.EditText.Text=user.Email;
@@ -93,13 +94,13 @@ namespace BirdTouch
             linkedInLinkWrapper.EditText.Text=user.LinkedInLink;
             collapsingToolBar.Title = "";
 
-                  
+
             imageView.Click += ImageView_Click;
 
             webClient = new WebClient();
             webClient.UploadDataCompleted += WebClient_UploadDataCompleted;
 
- 
+
             fabSaveChanges = FindViewById<FloatingActionButton>(Resource.Id.fabEditPrivateUserInfoSaveChanges);
             fabInsertPhoto = FindViewById<FloatingActionButton>(Resource.Id.fabEditPrivateUserInfoInsertPhoto);
 
@@ -108,17 +109,17 @@ namespace BirdTouch
             fabSaveChanges.Click += (o, e) => //o is sender, sender is button, button is a view
             {
                 View view = o as View;
-                if (Reachability.isOnline(this) && !webClient.IsBusy)
-                { 
+                if (Reachability.IsOnline(this) && !webClient.IsBusy)
+                {
 
-                    //zbog parametara mora da postoje sva polja kada se salju, makar privremeno 
+                    //zbog parametara mora da postoje sva polja kada se salju, makar privremeno
                     checkIfEditTextsAreEmptyAndTurnThemToNULLString();
 
-                    
+
                     //get ImageView (profileImage) as  array of bytes
                     imageView.BuildDrawingCache(true);
                     Bitmap bitmap = imageView.GetDrawingCache(true);
-                    
+
                     MemoryStream memStream = new MemoryStream();
                     bitmap.Compress(Bitmap.CompressFormat.Jpeg, 70, memStream); //moze i drugi format //max img size je 61kB
                     byte[] picData = memStream.ToArray();
@@ -128,11 +129,11 @@ namespace BirdTouch
                     if (!pictureChanged)
                     {
                         picData = new byte[1]; //server pita, ako je duzine 1 ovaj niz, onda ne upisuje sliku jer nije bilo promene od strane korisnika
-                    
+
                     }
                     else
                     {
-                    StartPageActivity.picDataProfileNavigation = picData;                   
+                    StartPageActivity.picDataProfileNavigation = picData;
                     }
 
                     //insert parameters for header for web request
@@ -149,7 +150,7 @@ namespace BirdTouch
                     parameters.Add("linkedinlink", linkedInLinkWrapper.EditText.Text);
                     parameters.Add("id", user.Id.ToString());
 
-                    String restUriString = GetString(Resource.String.server_ip_changePrivateUser);
+                    String restUriString = GetString(Resource.String.webapi_endpoint_changePrivateUser);
                     uri = new Uri(restUriString);
 
                     webClient.Headers.Clear();
@@ -166,7 +167,7 @@ namespace BirdTouch
 
             };
 
-          
+
         }
 
         private void FabInsertPhoto_Click(object sender, EventArgs e)
@@ -229,7 +230,7 @@ namespace BirdTouch
             }
         }
 
-        
+
 
         private void checkIfEditTextsAreEmptyAndTurnThemToNULLString()
         {
@@ -335,7 +336,7 @@ namespace BirdTouch
 //nepotrebno
 
 
-//String restUriString = GetString(Resource.String.server_ip_changePrivateUser)
+//String restUriString = GetString(Resource.String.webapi_endpoint_changePrivateUser)
 //+ user.Id + "/" + firstNameWrapper.EditText.Text + "/" + lastNameWrapper.EditText.Text + "/" + emailWrapper.EditText.Text
 //+ "/" + phoneWrapper.EditText.Text + "/" + adressWrapper.EditText.Text + "/" + dateOfBirthWrapper.EditText.Text + "/"
 //+ facebookLinkWrapper.EditText.Text + "/"
@@ -389,7 +390,7 @@ namespace BirdTouch
 //        webClientPictureUpload.Headers.Add(nvc);
 //        webClientPictureUpload.UploadDataAsync(uri, picData);
 
-//        // webClientPictureUpload.UploadValuesAsync(uri, nvc);           
+//        // webClientPictureUpload.UploadValuesAsync(uri, nvc);
 //    }
 //}
 

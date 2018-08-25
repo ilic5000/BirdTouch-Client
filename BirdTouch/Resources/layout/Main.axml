@@ -46,7 +46,7 @@
             android:layout_marginTop="5dp"
             android:shadowColor="#b4b4b4ff" />
         <Button
-            android:text="Register"
+            android:text="Sign up"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:height="0dp"

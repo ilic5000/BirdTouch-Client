@@ -15,6 +15,7 @@ using System.Net;
 using System.Collections.Specialized;
 using Android.Support.Design.Widget;
 using Android.Text;
+using BirdTouch.Helpers;
 
 namespace BirdTouch.Fragments
 {
@@ -31,7 +32,7 @@ namespace BirdTouch.Fragments
         private WebClient webClientLoadList;
         private Uri uri;
 
-        private List<User> listSavedPrivateUsers;
+        private List<UserInfoModel> listSavedPrivateUsers;
 
 
         public override void OnCreate(Bundle savedInstanceState)
@@ -75,12 +76,12 @@ namespace BirdTouch.Fragments
 
         private void SaveListToDatabase()
         {
-            if(listSavedPrivateUsers.Count > 0) { 
-            if (Reachability.isOnline(Activity) && !webClientSaveList.IsBusy)
+            if(listSavedPrivateUsers.Count > 0) {
+            if (Reachability.IsOnline(Activity) && !webClientSaveList.IsBusy)
             {
 
-                List<int> listSavedContactsId = new List<int>();
-                foreach (User item in listSavedPrivateUsers)
+                List<Guid> listSavedContactsId = new List<Guid>();
+                foreach (UserInfoModel item in listSavedPrivateUsers)
                 {
 
                     listSavedContactsId.Add(item.Id);
@@ -94,14 +95,14 @@ namespace BirdTouch.Fragments
                     parameters.Add("id", StartPageActivity.user.Id.ToString());
                     parameters.Add("listSavedContactsIDSerialized", listSavedIDSerialized);
 
-                    String restUriString = GetString(Resource.String.server_ip_savePrivateSavedList);
+                    String restUriString = GetString(Resource.String.webapi_endpoint_savePrivateSavedList);
                     uri = new Uri(restUriString);
 
                     webClientSaveList.Headers.Clear();
                     webClientSaveList.Headers.Add(parameters);
                     webClientSaveList.DownloadDataAsync(uri);
-                
-               
+
+
 
             }
             else
@@ -128,8 +129,8 @@ namespace BirdTouch.Fragments
 
         public void SetUpRecyclerView() //ovde da se napravi lista dobijenih korisnika
         {
-            int userId = StartPageActivity.user.Id;
-            listSavedPrivateUsers = new List<User>();
+            Guid userId = StartPageActivity.user.Id;
+            listSavedPrivateUsers = new List<UserInfoModel>();
 
             ISharedPreferences pref = Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
             ISharedPreferencesEditor edit = pref.Edit();
@@ -140,7 +141,9 @@ namespace BirdTouch.Fragments
                 if (serializedDictionary != String.Empty)
                 {
 
-                    Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
+                    var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                        <Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
+
                     if (dictionary.ContainsKey(userId))
                     {//ako je user dodavao usere
                         if (dictionary[userId].ContainsKey(1))
@@ -148,12 +151,12 @@ namespace BirdTouch.Fragments
                            listSavedPrivateUsers = dictionary[userId][1];
                         }
                     }
-                                     
+
                 }
 
             }
 
-            
+
             recycleView.SetLayoutManager(new LinearLayoutManager(recycleView.Context));
             recycleView.SetAdapter(new SimpleStringRecyclerViewAdapter(recycleView.Context, listSavedPrivateUsers, Activity.Resources, recycleView));
 
@@ -171,18 +174,18 @@ namespace BirdTouch.Fragments
         {
             private readonly TypedValue mTypedValue = new TypedValue();
             private int mBackground;
-            private List<User> mValues;
+            private List<UserInfoModel> mValues;
             private RecyclerView recycleView;
             Resources mResource;
-            
-            public SimpleStringRecyclerViewAdapter(Context context, List<User> items, Resources res, RecyclerView rv)
+
+            public SimpleStringRecyclerViewAdapter(Context context, List<UserInfoModel> items, Resources res, RecyclerView rv)
             {
                 context.Theme.ResolveAttribute(Resource.Attribute.selectableItemBackground, mTypedValue, true);
                 mBackground = mTypedValue.ResourceId;
                 mValues = items;
                 mResource = res;
                 recycleView = rv;
-                
+
             }
 
             public override int ItemCount
@@ -245,8 +248,8 @@ namespace BirdTouch.Fragments
 
                 View mView = (View)vsender.Tag;
                 int position = recycleView.GetChildAdapterPosition(mView);
-                int userId = StartPageActivity.user.Id;
-              
+                Guid userId = StartPageActivity.user.Id;
+
                 ISharedPreferences pref = vsender.Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
                 ISharedPreferencesEditor edit = pref.Edit();
 
@@ -254,10 +257,10 @@ namespace BirdTouch.Fragments
                 {//checked
 
                     if (!pref.Contains("SavedPrivateUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
-                    {       
-                        Dictionary<int, Dictionary<int, List<User>>> dictionary = new Dictionary<int, Dictionary<int, List<User>>>();
-                        dictionary.Add(userId, new Dictionary<int, List<User>>());
-                        dictionary[userId].Add(1, new List<User>());// 1 je private mode
+                    {
+                        var dictionary = new Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>();
+                        dictionary.Add(userId, new Dictionary<int, List<UserInfoModel>>());
+                        dictionary[userId].Add(1, new List<UserInfoModel>());// 1 je private mode
                         dictionary[userId][1].Add(mValues[position]);
 
                         edit.Remove("SavedPrivateUsersDictionary");
@@ -273,14 +276,17 @@ namespace BirdTouch.Fragments
                         if (serializedDictionary != String.Empty)
                         {
 
-                            Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
+                            var dictionary =
+                                Newtonsoft.Json.JsonConvert.DeserializeObject<
+                                    Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
+
                             if (!dictionary.ContainsKey(userId))
                             {//ako user nije uopste dodavao usere
-                                dictionary.Add(userId, new Dictionary<int, List<User>>());
+                                dictionary.Add(userId, new Dictionary<int, List<UserInfoModel>>());
                             }
                             if (!dictionary[userId].ContainsKey(1))
                             {//ako nije dodavao private usere
-                                dictionary[userId].Add(1, new List<User>());
+                                dictionary[userId].Add(1, new List<UserInfoModel>());
                             }
 
                             //samo dodamo private usera iz recyclerViewa
@@ -302,7 +308,9 @@ namespace BirdTouch.Fragments
                     string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
                     if (serializedDictionary != String.Empty)
                     {
-                        Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
+                        var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                            <Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
+
                         dictionary[userId][1].RemoveAll(a => a.Id == mValues[position].Id);
                         edit.Remove("SavedPrivateUsersDictionary");
                         edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
@@ -311,7 +319,7 @@ namespace BirdTouch.Fragments
                         NotifyItemRemoved(position);
                         Fragment1_Private refToSavedUsersFragment = (Fragment1_Private)StartPageActivity.adapter.GetItem(0);
                         refToSavedUsersFragment.NotifyDataSetChangedFromAnotherFragment();
-                       
+
                     }
 
                 }
@@ -393,7 +401,7 @@ namespace BirdTouch.Fragments
                 mImageView = view.FindViewById<ImageView>(Resource.Id.avatar); //profilna slika usera
                 mTxtView = view.FindViewById<TextView>(Resource.Id.text1); //ime + prezime usera
                 checkbox = view.FindViewById<CheckBox>(Resource.Id.checkboxSaveUserRecycleViewRow);
-              
+
             }
 
             public override string ToString()

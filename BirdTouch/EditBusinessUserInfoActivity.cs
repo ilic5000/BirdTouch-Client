@@ -15,6 +15,7 @@ using System.Net;
 using System.Collections.Specialized;
 using Android.Graphics;
 using System.IO;
+using BirdTouch.Helpers;
 
 namespace BirdTouch
 {
@@ -23,7 +24,7 @@ namespace BirdTouch
 
     {
 
-        private Business business;
+        private BusinessInfoModel business;
         private ImageView imageView;
         private TextInputLayout companyNameWrapper;
         private TextInputLayout emailWrapper;
@@ -39,7 +40,7 @@ namespace BirdTouch
         private bool pictureChanged = false;
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            
+
 
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Activity_EditBusinessUserInfo);
@@ -52,7 +53,7 @@ namespace BirdTouch
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_arrow_back_black_24dp);
             SupportActionBar.Title = "";
             //popunjavanje polja iz baze
-            business = Newtonsoft.Json.JsonConvert.DeserializeObject<Business>(Intent.GetStringExtra("businessLoggedInJson"));
+            business = Newtonsoft.Json.JsonConvert.DeserializeObject<BusinessInfoModel>(Intent.GetStringExtra("businessLoggedInJson"));
 
 
             if (business.ProfilePictureData != null)
@@ -95,10 +96,10 @@ namespace BirdTouch
             fabSaveChanges.Click += (o, e) => //o is sender, sender is button, button is a view
             {
                 View view = o as View;
-                if (Reachability.isOnline(this) && !webClient.IsBusy)
+                if (Reachability.IsOnline(this) && !webClient.IsBusy)
                 {
 
-                    //zbog parametara mora da postoje sva polja kada se salju, makar privremeno 
+                    //zbog parametara mora da postoje sva polja kada se salju, makar privremeno
                     checkIfEditTextsAreEmptyAndTurnThemToNULLString();
 
 
@@ -125,7 +126,7 @@ namespace BirdTouch
                     parameters.Add("adress", adressWrapper.EditText.Text);
                     parameters.Add("id", business.IdBusinessOwner.ToString());
 
-                    String restUriString = GetString(Resource.String.server_ip_changeBusinessUser);
+                    String restUriString = GetString(Resource.String.webapi_endpoint_changeBusinessUser);
                     uri = new Uri(restUriString);
 
                     webClient.Headers.Clear();
@@ -173,7 +174,7 @@ namespace BirdTouch
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
                 Console.Out.WriteLine(jsonResult);
                 Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">Changes saved successfully</font>"), Snackbar.LengthLong).Show();
-                                                                                                                  
+
             }
         }
 

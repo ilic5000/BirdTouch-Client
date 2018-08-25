@@ -15,6 +15,7 @@ using System.Net;
 using Android.Text;
 using Android.Support.Design.Widget;
 using System.Collections.Specialized;
+using BirdTouch.Helpers;
 
 namespace BirdTouch.Fragments
 {
@@ -31,7 +32,7 @@ namespace BirdTouch.Fragments
         private WebClient webClientLoadList;
         private Uri uri;
 
-        List<Business> listSavedBusinessUsers;
+        List<BusinessInfoModel> listSavedBusinessUsers;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -87,11 +88,11 @@ namespace BirdTouch.Fragments
         {
             if (listSavedBusinessUsers.Count > 0)
             {
-                if (Reachability.isOnline(Activity) && !webClientSaveList.IsBusy)
+                if (Reachability.IsOnline(Activity) && !webClientSaveList.IsBusy)
                 {
+                    List<Guid> listSavedContactsId = new List<Guid>();
 
-                    List<int> listSavedContactsId = new List<int>();
-                    foreach (Business item in listSavedBusinessUsers)
+                    foreach (BusinessInfoModel item in listSavedBusinessUsers)
                     {
                         listSavedContactsId.Add(item.IdBusinessOwner);
                     }
@@ -104,7 +105,7 @@ namespace BirdTouch.Fragments
                     parameters.Add("id", StartPageActivity.user.Id.ToString());
                     parameters.Add("listSavedContactsIDSerialized", listSavedIDSerialized);
 
-                    String restUriString = GetString(Resource.String.server_ip_saveBusinessSavedList);
+                    String restUriString = GetString(Resource.String.webapi_endpoint_saveBusinessSavedList);
                     uri = new Uri(restUriString);
 
                     webClientSaveList.Headers.Clear();
@@ -126,8 +127,8 @@ namespace BirdTouch.Fragments
 
         public void SetUpRecyclerView() //ovde da se napravi lista dobijenih korisnika
         {
-            int userId = StartPageActivity.user.Id;
-            listSavedBusinessUsers = new List<Business>();
+            Guid userId = StartPageActivity.user.Id;
+            listSavedBusinessUsers = new List<BusinessInfoModel>();
 
             ISharedPreferences pref = Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
             ISharedPreferencesEditor edit = pref.Edit();
@@ -138,7 +139,9 @@ namespace BirdTouch.Fragments
                 if (serializedDictionary != String.Empty)
                 {
 
-                    Dictionary<int, Dictionary<int, List<Business>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<Business>>>>(serializedDictionary);
+                    var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                        <Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>>(serializedDictionary);
+
                     if (dictionary.ContainsKey(userId))
                     {//ako je user dodavao usere
                         if (dictionary[userId].ContainsKey(1))
@@ -168,11 +171,11 @@ namespace BirdTouch.Fragments
         {
             private readonly TypedValue mTypedValue = new TypedValue();
             private int mBackground;
-            private List<Business> mValues;
+            private List<BusinessInfoModel> mValues;
             private RecyclerView recycleView;
             Resources mResource;
 
-            public SimpleStringRecyclerViewAdapter(Context context, List<Business> items, Resources res, RecyclerView rv)
+            public SimpleStringRecyclerViewAdapter(Context context, List<BusinessInfoModel> items, Resources res, RecyclerView rv)
             {
                 context.Theme.ResolveAttribute(Resource.Attribute.selectableItemBackground, mTypedValue, true);
                 mBackground = mTypedValue.ResourceId;
@@ -242,7 +245,7 @@ namespace BirdTouch.Fragments
 
                 View mView = (View)vsender.Tag;
                 int position = recycleView.GetChildAdapterPosition(mView);
-                int userId = StartPageActivity.user.Id;
+                Guid userId = StartPageActivity.user.Id;
 
                 ISharedPreferences pref = vsender.Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
                 ISharedPreferencesEditor edit = pref.Edit();
@@ -252,9 +255,10 @@ namespace BirdTouch.Fragments
 
                     if (!pref.Contains("SavedBusinessUsersDictionary")) //prvi put u aplikaciji dodajemo business usera u saved
                     {
-                        Dictionary<int, Dictionary<int, List<Business>>> dictionary = new Dictionary<int, Dictionary<int, List<Business>>>();
-                        dictionary.Add(userId, new Dictionary<int, List<Business>>());
-                        dictionary[userId].Add(1, new List<Business>());//jedinica zbog eventualnih modova
+                        var dictionary = new Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>();
+
+                        dictionary.Add(userId, new Dictionary<int, List<BusinessInfoModel>>());
+                        dictionary[userId].Add(1, new List<BusinessInfoModel>());//jedinica zbog eventualnih modova
                         dictionary[userId][1].Add(mValues[position]);
 
                         edit.Remove("SavedBusinessUsersDictionary");
@@ -270,14 +274,16 @@ namespace BirdTouch.Fragments
                         if (serializedDictionary != String.Empty)
                         {
 
-                            Dictionary<int, Dictionary<int, List<Business>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<Business>>>>(serializedDictionary);
+                            var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                                <Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>>(serializedDictionary);
+
                             if (!dictionary.ContainsKey(userId))
                             {//ako user nije uopste dodavao usere
-                                dictionary.Add(userId, new Dictionary<int, List<Business>>());
+                                dictionary.Add(userId, new Dictionary<int, List<BusinessInfoModel>>());
                             }
                             if (!dictionary[userId].ContainsKey(1))
                             {//jedinica zbog eventualnih modova
-                                dictionary[userId].Add(1, new List<Business>());
+                                dictionary[userId].Add(1, new List<BusinessInfoModel>());
                             }
 
                             //samo dodamo private usera iz recyclerViewa
@@ -299,7 +305,9 @@ namespace BirdTouch.Fragments
                     string serializedDictionary = pref.GetString("SavedBusinessUsersDictionary", String.Empty);
                     if (serializedDictionary != String.Empty)
                     {
-                        Dictionary<int, Dictionary<int, List<Business>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<Business>>>>(serializedDictionary);
+                        var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                            <Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>>(serializedDictionary);
+
                         dictionary[userId][1].RemoveAll(a => a.IdBusinessOwner == mValues[position].IdBusinessOwner);
                         edit.Remove("SavedBusinessUsersDictionary");
                         edit.PutString("SavedBusinessUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));

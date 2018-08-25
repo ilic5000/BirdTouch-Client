@@ -19,7 +19,7 @@ namespace BirdTouch
     public class UserDetailActivity : AppCompatActivity
     {
 
-        private User user;
+        private UserInfoModel user;
         private ImageView imageView;
 
         private TextView firstNameWrapper;
@@ -62,7 +62,7 @@ namespace BirdTouch
 
             fabSaveUser = FindViewById<FloatingActionButton>(Resource.Id.fabPrivateUserInfoSaveUser);
 
-            user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("userInformation"));
+            user = Newtonsoft.Json.JsonConvert.DeserializeObject<UserInfoModel>(Intent.GetStringExtra("userInformation"));
             isSaved = Intent.GetBooleanExtra("isSaved", false);
 
             if (user.ProfilePictureData != null)
@@ -226,16 +226,14 @@ namespace BirdTouch
 
         private void FbLogo_Click(object sender, EventArgs e)
         {
-            
                 var uri = Android.Net.Uri.Parse(user.FbLink);
                 var intent = new Intent(Intent.ActionView, uri);
                 StartActivity(intent);
-            
         }
 
         private void FabSaveUser_Click(object sender, EventArgs e)
         {
-            int userId = StartPageActivity.user.Id;
+            Guid userId = StartPageActivity.user.Id;
 
             ISharedPreferences pref = ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
             ISharedPreferencesEditor edit = pref.Edit();
@@ -247,13 +245,15 @@ namespace BirdTouch
                 string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
                 if (serializedDictionary != String.Empty)
                 {
-                    Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
+                    var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                        <Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
+
                     dictionary[userId][1].RemoveAll(a => a.Id == user.Id);
                     edit.Remove("SavedPrivateUsersDictionary");
                     edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                     edit.Apply();
-                    
-                    
+
+
                     Fragment1_Private refToSavedUsersFragment = (Fragment1_Private)StartPageActivity.adapter.GetItem(0);
                     refToSavedUsersFragment.NotifyDataSetChangedFromAnotherFragment();
                     Fragment1_PrivateSavedUsers refToSavedUsersFragment2 = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
@@ -270,9 +270,10 @@ namespace BirdTouch
                 {
                     // Snackbar.Make((View)sender, Android.Text.Html.FromHtml("<font color=\"#ffffff\">does not contain</font>"), Snackbar.LengthLong).Show();
 
-                    Dictionary<int, Dictionary<int, List<User>>> dictionary = new Dictionary<int, Dictionary<int, List<User>>>();
-                    dictionary.Add(userId, new Dictionary<int, List<User>>());
-                    dictionary[userId].Add(1, new List<User>());// 1 je private mode
+                    var dictionary = new Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>();
+
+                    dictionary.Add(userId, new Dictionary<int, List<UserInfoModel>>());
+                    dictionary[userId].Add(1, new List<UserInfoModel>());// 1 je private mode
                     dictionary[userId][1].Add(user);
 
                     edit.Remove("SavedPrivateUsersDictionary");
@@ -290,14 +291,16 @@ namespace BirdTouch
                     if (serializedDictionary != String.Empty)
                     {
 
-                        Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
+                        var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                            <Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
+
                         if (!dictionary.ContainsKey(userId))
                         {//ako user nije uopste dodavao usere
-                            dictionary.Add(userId, new Dictionary<int, List<User>>());
+                            dictionary.Add(userId, new Dictionary<int, List<UserInfoModel>>());
                         }
                         if (!dictionary[userId].ContainsKey(1))
                         {//ako nije dodavao private usere
-                            dictionary[userId].Add(1, new List<User>());
+                            dictionary[userId].Add(1, new List<UserInfoModel>());
                         }
 
                         //samo dodamo private usera iz recyclerViewa
@@ -318,7 +321,7 @@ namespace BirdTouch
                 isSaved = true;
             }
 
-         
+
 
         }
 
@@ -335,8 +338,8 @@ namespace BirdTouch
         }
 
 
-    
-       
+
+
     }
 }
 
