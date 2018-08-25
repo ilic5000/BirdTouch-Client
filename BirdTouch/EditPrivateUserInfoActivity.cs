@@ -94,12 +94,10 @@ namespace BirdTouch
             linkedInLinkWrapper.EditText.Text=user.LinkedInLink;
             collapsingToolBar.Title = "";
 
-
             imageView.Click += ImageView_Click;
 
             webClient = new WebClient();
             webClient.UploadDataCompleted += WebClient_UploadDataCompleted;
-
 
             fabSaveChanges = FindViewById<FloatingActionButton>(Resource.Id.fabEditPrivateUserInfoSaveChanges);
             fabInsertPhoto = FindViewById<FloatingActionButton>(Resource.Id.fabEditPrivateUserInfoInsertPhoto);
@@ -114,7 +112,6 @@ namespace BirdTouch
 
                     //zbog parametara mora da postoje sva polja kada se salju, makar privremeno
                     checkIfEditTextsAreEmptyAndTurnThemToNULLString();
-
 
                     //get ImageView (profileImage) as  array of bytes
                     imageView.BuildDrawingCache(true);
@@ -166,8 +163,6 @@ namespace BirdTouch
                 }
 
             };
-
-
         }
 
         private void FabInsertPhoto_Click(object sender, EventArgs e)
@@ -205,7 +200,6 @@ namespace BirdTouch
 
                     StartPageActivity.UpdateProfileImage();
                 }
-
             }
         }
 
@@ -229,8 +223,6 @@ namespace BirdTouch
                 pictureChanged = true;
             }
         }
-
-
 
         private void checkIfEditTextsAreEmptyAndTurnThemToNULLString()
         {
@@ -321,115 +313,5 @@ namespace BirdTouch
             Console.WriteLine();
             return inSampleSize;
         }
-
     }
 }
-
-
-
-
-
-
-
-
-
-//nepotrebno
-
-
-//String restUriString = GetString(Resource.String.webapi_endpoint_changePrivateUser)
-//+ user.Id + "/" + firstNameWrapper.EditText.Text + "/" + lastNameWrapper.EditText.Text + "/" + emailWrapper.EditText.Text
-//+ "/" + phoneWrapper.EditText.Text + "/" + adressWrapper.EditText.Text + "/" + dateOfBirthWrapper.EditText.Text + "/"
-//+ facebookLinkWrapper.EditText.Text + "/"
-//+ twitterLinkWrapper.EditText.Text + "/" + gPlusLinkWrapper.EditText.Text + "/" + linkedInLinkWrapper.EditText.Text;
-
-//uri = new Uri(restUriString);
-//webClient.DownloadDataAsync(uri);
-
-//  webClient.UploadDataAsync(uri, changedUser);
-
-
-
-
-
-
-//private void WebClient_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
-//{
-//    if (e.Error != null)
-//    {
-//        //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
-
-//        returnAllNullEditTextsToEmpty();
-//        Console.WriteLine("*******Error webclient data save changes error");
-//        Console.WriteLine(e.Error.Message);
-//        Console.WriteLine("******************************************************");
-//        Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
-
-//    }
-//    else
-//    {
-//        returnAllNullEditTextsToEmpty();
-//        Console.WriteLine("Success!");
-//        string jsonResult = Encoding.UTF8.GetString(e.Result);
-//        Console.Out.WriteLine(jsonResult);
-//        Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">Changes saved successfully</font>"), Snackbar.LengthLong).Show();
-//        StartPageActivity.ab.Title = firstNameWrapper.EditText.Text + " " + lastNameWrapper.EditText.Text; //update title u glavnoj activity, jer je ime i prezime sada promenjeno
-
-
-
-
-
-//        NameValueCollection nvc = new NameValueCollection();
-//        //  nvc.Add("picDataEncoded", picDataEncoded);
-//        nvc.Add("test2", "test2 je uspesno stigao");
-//        nvc.Add("test3", "test3 je uspesno stigao");
-
-//        String restUriString = "http://192.168.0.102:80/BirdTouchServer/rest/uploadPictureData/" + user.Id.ToString();
-//        uri = new Uri(restUriString);
-//        //webClientPictureUpload.Headers["Content-Type"] = "application/json";
-
-//        webClientPictureUpload.Headers.Add(nvc);
-//        webClientPictureUpload.UploadDataAsync(uri, picData);
-
-//        // webClientPictureUpload.UploadValuesAsync(uri, nvc);
-//    }
-//}
-
-
-//private void WebClientPictureUpload_UploadDataCompleted(object sender, UploadDataCompletedEventArgs e)
-//{
-//    if (e.Error != null)
-//    {
-//        Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">3Changes pic not saved successfully</font>"), Snackbar.LengthLong).Show();
-
-//    }
-//    else
-//    {
-//        Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">3Changes pic saved successfully</font>"), Snackbar.LengthLong).Show();
-
-//    }
-//}
-
-
-//private void WebClientPictureUpload_UploadValuesCompleted(object sender, UploadValuesCompletedEventArgs e)
-//{
-//    if (e.Error != null)
-//    {
-//        Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">2Changes pic not saved successfully</font>"), Snackbar.LengthLong).Show();
-
-//    }
-//    else
-//    {
-//        Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">2Changes pic saved successfully</font>"), Snackbar.LengthLong).Show();
-
-//    }
-//}
-
-
-
-
-
-
-//Bitmap bitmap = BitmapFactory.DecodeStream(stream); //ako hocemo skaliranu, onda koristimo DecodeBitmapFromStream(data.Data, 400, 300)
-//MemoryStream memStream = new MemoryStream();
-//bitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, memStream); //moze i drugi format //max img size je 61kB
-//byte[] picData = memStream.ToArray();

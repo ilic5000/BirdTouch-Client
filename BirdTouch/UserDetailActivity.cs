@@ -18,7 +18,6 @@ namespace BirdTouch
     [Activity(Label ="UserDetailActivity", Theme = "@style/Theme.DesignDemo")]
     public class UserDetailActivity : AppCompatActivity
     {
-
         private UserInfoModel user;
         private ImageView imageView;
 
@@ -36,12 +35,10 @@ namespace BirdTouch
         private CardView phoneCardView;
         private CardView dateOfBirthCardView;
 
-
         private ImageView fbLogo;
         private ImageView twLogo;
         private ImageView gpLogo;
         private ImageView liLogo;
-
 
         private FloatingActionButton fabSaveUser;
 
@@ -75,8 +72,6 @@ namespace BirdTouch
                 imageView.SetImageResource(Resource.Drawable.blank_navigation);
             }
 
-
-
             firstNameWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailFirstname);
             lastNameWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailLastname);
             emailWrapper = FindViewById<TextView>(Resource.Id.textViewPrivateUserShowDetailEmail);
@@ -90,7 +85,6 @@ namespace BirdTouch
             phoneCardView = FindViewById<CardView>(Resource.Id.cardViewPhoneNumber);
             adressCardView = FindViewById<CardView>(Resource.Id.cardViewAdress);
             dateOfBirthCardView = FindViewById<CardView>(Resource.Id.cardViewDateOfBirth);
-
 
             fbLogo = FindViewById<ImageView>(Resource.Id.facebookLinkLogo);
             twLogo = FindViewById<ImageView>(Resource.Id.twitterLinkLogo);
@@ -238,10 +232,8 @@ namespace BirdTouch
             ISharedPreferences pref = ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
             ISharedPreferencesEditor edit = pref.Edit();
 
-
             if (isSaved)
             {
-
                 string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
                 if (serializedDictionary != String.Empty)
                 {
@@ -262,10 +254,8 @@ namespace BirdTouch
 
                 fabSaveUser.SetImageResource(Resource.Drawable.ic_save_white_24dp);
                 isSaved = false;
-            }else
+            } else
             {
-
-
                 if (!pref.Contains("SavedPrivateUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
                 {
                     // Snackbar.Make((View)sender, Android.Text.Html.FromHtml("<font color=\"#ffffff\">does not contain</font>"), Snackbar.LengthLong).Show();
@@ -312,17 +302,12 @@ namespace BirdTouch
                         refToSavedUsersFragment.NotifyDataSetChangedFromAnotherFragment();
                         Fragment1_PrivateSavedUsers refToSavedUsersFragment2 = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
                         refToSavedUsersFragment2.SetUpRecyclerView();
-
                     }
-
                 }
 
                 fabSaveUser.SetImageResource(Resource.Drawable.ic_done);
                 isSaved = true;
             }
-
-
-
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -332,48 +317,8 @@ namespace BirdTouch
                 case Android.Resource.Id.Home:
                     Finish();
                     return true;
-
             }
             return base.OnOptionsItemSelected(item);
         }
-
-
-
-
     }
 }
-
-
-
-
-
-
-
-
-
-//if (pref.Contains("SavedPrivateUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
-//{
-//    string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
-//    if (serializedDictionary != String.Empty)
-//    {
-
-//        Dictionary<int, Dictionary<int, List<User>>> dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, List<User>>>>(serializedDictionary);
-//        if (!dictionary.ContainsKey(userId))
-//        {//ako user nije uopste dodavao usere
-//            dictionary.Add(userId, new Dictionary<int, List<User>>());
-//        }
-//        if (!dictionary[userId].ContainsKey(1))
-//        {//ako nije dodavao private usere
-//            dictionary[userId].Add(1, new List<User>());
-//        }
-
-//        //samo dodamo private usera iz recyclerViewa
-//        dictionary[userId][1].Add(mValues[position]);
-//        edit.Remove("SavedPrivateUsersDictionary");
-//        edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
-//        edit.Apply();
-//        Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
-//        refToSavedUsersFragment.SetUpRecyclerView();
-
-//    }
-//}

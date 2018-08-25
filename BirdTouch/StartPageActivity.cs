@@ -31,9 +31,8 @@ using BirdTouch.Helpers;
 namespace BirdTouch
 {
     [Activity(Label = "StartPageActivity", Theme = "@style/Theme.DesignDemo")]
-    public class StartPageActivity : AppCompatActivity, View.IOnClickListener //zbog design library nije obican activity
+    public class StartPageActivity : AppCompatActivity, View.IOnClickListener
     {
-
         public static SupportActionBar ab;
         public static ImageView profilePictureNavigationHeader;
         public static TabAdapter adapter;
@@ -114,7 +113,8 @@ namespace BirdTouch
             //Prvo pokretanje aplikacije - da li da pokaze tutorijal
             //obratiti paznju na childview iz adaptera, ako se promeni redosled, tutorijal ce biti los ili ce biti null
             ISharedPreferences pref = ApplicationContext.GetSharedPreferences("FirstTimeRun", FileCreationMode.Private);
-            if (pref.GetBoolean(user.Username + "FirstRodeo", true)){ //da li user prvi put pokrece aplikaciju, true je defaultno ako ne pronadje key sa ovim usernameom
+            if (pref.GetBoolean(user.Username + "FirstRodeo", true))
+            { //da li user prvi put pokrece aplikaciju, true je defaultno ako ne pronadje key sa ovim usernameom
 
                 var target = new ViewTarget(((SlidingTabStrip)tabs.GetChildAt(0)).GetChildAt(0));
 
@@ -129,11 +129,7 @@ namespace BirdTouch
                 showcaseView.OverrideButtonClick(this); //this jer ova aktivnost nasledjuje ionclicklistener koji ima zeljenjo ponasanje
                 pref.Edit().PutBoolean(user.Username + "FirstRodeo", false).Commit();
             }
-
-
         }
-
-
 
         public static void UpdateProfileImage()
         {
@@ -152,7 +148,7 @@ namespace BirdTouch
             adapter.AddFragment(new Fragment1_PrivateSavedUsers(), "Saved private");
             adapter.AddFragment(new Fragment2_Business(), "Business");
             adapter.AddFragment(new Fragment2_BusinessSavedUsers(), "Saved business");
-           // adapter.AddFragment(new Fragment3_Celebrity(), "Celebrity"); not available in beta
+            // adapter.AddFragment(new Fragment3_Celebrity(), "Celebrity"); not available in beta
             viewPager.Adapter = adapter;
         }
 
@@ -171,6 +167,7 @@ namespace BirdTouch
             }
 
         }
+
         private void SetUpDrawerContent(NavigationView navigationView)
         {
             navigationView.NavigationItemSelected += (object sender, NavigationView.NavigationItemSelectedEventArgs e) =>
@@ -198,7 +195,7 @@ namespace BirdTouch
                          {
                              Snackbar.Make(navigationView, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
                          }
-                      break;
+                         break;
 
 
                      case Resource.Id.nav_business: //kada se klikne na business user edit info
@@ -212,7 +209,7 @@ namespace BirdTouch
                          {
                              Snackbar.Make(navigationView, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
                          }
-                     break;
+                         break;
 
                      case Resource.Id.nav_celebrity: //kada se klikne na celebrity user edit info
                          Context context22 = navigationView.Context;
@@ -238,7 +235,6 @@ namespace BirdTouch
                  drawerLayout.CloseDrawers();
              };
         }
-
 
         private void WebClientUserPrivateDataUponOpeningEditDataActivity_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
@@ -295,8 +291,6 @@ namespace BirdTouch
             }
         }
 
-
-
         public class TabAdapter : FragmentPagerAdapter //ovo poziva viewpager kako bi znao koji fragment u kom tabu
         {
 
@@ -338,8 +332,6 @@ namespace BirdTouch
         {
             MoveTaskToBack(true);
         }
-
-
 
         void View.IOnClickListener.OnClick(View v) //mora ovako jer c# ne dozvoljava pravljenje OnClickListenera unutar OverrideButtonClick kao sto bi trebalo. Zato sam nasledio taj interfejs i ovde ga overridovao i onda u overridebuttonclick ga povezem preko this.
         {
@@ -409,65 +401,9 @@ namespace BirdTouch
 
                     break;
 
-
                 default:
                     break;
             }
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //public override bool OnCreateOptionsMenu(IMenu menu)
-        //{
-        //    var inflater = MenuInflater;
-        //    inflater.Inflate(Resource.Menu.menu_main, menu);
-        //    return base.OnCreateOptionsMenu(menu);
-        //}
-
-        //public override bool OnOptionsItemSelected(IMenuItem item)
-        //{
-        //    int id = item.ItemId;
-        //    if(id == Resource.Id.privateUserActionBarButton) {
-        //        Toast.MakeText(this, "Private user activity starting...", ToastLength.Short).Show();
-        //    }
-        //    if (id == Resource.Id.bussinessUserActionBarButton)
-        //    {
-        //        Toast.MakeText(this, "Bussiness user activity starting...", ToastLength.Short).Show();
-        //    }
-
-        //    return base.OnOptionsItemSelected(item);
-        //}
-
-
-        //fab.Click += (o, e) => //o is sender, sender is button, button is a view
-        //{
-        //    //adapter.AddFragment(new Fragment3_Celebrity(), "TEST");
-        //   // adapter.Fragments[1]=new Fragment3_Celebrity();
-        //   // adapter.NotifyDataSetChanged();
-        //    View anchor = o as View;
-        //    Snackbar.Make(anchor, "Yay Snackbar!!", Snackbar.LengthLong).SetAction("Action", v =>
-        //    {
-        //        //Do something here
-        //        //Intent intent new Intent();
-        //    }).Show();
-        //};
-
     }
-
-
-
-
-
 }

@@ -38,9 +38,6 @@ namespace BirdTouch
             {
                 new SignInDialog().Show(SupportFragmentManager, "Dialog fragment");
             };
-
-            PreferenceManager.GetDefaultSharedPreferences(this.ApplicationContext).Edit().Clear().Commit();
-
         }
     }
 }

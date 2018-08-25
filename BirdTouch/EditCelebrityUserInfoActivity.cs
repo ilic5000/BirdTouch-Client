@@ -11,20 +11,18 @@ namespace BirdTouch
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            
-
             // Create your application here
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Activity_EditCelebrityUserInfo);
 
-            
-            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolbar_edit_celebrity_info); //nije isti toolbar kao u startpage
+            //nije isti toolbar kao u startpage
+            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolbar_edit_celebrity_info);
 
             SetSupportActionBar(toolBar);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_arrow_back_black_24dp);
             SupportActionBar.Title = "";
-            
+
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -34,7 +32,7 @@ namespace BirdTouch
                 case Android.Resource.Id.Home:
                     Finish();
                     return true;
-                    
+
             }
             return base.OnOptionsItemSelected(item);
         }
