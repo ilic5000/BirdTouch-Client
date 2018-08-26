@@ -12,6 +12,7 @@ using BirdTouch.Models;
 using Android.Graphics;
 using BirdTouch.Fragments;
 using Android.Support.V7.Widget;
+using BirdTouch.Activities;
 
 namespace BirdTouch
 {

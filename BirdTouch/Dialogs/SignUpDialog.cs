@@ -4,6 +4,8 @@ using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Views;
 using Android.Widget;
+using BirdTouch.Activities;
+using BirdTouch.Constants;
 using BirdTouch.Helpers;
 using BirdTouch.Models;
 using Newtonsoft.Json;
@@ -122,10 +124,13 @@ namespace BirdTouch.Dialogs
             }
             else
             {
-                var user = JsonConvert.DeserializeObject<UserInfoModel>(e.Result);
+                var response = JsonConvert.DeserializeObject<LoginResponse>(e.Result);
+
+                // Add token for the next time you run app
+                JwtTokenHelper.AddTokenToSharedPreferences(Context, response.JwtToken);
 
                 Intent intent = new Intent(this.Activity, typeof(StartPageActivity));
-                intent.PutExtra("userLoggedInJson", e.Result);
+                intent.PutExtra(IntentConstants.LOGGEDINUSER, JsonConvert.SerializeObject(response.User));
                 this.StartActivity(intent);
                 this.Activity.Finish();
             }

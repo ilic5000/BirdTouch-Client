@@ -5,10 +5,14 @@ using Android.Support.Design.Widget;
 using Android.Text;
 using Android.Views;
 using Android.Widget;
+using BirdTouch.Activities;
+using BirdTouch.Constants;
 using BirdTouch.Helpers;
 using BirdTouch.Models;
+using Newtonsoft.Json;
 using System;
 using System.Net;
+using System.Text;
 
 namespace BirdTouch.Dialogs
 {
@@ -79,6 +83,24 @@ namespace BirdTouch.Dialogs
             }
         }
 
+        private void WebClientSignedIn_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                // TODO: Maybe notify users about the different types of error (connectivity issues, credentials etc.)
+                _passwordWrapper.Error = "There was some error with JWT Token, try again.";
+            }
+            else
+            {
+                _passwordWrapper.Error = string.Empty;
+
+                Intent intent = new Intent(this.Activity, typeof(StartPageActivity));
+                intent.PutExtra(IntentConstants.LOGGEDINUSER, Encoding.UTF8.GetString(e.Result));
+                this.StartActivity(intent);
+                this.Activity.Finish();
+            }
+        }
+
         private void WebClientLogin_UploadStringCompleted(object sender, UploadStringCompletedEventArgs e)
         {
             if (e.Error != null)
@@ -88,14 +110,14 @@ namespace BirdTouch.Dialogs
             }
             else
             {
+                var response = JsonConvert.DeserializeObject<LoginResponse>(e.Result);
                 _passwordWrapper.Error = string.Empty;
 
-                UserInfoModel user = Newtonsoft.Json.JsonConvert.DeserializeObject
-                    <UserInfoModel>(e.Result);
+                // Add token for the next time you run app
+                JwtTokenHelper.AddTokenToSharedPreferences(Context, response.JwtToken);
 
                 Intent intent = new Intent(this.Activity, typeof(StartPageActivity));
-                intent.PutExtra("userLoggedInJson", e.Result);
-
+                intent.PutExtra(IntentConstants.LOGGEDINUSER, JsonConvert.SerializeObject(response.User));
                 this.StartActivity(intent);
                 this.Activity.Finish();
             }

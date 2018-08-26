@@ -20,6 +20,7 @@ using System.Text;
 using BirdTouch.Models;
 using Android.Views.Animations;
 using BirdTouch.Helpers;
+using BirdTouch.Activities;
 
 namespace BirdTouch.Fragments
 {

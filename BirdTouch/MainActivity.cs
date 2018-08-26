@@ -1,10 +1,15 @@
-﻿using System;
-using Android.Widget;
+﻿using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Support.V4.App;
-using Android.App;
+using Android.Widget;
+using BirdTouch.Activities;
+using BirdTouch.Constants;
 using BirdTouch.Dialogs;
-using Android.Preferences;
+using BirdTouch.Helpers;
+using System;
+using System.Net;
+using System.Text;
 
 namespace BirdTouch
 {
@@ -13,31 +18,79 @@ namespace BirdTouch
     {
         private Button _btnRegister;
         private Button _btnSignIn;
+        private WebClient _webClientSignedIn;
 
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
-            // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.Main);
-
-            // Find buttons
-            _btnRegister = FindViewById<Button>(Resource.Id.btnRegister);
-            _btnSignIn = FindViewById<Button>(Resource.Id.btnSignIn);
-
-            // Add desired actions for buttons
-
-            // Show dialog for signing up
-            _btnRegister.Click += (object sender, EventArgs e) =>
+            // If User is already signed in
+            if (JwtTokenHelper.IsUserSignedIn(ApplicationContext)
+                && Reachability.IsOnline(this))
             {
-                new SignUpDialog().Show(SupportFragmentManager, "Dialog fragment");
-            };
+                // Set our view from the "main" layout resource
+                SetContentView(Resource.Layout.MainAlreadySignedIn);
 
-            // Show dialog for signing in
-            _btnSignIn.Click += (object sender, EventArgs e) =>
+                // Initialize web clients
+                _webClientSignedIn = new WebClient();
+
+                // Set up events for web clients
+                _webClientSignedIn.DownloadDataCompleted += WebClientSignedIn_DownloadDataCompleted;
+
+                SignInUserFromJwtTokenCredentials();
+            }
+            else
             {
-                new SignInDialog().Show(SupportFragmentManager, "Dialog fragment");
-            };
+                // Set our view from the "main" layout resource
+                SetContentView(Resource.Layout.Main);
+
+                // Find buttons
+                _btnRegister = FindViewById<Button>(Resource.Id.btnRegister);
+                _btnSignIn = FindViewById<Button>(Resource.Id.btnSignIn);
+
+                // Add desired actions for buttons
+
+                // Show dialog for signing up
+                _btnRegister.Click += (object sender, EventArgs e) =>
+                {
+                    new SignUpDialog().Show(SupportFragmentManager, "Dialog fragment");
+                };
+
+                // Show dialog for signing in
+                _btnSignIn.Click += (object sender, EventArgs e) =>
+                {
+                    new SignInDialog().Show(SupportFragmentManager, "Dialog fragment");
+                };
+            }
+        }
+
+        public void SignInUserFromJwtTokenCredentials()
+        {
+            // Check if internet access is available
+            if (Reachability.IsOnline(this)
+                && !_webClientSignedIn.IsBusy)
+            {
+                var uri = WebApiUrlGenerator
+                            .GenerateWebApiUrl(Resource.String.webapi_endpoint_getPrivateInfo);
+
+                _webClientSignedIn.Headers.Clear();
+                _webClientSignedIn.Headers.Add(
+                    HttpRequestHeader.Authorization,
+                    "Bearer " + JwtTokenHelper.GetTokenFromSharedPreferences(ApplicationContext));
+
+                _webClientSignedIn.DownloadDataAsync(uri);
+            }
+        }
+
+        private void WebClientSignedIn_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                Intent intent = new Intent(this, typeof(StartPageActivity));
+                intent.PutExtra(IntentConstants.LOGGEDINUSER, Encoding.UTF8.GetString(e.Result));
+                this.StartActivity(intent);
+                this.Finish();
+            }
         }
     }
 }

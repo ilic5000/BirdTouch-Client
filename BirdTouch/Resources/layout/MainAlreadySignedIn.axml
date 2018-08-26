@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/background_light"
+        android:weightSum="100"
+        android:minWidth="25px"
+        android:minHeight="25px">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_weight="20"
+            android:layout_height="0dp"
+            android:src="@drawable/logo"
+            android:layout_marginTop="85dp" />
+        <TextView
+            android:text="Birdtouch"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:height="0dp"
+            android:textColor="#512DA8"
+            android:gravity="center"
+            android:textStyle="normal"
+            android:textSize="24dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:shadowColor="#b4b4b4ff" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:id="@+id/relativeLayout"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_marginTop="0.0dp" />
+    </LinearLayout>
+</FrameLayout>

@@ -4,7 +4,6 @@ using Android.Support.V7.Widget;
 
 namespace BirdTouch.Fragments
 {
-
     public static class ExtensionMethods
     {
         public static void SetItemClickListener(this RecyclerView rv, Action<RecyclerView, int, View> action)

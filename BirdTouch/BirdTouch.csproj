@@ -125,7 +125,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutActivity.cs" />
+    <Compile Include="Adapters\TabAdapter.cs" />
     <Compile Include="BusinessDetailActivity.cs" />
+    <Compile Include="Constants\IntentConstants.cs" />
+    <Compile Include="Constants\SharedPreferencesConstants.cs" />
     <Compile Include="Dialogs\SignUpDialog.cs" />
     <Compile Include="Dialogs\SignInDialog.cs" />
     <Compile Include="EditBusinessUserInfoActivity.cs" />
@@ -138,16 +141,18 @@
     <Compile Include="Fragments\Fragment2_Business.cs" />
     <Compile Include="Fragments\Fragment2_BusinessSavedUsers.cs" />
     <Compile Include="Fragments\Fragment3_Celebrity.cs" />
+    <Compile Include="Helpers\JwtTokenHelper.cs" />
     <Compile Include="Helpers\WebApiUrlGenerator.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Models\BusinessInfoModel.cs" />
     <Compile Include="Models\LoginCredentials.cs" />
+    <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Models\UserInfoModel.cs" />
     <Compile Include="Helpers\Reachability.cs" />
     <Compile Include="Models\UserExistResponse.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StartPageActivity.cs" />
+    <Compile Include="Activities\StartPageActivity.cs" />
     <Compile Include="UserDetailActivity.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +210,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\BusinessDetailActivity.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\MainAlreadySignedIn.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

@@ -16,6 +16,8 @@ using System.Collections.Specialized;
 using Android.Graphics;
 using System.IO;
 using BirdTouch.Helpers;
+using BirdTouch.Activities;
+using BirdTouch.Constants;
 
 namespace BirdTouch
 {
@@ -57,7 +59,7 @@ namespace BirdTouch
 
             //popunjavanje polja iz baze
 
-            user = Newtonsoft.Json.JsonConvert.DeserializeObject<UserInfoModel>(Intent.GetStringExtra("userLoggedInJson"));
+            user = Newtonsoft.Json.JsonConvert.DeserializeObject<UserInfoModel>(Intent.GetStringExtra(IntentConstants.LOGGEDINUSER));
 
             if (user.ProfilePictureData != null)
             {
@@ -193,7 +195,7 @@ namespace BirdTouch
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
                 Console.Out.WriteLine(jsonResult);
                 Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">Changes saved successfully</font>"), Snackbar.LengthLong).Show();
-                StartPageActivity.ab.Title = firstNameWrapper.EditText.Text + " " + lastNameWrapper.EditText.Text; //update title u glavnoj activity, jer je ime i prezime sada promenjeno
+                StartPageActivity.actionBar.Title = firstNameWrapper.EditText.Text + " " + lastNameWrapper.EditText.Text; //update title u glavnoj activity, jer je ime i prezime sada promenjeno
 
                 if (pictureChanged)
                 {

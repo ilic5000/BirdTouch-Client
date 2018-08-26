@@ -6,6 +6,7 @@
   <string name="webapi_endpoint_registerUser">api/users</string>
   <string name="webapi_endpoint_getUserLogin">api/login</string>
   <string name="webapi_endpoint_doesUsernameExist">api/users/doesUsernameExist"</string>
+  <string name="webapi_endpoint_getPrivateInfo">api/users/getPrivateInfo</string>
 
   <string name="webapi_endpoint_getBusiness">api/getBusiness/"</string>
   <string name="webapi_endpoint_changePrivateUser">api/changeUserPrivateInfo"</string>

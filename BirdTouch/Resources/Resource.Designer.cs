@@ -3355,52 +3355,55 @@ namespace BirdTouch
 			public const int Main = 2130903092;
 			
 			// aapt resource value: 0x7f030035
-			public const int nav_header = 2130903093;
+			public const int MainAlreadySignedIn = 2130903093;
 			
 			// aapt resource value: 0x7f030036
-			public const int notification_media_action = 2130903094;
+			public const int nav_header = 2130903094;
 			
 			// aapt resource value: 0x7f030037
-			public const int notification_media_cancel_action = 2130903095;
+			public const int notification_media_action = 2130903095;
 			
 			// aapt resource value: 0x7f030038
-			public const int notification_template_big_media = 2130903096;
+			public const int notification_media_cancel_action = 2130903096;
 			
 			// aapt resource value: 0x7f030039
-			public const int notification_template_big_media_narrow = 2130903097;
+			public const int notification_template_big_media = 2130903097;
 			
 			// aapt resource value: 0x7f03003a
-			public const int notification_template_lines = 2130903098;
+			public const int notification_template_big_media_narrow = 2130903098;
 			
 			// aapt resource value: 0x7f03003b
-			public const int notification_template_media = 2130903099;
+			public const int notification_template_lines = 2130903099;
 			
 			// aapt resource value: 0x7f03003c
-			public const int notification_template_part_chronometer = 2130903100;
+			public const int notification_template_media = 2130903100;
 			
 			// aapt resource value: 0x7f03003d
-			public const int notification_template_part_time = 2130903101;
+			public const int notification_template_part_chronometer = 2130903101;
 			
 			// aapt resource value: 0x7f03003e
-			public const int select_dialog_item_material = 2130903102;
+			public const int notification_template_part_time = 2130903102;
 			
 			// aapt resource value: 0x7f03003f
-			public const int select_dialog_multichoice_material = 2130903103;
+			public const int select_dialog_item_material = 2130903103;
 			
 			// aapt resource value: 0x7f030040
-			public const int select_dialog_singlechoice_material = 2130903104;
+			public const int select_dialog_multichoice_material = 2130903104;
 			
 			// aapt resource value: 0x7f030041
-			public const int showcase_button = 2130903105;
+			public const int select_dialog_singlechoice_material = 2130903105;
 			
 			// aapt resource value: 0x7f030042
-			public const int StartPage = 2130903106;
+			public const int showcase_button = 2130903106;
 			
 			// aapt resource value: 0x7f030043
-			public const int support_simple_spinner_dropdown_item = 2130903107;
+			public const int StartPage = 2130903107;
 			
 			// aapt resource value: 0x7f030044
-			public const int UserDetailActivity = 2130903108;
+			public const int support_simple_spinner_dropdown_item = 2130903108;
+			
+			// aapt resource value: 0x7f030045
+			public const int UserDetailActivity = 2130903109;
 			
 			static Layout()
 			{
@@ -3434,11 +3437,11 @@ namespace BirdTouch
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f090027
-			public const int ApplicationName = 2131296295;
+			// aapt resource value: 0x7f090028
+			public const int ApplicationName = 2131296296;
 			
-			// aapt resource value: 0x7f090026
-			public const int Hello = 2131296294;
+			// aapt resource value: 0x7f090027
+			public const int Hello = 2131296295;
 			
 			// aapt resource value: 0x7f090000
 			public const int abc_action_bar_home_description = 2131296256;
@@ -3500,11 +3503,11 @@ namespace BirdTouch
 			// aapt resource value: 0x7f090014
 			public const int appbar_scrolling_view_behavior = 2131296276;
 			
-			// aapt resource value: 0x7f09002a
-			public const int author = 2131296298;
-			
 			// aapt resource value: 0x7f09002b
-			public const int author_email = 2131296299;
+			public const int author = 2131296299;
+			
+			// aapt resource value: 0x7f09002c
+			public const int author_email = 2131296300;
 			
 			// aapt resource value: 0x7f090015
 			public const int bottom_sheet_behavior = 2131296277;
@@ -3512,56 +3515,59 @@ namespace BirdTouch
 			// aapt resource value: 0x7f090016
 			public const int character_counter_pattern = 2131296278;
 			
-			// aapt resource value: 0x7f090028
-			public const int checkin = 2131296296;
-			
 			// aapt resource value: 0x7f090029
-			public const int menu_settings = 2131296297;
+			public const int checkin = 2131296297;
+			
+			// aapt resource value: 0x7f09002a
+			public const int menu_settings = 2131296298;
 			
 			// aapt resource value: 0x7f090017
 			public const int ok = 2131296279;
 			
-			// aapt resource value: 0x7f09002c
-			public const int program_version = 2131296300;
+			// aapt resource value: 0x7f09002d
+			public const int program_version = 2131296301;
 			
 			// aapt resource value: 0x7f090013
 			public const int status_bar_notification_info_overflow = 2131296275;
 			
-			// aapt resource value: 0x7f09001f
-			public const int webapi_endpoint_changeBusinessUser = 2131296287;
+			// aapt resource value: 0x7f090020
+			public const int webapi_endpoint_changeBusinessUser = 2131296288;
 			
-			// aapt resource value: 0x7f09001e
-			public const int webapi_endpoint_changePrivateUser = 2131296286;
+			// aapt resource value: 0x7f09001f
+			public const int webapi_endpoint_changePrivateUser = 2131296287;
 			
 			// aapt resource value: 0x7f09001c
 			public const int webapi_endpoint_doesUsernameExist = 2131296284;
 			
+			// aapt resource value: 0x7f09001e
+			public const int webapi_endpoint_getBusiness = 2131296286;
+			
+			// aapt resource value: 0x7f090024
+			public const int webapi_endpoint_getBusinessUsersNearMe = 2131296292;
+			
 			// aapt resource value: 0x7f09001d
-			public const int webapi_endpoint_getBusiness = 2131296285;
+			public const int webapi_endpoint_getPrivateInfo = 2131296285;
 			
 			// aapt resource value: 0x7f090023
-			public const int webapi_endpoint_getBusinessUsersNearMe = 2131296291;
-			
-			// aapt resource value: 0x7f090022
-			public const int webapi_endpoint_getPrivateUsersNearMe = 2131296290;
+			public const int webapi_endpoint_getPrivateUsersNearMe = 2131296291;
 			
 			// aapt resource value: 0x7f09001b
 			public const int webapi_endpoint_getUserLogin = 2131296283;
 			
-			// aapt resource value: 0x7f090021
-			public const int webapi_endpoint_makeUserInvisible = 2131296289;
+			// aapt resource value: 0x7f090022
+			public const int webapi_endpoint_makeUserInvisible = 2131296290;
 			
-			// aapt resource value: 0x7f090020
-			public const int webapi_endpoint_makeUserVisible = 2131296288;
+			// aapt resource value: 0x7f090021
+			public const int webapi_endpoint_makeUserVisible = 2131296289;
 			
 			// aapt resource value: 0x7f09001a
 			public const int webapi_endpoint_registerUser = 2131296282;
 			
-			// aapt resource value: 0x7f090025
-			public const int webapi_endpoint_saveBusinessSavedList = 2131296293;
+			// aapt resource value: 0x7f090026
+			public const int webapi_endpoint_saveBusinessSavedList = 2131296294;
 			
-			// aapt resource value: 0x7f090024
-			public const int webapi_endpoint_savePrivateSavedList = 2131296292;
+			// aapt resource value: 0x7f090025
+			public const int webapi_endpoint_savePrivateSavedList = 2131296293;
 			
 			// aapt resource value: 0x7f090018
 			public const int webapi_http_protocol = 2131296280;
