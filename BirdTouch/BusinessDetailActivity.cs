@@ -156,7 +156,7 @@ namespace BirdTouch
                     var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
                         <Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>>(serializedDictionary);
 
-                    dictionary[userId][1].RemoveAll(a => a.IdBusinessOwner == user.IdBusinessOwner);
+                    dictionary[userId][1].RemoveAll(a => a.FkUserId == user.FkUserId);
                     edit.Remove("SavedBusinessUsersDictionary");
                     edit.PutString("SavedBusinessUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                     edit.Apply();

@@ -45,8 +45,6 @@ namespace BirdTouch.Activities
         private TabLayout _tabs;
         private ViewPager _viewPager;
 
-        private BusinessInfoModel _businessInfo;
-
         private WebClient _webClientUserPrivateDataUponOpeningEditDataActivity;
         private WebClient _webClientUserBusinessDataUponOpeningEditDataActivity;
 
@@ -60,7 +58,7 @@ namespace BirdTouch.Activities
             SetContentView(Resource.Layout.StartPage);
 
             user = Newtonsoft.Json.JsonConvert.DeserializeObject
-             <UserInfoModel>(Intent.GetStringExtra(IntentConstants.LOGGEDINUSER));
+             <UserInfoModel>(Intent.GetStringExtra(IntentConstants.LOGGED_IN_USER));
 
             // Initialize web clients
             _webClientUserPrivateDataUponOpeningEditDataActivity = new WebClient();
@@ -211,6 +209,12 @@ namespace BirdTouch.Activities
                  {
                      // When clicked on private user edit info
                      case Resource.Id.nav_private:
+                         if (!JwtTokenHelper.IsUserSignedIn(ApplicationContext))
+                         {
+                             LogoutAndGoBackToMainScreen(navigationView);
+                             break;
+                         }
+
                          if (Reachability.IsOnline(this))
                          {
                              var uri = WebApiUrlGenerator
@@ -235,10 +239,22 @@ namespace BirdTouch.Activities
 
                      // When clicked on business user edit info
                      case Resource.Id.nav_business:
+                         if (!JwtTokenHelper.IsUserSignedIn(ApplicationContext))
+                         {
+                             LogoutAndGoBackToMainScreen(navigationView);
+                             break;
+                         }
+
                          if (Reachability.IsOnline(this))
                          {
-                             System.String restUriString = GetString(Resource.String.webapi_endpoint_getBusiness) + user.Id;
-                             var uri = new Uri(restUriString);
+                             var uri = WebApiUrlGenerator
+                                 .GenerateWebApiUrl(Resource.String.webapi_endpoint_getBusinessInfo);
+
+                             _webClientUserBusinessDataUponOpeningEditDataActivity.Headers.Clear();
+                             _webClientUserBusinessDataUponOpeningEditDataActivity.Headers.Add(
+                                HttpRequestHeader.Authorization,
+                                "Bearer " + JwtTokenHelper.GetTokenFromSharedPreferences(ApplicationContext));
+
                              _webClientUserBusinessDataUponOpeningEditDataActivity.DownloadDataAsync(uri);
                          }
                          else
@@ -267,11 +283,7 @@ namespace BirdTouch.Activities
 
                      // When clicked on logout
                      case Resource.Id.nav_logout:
-                         JwtTokenHelper.RemoveTokenFromSharedPreferences(ApplicationContext);
-                         this.Finish();
-                         Context context = navigationView.Context;
-                         Intent intent = new Intent(context, typeof(MainActivity));
-                         context.StartActivity(intent);
+                         LogoutAndGoBackToMainScreen(navigationView);
                          break;
                  }
 
@@ -279,12 +291,22 @@ namespace BirdTouch.Activities
              };
         }
 
+        private void LogoutAndGoBackToMainScreen(NavigationView navigationView)
+        {
+            JwtTokenHelper.RemoveTokenFromSharedPreferences(ApplicationContext);
+            this.Finish();
+            Context context = navigationView.Context;
+            Intent intent = new Intent(context, typeof(MainActivity));
+            context.StartActivity(intent);
+        }
+
         private void WebClientUserPrivateDataUponOpeningEditDataActivity_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
             if (e.Error != null)
             {
                 // TODO: Add error type
-                Snackbar.Make(_navigationView,
+                Snackbar.Make(
+                    _navigationView,
                     Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"),
                     Snackbar.LengthLong)
                      .Show();
@@ -293,17 +315,13 @@ namespace BirdTouch.Activities
             {
                 string jsonResult = Encoding.UTF8.GetString(e.Result);
 
-                // Update global user object
-                // TODO: HOW TO HANDLE JWT
+                // Update user if some changes occured since login
                 user = Newtonsoft.Json.JsonConvert.DeserializeObject<UserInfoModel>(jsonResult);
 
-                Context context = _navigationView.Context;
-                Intent intent = new Intent(context, typeof(EditPrivateUserInfoActivity));
-                string userSerialized = Newtonsoft.Json.JsonConvert.SerializeObject(user);
+                Intent intent = new Intent(_navigationView.Context, typeof(EditPrivateUserInfoActivity));
 
-
-                intent.PutExtra(IntentConstants.LOGGEDINUSER, userSerialized);
-                context.StartActivity(intent);
+                intent.PutExtra(IntentConstants.LOGGED_IN_USER, jsonResult);
+                _navigationView.Context.StartActivity(intent);
             }
         }
 
@@ -311,24 +329,18 @@ namespace BirdTouch.Activities
         {
             if (e.Error != null)
             {
-                //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
-                Console.WriteLine("*******Error webclient data save changes error");
-                Console.WriteLine(e.Error.Message);
-                Console.WriteLine("******************************************************");
-                Snackbar.Make(_navigationView, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
-
+                // TODO: Add error type
+                Snackbar.Make(
+                    _navigationView,
+                    Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
             }
             else
             {
-                Console.WriteLine("Success!");
-                string jsonResult = Encoding.UTF8.GetString(e.Result);
-                Console.Out.WriteLine(jsonResult);
-                _businessInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<BusinessInfoModel>(jsonResult);//ZBOG DEBUGA
-
                 Context context = _navigationView.Context;
                 Intent intent = new Intent(context, typeof(EditBusinessUserInfoActivity));
-                string userSerialized = Newtonsoft.Json.JsonConvert.SerializeObject(_businessInfo);
-                intent.PutExtra("businessLoggedInJson", userSerialized);
+                intent.PutExtra(IntentConstants.LOGGED_IN_BUSINESS_USER, Encoding.UTF8.GetString(e.Result));
 
                 context.StartActivity(intent);
             }
@@ -340,7 +352,7 @@ namespace BirdTouch.Activities
         public override void OnBackPressed()
         {
             // Minimizes app
-            // TODO: Decide if this is the best way to handle back
+            // TODO: Decide if this is the best way to handle back button
             MoveTaskToBack(true);
         }
 

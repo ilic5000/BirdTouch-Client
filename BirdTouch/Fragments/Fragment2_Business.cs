@@ -504,7 +504,7 @@ namespace BirdTouch.Fragments
             {
                 var simpleHolder = holder as SimpleViewHolder;
 
-                simpleHolder.mBoundString = mValues[position].IdBusinessOwner.ToString();
+                simpleHolder.mBoundString = mValues[position].FkUserId.ToString();
                 simpleHolder.mTxtView.Text = mValues[position].CompanyName;
 
                 if (mValues[position].ProfilePictureData != null)
@@ -540,7 +540,7 @@ namespace BirdTouch.Fragments
 
                 simpleHolder.checkbox.CheckedChange -= Checkbox_CheckedChange;//stavljeno ovde da ne bi redovi ispod izazvali pozivanje event listenera
 
-                if (isUserInSavedContacts(mValues[position].IdBusinessOwner, simpleHolder)) simpleHolder.checkbox.Checked = true; //da li je vec u saved contacts
+                if (isUserInSavedContacts(mValues[position].FkUserId, simpleHolder)) simpleHolder.checkbox.Checked = true; //da li je vec u saved contacts
                 else simpleHolder.checkbox.Checked = false;
 
                 simpleHolder.checkbox.Tag = simpleHolder.mView; //potrebno zbog pozicije u adapteru koja nam je potrebna u Checkbox_CheckedChange
@@ -577,7 +577,7 @@ namespace BirdTouch.Fragments
 
                 }
 
-                if (!(listSavedBusinessUsers.Find(a => a.IdBusinessOwner == userIdRecyclerView) == null)) return true;
+                if (!(listSavedBusinessUsers.Find(a => a.FkUserId == userIdRecyclerView) == null)) return true;
                 else return false;
             }
 
@@ -648,7 +648,7 @@ namespace BirdTouch.Fragments
                         var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
                             <Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>>(serializedDictionary);
 
-                        dictionary[userId][1].RemoveAll(a => a.IdBusinessOwner == mValues[position].IdBusinessOwner);
+                        dictionary[userId][1].RemoveAll(a => a.FkUserId == mValues[position].FkUserId);
                         edit.Remove("SavedBusinessUsersDictionary");
                         edit.PutString("SavedBusinessUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();

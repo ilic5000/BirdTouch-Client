@@ -130,7 +130,7 @@ namespace BirdTouch.Dialogs
                 JwtTokenHelper.AddTokenToSharedPreferences(Context, response.JwtToken);
 
                 Intent intent = new Intent(this.Activity, typeof(StartPageActivity));
-                intent.PutExtra(IntentConstants.LOGGEDINUSER, JsonConvert.SerializeObject(response.User));
+                intent.PutExtra(IntentConstants.LOGGED_IN_USER, JsonConvert.SerializeObject(response.User));
                 this.StartActivity(intent);
                 this.Activity.Finish();
             }

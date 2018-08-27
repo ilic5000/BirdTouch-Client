@@ -59,7 +59,7 @@ namespace BirdTouch
 
             //popunjavanje polja iz baze
 
-            user = Newtonsoft.Json.JsonConvert.DeserializeObject<UserInfoModel>(Intent.GetStringExtra(IntentConstants.LOGGEDINUSER));
+            user = Newtonsoft.Json.JsonConvert.DeserializeObject<UserInfoModel>(Intent.GetStringExtra(IntentConstants.LOGGED_IN_USER));
 
             if (user.ProfilePictureData != null)
             {

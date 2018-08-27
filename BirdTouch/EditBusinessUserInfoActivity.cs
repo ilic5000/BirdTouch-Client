@@ -16,6 +16,7 @@ using System.Collections.Specialized;
 using Android.Graphics;
 using System.IO;
 using BirdTouch.Helpers;
+using BirdTouch.Constants;
 
 namespace BirdTouch
 {
@@ -53,7 +54,8 @@ namespace BirdTouch
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_arrow_back_black_24dp);
             SupportActionBar.Title = "";
             //popunjavanje polja iz baze
-            business = Newtonsoft.Json.JsonConvert.DeserializeObject<BusinessInfoModel>(Intent.GetStringExtra("businessLoggedInJson"));
+            business = Newtonsoft.Json.JsonConvert.DeserializeObject<BusinessInfoModel>
+                (Intent.GetStringExtra(IntentConstants.LOGGED_IN_BUSINESS_USER));
 
 
             if (business.ProfilePictureData != null)
@@ -124,7 +126,7 @@ namespace BirdTouch
                     parameters.Add("website", websiteWrapper.EditText.Text);
                     parameters.Add("phone", phoneWrapper.EditText.Text);
                     parameters.Add("adress", adressWrapper.EditText.Text);
-                    parameters.Add("id", business.IdBusinessOwner.ToString());
+                    parameters.Add("id", business.FkUserId.ToString());
 
                     String restUriString = GetString(Resource.String.webapi_endpoint_changeBusinessUser);
                     uri = new Uri(restUriString);

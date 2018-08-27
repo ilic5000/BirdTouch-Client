@@ -95,7 +95,7 @@ namespace BirdTouch.Fragments
 
                     foreach (BusinessInfoModel item in listSavedBusinessUsers)
                     {
-                        listSavedContactsId.Add(item.IdBusinessOwner);
+                        listSavedContactsId.Add(item.FkUserId);
                     }
 
                     string listSavedIDSerialized = Newtonsoft.Json.JsonConvert.SerializeObject(listSavedContactsId);
@@ -199,7 +199,7 @@ namespace BirdTouch.Fragments
             {
                 var simpleHolder = holder as SimpleViewHolder;
 
-                simpleHolder.mBoundString = mValues[position].IdBusinessOwner.ToString();
+                simpleHolder.mBoundString = mValues[position].FkUserId.ToString();
                 simpleHolder.mTxtView.Text = mValues[position].CompanyName;
 
 
@@ -309,7 +309,7 @@ namespace BirdTouch.Fragments
                         var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
                             <Dictionary<Guid, Dictionary<int, List<BusinessInfoModel>>>>(serializedDictionary);
 
-                        dictionary[userId][1].RemoveAll(a => a.IdBusinessOwner == mValues[position].IdBusinessOwner);
+                        dictionary[userId][1].RemoveAll(a => a.FkUserId == mValues[position].FkUserId);
                         edit.Remove("SavedBusinessUsersDictionary");
                         edit.PutString("SavedBusinessUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();

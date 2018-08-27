@@ -87,7 +87,7 @@ namespace BirdTouch
             if (e.Error == null)
             {
                 Intent intent = new Intent(this, typeof(StartPageActivity));
-                intent.PutExtra(IntentConstants.LOGGEDINUSER, Encoding.UTF8.GetString(e.Result));
+                intent.PutExtra(IntentConstants.LOGGED_IN_USER, Encoding.UTF8.GetString(e.Result));
                 this.StartActivity(intent);
                 this.Finish();
             }

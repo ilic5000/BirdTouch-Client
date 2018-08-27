@@ -3540,7 +3540,7 @@ namespace BirdTouch
 			public const int webapi_endpoint_doesUsernameExist = 2131296284;
 			
 			// aapt resource value: 0x7f09001e
-			public const int webapi_endpoint_getBusiness = 2131296286;
+			public const int webapi_endpoint_getBusinessInfo = 2131296286;
 			
 			// aapt resource value: 0x7f090024
 			public const int webapi_endpoint_getBusinessUsersNearMe = 2131296292;

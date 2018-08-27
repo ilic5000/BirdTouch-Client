@@ -95,7 +95,7 @@ namespace BirdTouch.Dialogs
                 _passwordWrapper.Error = string.Empty;
 
                 Intent intent = new Intent(this.Activity, typeof(StartPageActivity));
-                intent.PutExtra(IntentConstants.LOGGEDINUSER, Encoding.UTF8.GetString(e.Result));
+                intent.PutExtra(IntentConstants.LOGGED_IN_USER, Encoding.UTF8.GetString(e.Result));
                 this.StartActivity(intent);
                 this.Activity.Finish();
             }
@@ -117,7 +117,7 @@ namespace BirdTouch.Dialogs
                 JwtTokenHelper.AddTokenToSharedPreferences(Context, response.JwtToken);
 
                 Intent intent = new Intent(this.Activity, typeof(StartPageActivity));
-                intent.PutExtra(IntentConstants.LOGGEDINUSER, JsonConvert.SerializeObject(response.User));
+                intent.PutExtra(IntentConstants.LOGGED_IN_USER, JsonConvert.SerializeObject(response.User));
                 this.StartActivity(intent);
                 this.Activity.Finish();
             }
