@@ -12,21 +12,6 @@ namespace BirdTouch.Models
         public string Website { get; set; }
         public string Adress { get; set; }
         public string Description { get; set; }
-
-        public byte[] ProfilePictureData
-        {
-            get
-            {
-                if (ProfilePictureDataEncoded != "" && ProfilePictureDataEncoded != null)
-                {
-                    byte[] image = Convert.FromBase64String(ProfilePictureDataEncoded);
-                    return image;
-                }
-                return null;
-            }
-        }
-
-        public String ProfilePictureDataEncoded { get; set; }
-
+        public byte[] ProfilePictureData { get; set; }
     }
 }

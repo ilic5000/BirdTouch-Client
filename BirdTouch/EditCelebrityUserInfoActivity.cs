@@ -11,11 +11,13 @@ namespace BirdTouch
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            //TODO: Celebrity mode is currently not implemented
+
             // Create your application here
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Activity_EditCelebrityUserInfo);
 
-            //nije isti toolbar kao u startpage
+            // Not the same toolbar as in startpage
             SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolbar_edit_celebrity_info);
 
             SetSupportActionBar(toolBar);

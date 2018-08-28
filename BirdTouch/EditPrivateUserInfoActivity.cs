@@ -18,153 +18,206 @@ using System.IO;
 using BirdTouch.Helpers;
 using BirdTouch.Activities;
 using BirdTouch.Constants;
+using Newtonsoft.Json;
 
 namespace BirdTouch
 {
     [Activity(Label = "EditUserInfoActivity", Theme = "@style/Theme.DesignDemo")]
     public class EditPrivateUserInfoActivity : AppCompatActivity
     {
-        private UserInfoModel user;
-        private ImageView imageView;
-        private TextInputLayout firstNameWrapper;
-        private TextInputLayout lastNameWrapper;
-        private TextInputLayout emailWrapper;
-        private TextInputLayout adressWrapper;
-        private TextInputLayout phoneWrapper;
-        private TextInputLayout dateOfBirthWrapper;
-        private TextInputLayout facebookLinkWrapper;
-        private TextInputLayout twitterLinkWrapper;
-        private TextInputLayout gPlusLinkWrapper;
-        private TextInputLayout linkedInLinkWrapper;
-        private CollapsingToolbarLayout collapsingToolBar;
-        private FloatingActionButton fabSaveChanges;
-        private FloatingActionButton fabInsertPhoto;
-        private WebClient webClient;
+        private UserInfoModel _user;
+        private bool pictureChanged = false;
 
-        private Uri uri;
+        private ImageView _imageView;
+        private TextInputLayout _firstNameWrapper;
+        private TextInputLayout _lastNameWrapper;
+        private TextInputLayout _emailWrapper;
+        private TextInputLayout _descriptionWrapper;
+        private TextInputLayout _adressWrapper;
+        private TextInputLayout _phoneWrapper;
+        private TextInputLayout _dateOfBirthWrapper;
+        private TextInputLayout _facebookLinkWrapper;
+        private TextInputLayout _twitterLinkWrapper;
+        private TextInputLayout _gPlusLinkWrapper;
+        private TextInputLayout _linkedInLinkWrapper;
+        private CollapsingToolbarLayout _collapsingToolBar;
+        private FloatingActionButton _fabSaveChanges;
+        private FloatingActionButton _fabInsertPhoto;
+        private WebClient _webClient;
 
-        private bool pictureChanged=false;
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            // Create view
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Activity_EditPrivateUserInfo);
 
-            imageView = FindViewById<ImageView>(Resource.Id.profile_picture_edit_private_info);
-            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolbar_edit_private_info); //nije isti toolbar kao u startpage
+            // Deserialize user info recevied from StartPageActivity
+            _user = Newtonsoft.Json.JsonConvert.DeserializeObject
+                <UserInfoModel>(Intent.GetStringExtra(IntentConstants.LOGGED_IN_USER));
+
+            // Not the same toolbar as in startpage
+            SupportToolbar toolBar = FindViewById<SupportToolbar>
+                (Resource.Id.toolbar_edit_private_info);
 
             SetSupportActionBar(toolBar);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_arrow_back_black_24dp);
-            SupportActionBar.Title = "";
+            SupportActionBar.Title = string.Empty;
 
-            //popunjavanje polja iz baze
+            // Setting image
+            _imageView = FindViewById<ImageView>(Resource.Id.profile_picture_edit_private_info);
 
-            user = Newtonsoft.Json.JsonConvert.DeserializeObject<UserInfoModel>(Intent.GetStringExtra(IntentConstants.LOGGED_IN_USER));
-
-            if (user.ProfilePictureData != null)
+            if (_user.ProfilePictureData != null)
             {
-                Bitmap bm = BitmapFactory.DecodeByteArrayAsync(user.ProfilePictureData, 0, user.ProfilePictureData.Length).Result;
-                imageView.SetImageBitmap(bm);
+                _imageView.SetImageBitmap(
+                    BitmapFactory.DecodeByteArrayAsync(
+                        _user.ProfilePictureData,
+                        0,
+                        _user.ProfilePictureData.Length)
+                         .Result);
             }
             else
-            {   //defaultni image kada korisnik jos uvek nije promenio, mada moze i u axml da se postavi
-                imageView.SetImageResource(Resource.Drawable.blank_user_profile);
+            {   // The default image when user has not saved any profile image
+                _imageView.SetImageResource(Resource.Drawable.blank_user_profile);
             }
 
-            collapsingToolBar = FindViewById<CollapsingToolbarLayout>(Resource.Id.collapsing_toolbar_edit_private_info);
-            firstNameWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserFirstNameWrapper);
-            lastNameWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserLastNameWrapper);
-            emailWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserEmailWrapper);
-            adressWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserAdressWrapper);
-            phoneWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserPhoneWrapper);
-            dateOfBirthWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserDateOfBirthWrapper);
-            facebookLinkWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserFacebookWrapper);
-            twitterLinkWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserTwitterWrapper);
-            gPlusLinkWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserGPlusWrapper);
-            linkedInLinkWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserLinkedInWrapper);
+            // Find all components
+            _collapsingToolBar = FindViewById<CollapsingToolbarLayout>(Resource.Id.collapsing_toolbar_edit_private_info);
+            _firstNameWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserFirstNameWrapper);
+            _lastNameWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserLastNameWrapper);
+            _emailWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserEmailWrapper);
+            _descriptionWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserDescriptionWrapper);
+            _adressWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserAdressWrapper);
+            _phoneWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserPhoneWrapper);
+            _dateOfBirthWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserDateOfBirthWrapper);
+            _facebookLinkWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserFacebookWrapper);
+            _twitterLinkWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserTwitterWrapper);
+            _gPlusLinkWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserGPlusWrapper);
+            _linkedInLinkWrapper = FindViewById<TextInputLayout>(Resource.Id.txtEditPrivateUserLinkedInWrapper);
+            _fabSaveChanges = FindViewById<FloatingActionButton>(Resource.Id.fabEditPrivateUserInfoSaveChanges);
+            _fabInsertPhoto = FindViewById<FloatingActionButton>(Resource.Id.fabEditPrivateUserInfoInsertPhoto);
 
+            // Fill components with values from logged in user
+            _firstNameWrapper.EditText.Text = _user.FirstName;
+            _lastNameWrapper.EditText.Text = _user.LastName;
+            _emailWrapper.EditText.Text = _user.Email;
+            _descriptionWrapper.EditText.Text = _user.Description;
+            _adressWrapper.EditText.Text = _user.Adress;
+            _phoneWrapper.EditText.Text = _user.PhoneNumber;
+            _dateOfBirthWrapper.EditText.Text = _user.DateOfBirth;
+            _facebookLinkWrapper.EditText.Text = WebUtility.UrlDecode(_user.FbLink);
+            _twitterLinkWrapper.EditText.Text = WebUtility.UrlDecode(_user.TwitterLink);
+            _gPlusLinkWrapper.EditText.Text = WebUtility.UrlDecode(_user.GPlusLink);
+            _linkedInLinkWrapper.EditText.Text = WebUtility.UrlDecode(_user.LinkedInLink);
+            _collapsingToolBar.Title = string.Empty;
 
-            firstNameWrapper.EditText.Text=user.FirstName;
-            lastNameWrapper.EditText.Text=user.LastName;
-            emailWrapper.EditText.Text=user.Email;
-            adressWrapper.EditText.Text=user.Adress;
-            phoneWrapper.EditText.Text=user.PhoneNumber;
-            dateOfBirthWrapper.EditText.Text = user.DateOfBirth;
-            facebookLinkWrapper.EditText.Text=user.FbLink;
-            twitterLinkWrapper.EditText.Text=user.TwitterLink;
-            gPlusLinkWrapper.EditText.Text=user.GPlusLink;
-            linkedInLinkWrapper.EditText.Text=user.LinkedInLink;
-            collapsingToolBar.Title = "";
+            // Initialize web clients
+            _webClient = new WebClient();
 
-            imageView.Click += ImageView_Click;
+            // Set up events for web clients
+            _webClient.UploadStringCompleted += WebClient_UploadStringCompleted;
 
-            webClient = new WebClient();
-            webClient.UploadDataCompleted += WebClient_UploadDataCompleted;
+            // Set OnClick events
+            _imageView.Click += ImageView_Click;
+            _fabInsertPhoto.Click += FabInsertPhoto_Click;
+            _fabSaveChanges.Click += FabSaveChanges_Click;
+        }
 
-            fabSaveChanges = FindViewById<FloatingActionButton>(Resource.Id.fabEditPrivateUserInfoSaveChanges);
-            fabInsertPhoto = FindViewById<FloatingActionButton>(Resource.Id.fabEditPrivateUserInfoInsertPhoto);
+        private void FabSaveChanges_Click(object sender, EventArgs e)
+        {
+            View view = sender as View;
 
-            fabInsertPhoto.Click += FabInsertPhoto_Click;
-
-            fabSaveChanges.Click += (o, e) => //o is sender, sender is button, button is a view
+            if (Reachability.IsOnline(this) && !_webClient.IsBusy)
             {
-                View view = o as View;
-                if (Reachability.IsOnline(this) && !webClient.IsBusy)
+                //get ImageView (profileImage) as  array of bytes
+                _imageView.BuildDrawingCache(true);
+                Bitmap bitmap = _imageView.GetDrawingCache(true);
+                MemoryStream memStream = new MemoryStream();
+
+                //TODO: Decide if jpeg is best
+                // max img size je 61kB
+                bitmap.Compress(Bitmap.CompressFormat.Jpeg, 70, memStream);
+                byte[] picData = memStream.ToArray();
+                _imageView.DestroyDrawingCache();
+
+                var userInfoForUpload = new UserInfoModel()
                 {
+                    Id = _user.Id,
+                    Username = _user.Username,
+                    FirstName = _firstNameWrapper.EditText.Text,
+                    LastName = _lastNameWrapper.EditText.Text,
+                    Email = _emailWrapper.EditText.Text,
+                    Description = _descriptionWrapper.EditText.Text,
+                    PhoneNumber = _phoneWrapper.EditText.Text,
+                    Adress = _adressWrapper.EditText.Text,
+                    DateOfBirth = _dateOfBirthWrapper.EditText.Text,
+                    FbLink = WebUtility.UrlEncode(_facebookLinkWrapper.EditText.Text),
+                    TwitterLink = WebUtility.UrlEncode(_twitterLinkWrapper.EditText.Text),
+                    GPlusLink = WebUtility.UrlEncode(_gPlusLinkWrapper.EditText.Text),
+                    LinkedInLink = WebUtility.UrlEncode(_linkedInLinkWrapper.EditText.Text),
+                };
 
-                    //zbog parametara mora da postoje sva polja kada se salju, makar privremeno
-                    checkIfEditTextsAreEmptyAndTurnThemToNULLString();
-
-                    //get ImageView (profileImage) as  array of bytes
-                    imageView.BuildDrawingCache(true);
-                    Bitmap bitmap = imageView.GetDrawingCache(true);
-
-                    MemoryStream memStream = new MemoryStream();
-                    bitmap.Compress(Bitmap.CompressFormat.Jpeg, 70, memStream); //moze i drugi format //max img size je 61kB
-                    byte[] picData = memStream.ToArray();
-                    //String picDataEncoded = Convert.ToBase64String(picData);
-                    imageView.DestroyDrawingCache();
-
-                    if (!pictureChanged)
-                    {
-                        picData = new byte[1]; //server pita, ako je duzine 1 ovaj niz, onda ne upisuje sliku jer nije bilo promene od strane korisnika
-
-                    }
-                    else
-                    {
+                if (pictureChanged)
+                {
+                    userInfoForUpload.ProfilePictureData = picData;
                     StartPageActivity.picDataProfileNavigation = picData;
-                    }
-
-                    //insert parameters for header for web request
-                    NameValueCollection parameters = new NameValueCollection();
-                    parameters.Add("firstname", firstNameWrapper.EditText.Text);
-                    parameters.Add("lastname", lastNameWrapper.EditText.Text);
-                    parameters.Add("email", emailWrapper.EditText.Text);
-                    parameters.Add("phone", phoneWrapper.EditText.Text);
-                    parameters.Add("adress", adressWrapper.EditText.Text);
-                    parameters.Add("dateofbirth", dateOfBirthWrapper.EditText.Text);
-                    parameters.Add("fblink", facebookLinkWrapper.EditText.Text);
-                    parameters.Add("twlink", twitterLinkWrapper.EditText.Text);
-                    parameters.Add("gpluslink", gPlusLinkWrapper.EditText.Text);
-                    parameters.Add("linkedinlink", linkedInLinkWrapper.EditText.Text);
-                    parameters.Add("id", user.Id.ToString());
-
-                    String restUriString = GetString(Resource.String.webapi_endpoint_changePrivateUser);
-                    uri = new Uri(restUriString);
-
-                    webClient.Headers.Clear();
-                    webClient.Headers.Add(parameters);
-                    webClient.UploadDataAsync(uri, picData);
-
                 }
                 else
                 {
-
-                    Snackbar.Make(view, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
-
+                    userInfoForUpload.ProfilePictureData = null;
                 }
 
-            };
+                var uri = WebApiUrlGenerator
+                            .GenerateWebApiUrl(Resource.String.webapi_endpoint_changePrivateUser);
+
+                _webClient.Headers.Clear();
+                _webClient.Headers.Add(
+                    HttpRequestHeader.ContentType,
+                    "application/json");
+                _webClient.Headers.Add(
+                   HttpRequestHeader.Authorization,
+                   "Bearer " + JwtTokenHelper.GetTokenFromSharedPreferences(ApplicationContext));
+
+                _webClient.UploadStringAsync(uri, "PATCH", JsonConvert.SerializeObject(userInfoForUpload));
+            }
+            else
+            {
+                Snackbar.Make(
+                    view,
+                    Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
+            }
+        }
+
+        private void WebClient_UploadStringCompleted(object sender, UploadStringCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                // TODO: Add type of error
+                Snackbar.Make(
+                    _fabSaveChanges,
+                    Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
+            }
+            else
+            {
+                Snackbar.Make(
+                    _fabSaveChanges,
+                    Html.FromHtml("<font color=\"#ffffff\">Changes saved successfully</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
+
+                // Update title in action bar with new Firstname and Lastname
+                StartPageActivity.actionBar.Title = _firstNameWrapper.EditText.Text + " " + _lastNameWrapper.EditText.Text;
+
+                // Update image in navigation menu with newly set image
+                if (pictureChanged)
+                {
+                    StartPageActivity.UpdateProfileImage();
+                }
+            }
         }
 
         private void FabInsertPhoto_Click(object sender, EventArgs e)
@@ -173,36 +226,6 @@ namespace BirdTouch
             intent.SetType("image/*");
             intent.SetAction(Intent.ActionGetContent);
             this.StartActivityForResult(Intent.CreateChooser(intent, "Select a Photo"), 0);
-        }
-
-        private void WebClient_UploadDataCompleted(object sender, UploadDataCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
-
-                returnAllNullEditTextsToEmpty();
-                Console.WriteLine("*******Error webclient data save changes error");
-                Console.WriteLine(e.Error.Message);
-                Console.WriteLine("******************************************************");
-                Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
-
-            }
-            else
-            {
-                returnAllNullEditTextsToEmpty();
-                Console.WriteLine("Success!");
-                string jsonResult = Encoding.UTF8.GetString(e.Result);
-                Console.Out.WriteLine(jsonResult);
-                Snackbar.Make(fabSaveChanges, Html.FromHtml("<font color=\"#ffffff\">Changes saved successfully</font>"), Snackbar.LengthLong).Show();
-                StartPageActivity.actionBar.Title = firstNameWrapper.EditText.Text + " " + lastNameWrapper.EditText.Text; //update title u glavnoj activity, jer je ime i prezime sada promenjeno
-
-                if (pictureChanged)
-                {
-
-                    StartPageActivity.UpdateProfileImage();
-                }
-            }
         }
 
         private void ImageView_Click(object sender, EventArgs e) //klik na sliku, da bi se promenila profilna slika
@@ -221,40 +244,9 @@ namespace BirdTouch
             {
                 System.IO.Stream stream = ContentResolver.OpenInputStream(data.Data);
             //  imageView.SetImageBitmap(BitmapFactory.DecodeStream(stream)); neefikasan nacin ucitavanja slika, nema skaliranja
-                imageView.SetImageBitmap(DecodeBitmapFromStream(data.Data, 400, 300)); //mozda su prevelike dimenzije, moze da se podesi
+                _imageView.SetImageBitmap(DecodeBitmapFromStream(data.Data, 400, 300)); //mozda su prevelike dimenzije, moze da se podesi
                 pictureChanged = true;
             }
-        }
-
-        private void checkIfEditTextsAreEmptyAndTurnThemToNULLString()
-        {
-            //da bi moglo da postoji i prazno polje, jer mora da postoje svi parametri u rest servisu
-            if (firstNameWrapper.EditText.Text.Equals("")) firstNameWrapper.EditText.Text = "NULL";
-            if (lastNameWrapper.EditText.Text.Equals("")) lastNameWrapper.EditText.Text = "NULL";
-            if (emailWrapper.EditText.Text.Equals("")) emailWrapper.EditText.Text = "NULL";
-            if (adressWrapper.EditText.Text.Equals("")) adressWrapper.EditText.Text = "NULL";
-            if (phoneWrapper.EditText.Text.Equals("")) phoneWrapper.EditText.Text = "NULL";
-            if (dateOfBirthWrapper.EditText.Text.Equals("")) dateOfBirthWrapper.EditText.Text = "NULL";
-            if (facebookLinkWrapper.EditText.Text.Equals("")) facebookLinkWrapper.EditText.Text = "NULL";
-            if (twitterLinkWrapper.EditText.Text.Equals("")) twitterLinkWrapper.EditText.Text = "NULL";
-            if (gPlusLinkWrapper.EditText.Text.Equals("")) gPlusLinkWrapper.EditText.Text = "NULL";
-            if (linkedInLinkWrapper.EditText.Text.Equals("")) linkedInLinkWrapper.EditText.Text = "NULL";
-        }
-
-        private void returnAllNullEditTextsToEmpty()
-        {
-            //da bi moglo da postoji i prazno polje, jer mora da postoje svi parametri u rest servisu
-            //sada vracamo na prazno ako je prosledjeno NULL kao parametar
-            if (firstNameWrapper.EditText.Text.Equals("NULL")) firstNameWrapper.EditText.Text = "";
-            if (lastNameWrapper.EditText.Text.Equals("NULL")) lastNameWrapper.EditText.Text = "";
-            if (emailWrapper.EditText.Text.Equals("NULL")) emailWrapper.EditText.Text = "";
-            if (adressWrapper.EditText.Text.Equals("NULL")) adressWrapper.EditText.Text = "";
-            if (phoneWrapper.EditText.Text.Equals("NULL")) phoneWrapper.EditText.Text = "";
-            if (dateOfBirthWrapper.EditText.Text.Equals("NULL")) dateOfBirthWrapper.EditText.Text = "";
-            if (facebookLinkWrapper.EditText.Text.Equals("NULL")) facebookLinkWrapper.EditText.Text = "";
-            if (twitterLinkWrapper.EditText.Text.Equals("NULL")) twitterLinkWrapper.EditText.Text = "";
-            if (gPlusLinkWrapper.EditText.Text.Equals("NULL")) gPlusLinkWrapper.EditText.Text = "";
-            if (linkedInLinkWrapper.EditText.Text.Equals("NULL")) linkedInLinkWrapper.EditText.Text = "";
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -264,7 +256,6 @@ namespace BirdTouch
                 case Android.Resource.Id.Home:
                     Finish();
                     return true;
-
             }
             return base.OnOptionsItemSelected(item);
         }
@@ -292,6 +283,7 @@ namespace BirdTouch
 
             return bitmap;
         }
+
         private int CalculateInSampleSize(BitmapFactory.Options options, int requestedWidth, int requestedHeight)
         {
             //Raw height and width of image

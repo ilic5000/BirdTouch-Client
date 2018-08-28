@@ -13,6 +13,7 @@ using Android.Graphics;
 using BirdTouch.Fragments;
 using Android.Support.V7.Widget;
 using BirdTouch.Activities;
+using System.Net;
 
 namespace BirdTouch
 {
@@ -143,11 +144,11 @@ namespace BirdTouch
 
         private void SetOnClickListenersAndFixUrls()
         {
-            if (user.FbLink != null && !user.FbLink.Equals(""))
+            if (!string.IsNullOrEmpty(user.FbLink))
             {
                 if (!user.FbLink.Contains("https://"))
                 {
-                    user.FbLink = "https://" + user.FbLink;
+                    user.FbLink = "https://" + WebUtility.UrlDecode(user.FbLink);
                 }
 
                 fbLogo.Click += FbLogo_Click;
@@ -157,11 +158,11 @@ namespace BirdTouch
                 fbLogo.Visibility = ViewStates.Gone;
             }
 
-            if (user.TwitterLink != null && !user.TwitterLink.Equals(""))
+            if (!string.IsNullOrEmpty(user.TwitterLink))
             {
                 if (!user.TwitterLink.Contains("https://"))
                 {
-                    user.TwitterLink = "https://" + user.TwitterLink;
+                    user.TwitterLink = "https://" + WebUtility.UrlDecode(user.TwitterLink);
                 }
 
                 twLogo.Click += TwLogo_Click;
@@ -171,11 +172,11 @@ namespace BirdTouch
                 twLogo.Visibility = ViewStates.Gone;
             }
 
-            if (user.GPlusLink != null && !user.GPlusLink.Equals(""))
+            if (string.IsNullOrEmpty(user.GPlusLink))
             {
                 if (!user.GPlusLink.Contains("https://"))
                 {
-                    user.GPlusLink = "https://" + user.GPlusLink;
+                    user.GPlusLink = "https://" + WebUtility.UrlDecode(user.GPlusLink);
                 }
                 gpLogo.Click += GpLogo_Click;
             }
@@ -184,11 +185,11 @@ namespace BirdTouch
                 gpLogo.Visibility = ViewStates.Gone;
             }
 
-            if (user.LinkedInLink != null && !user.LinkedInLink.Equals(""))
+            if (string.IsNullOrEmpty(user.LinkedInLink))
             {
                 if (!user.LinkedInLink.Contains("https://") )
                 {
-                    user.LinkedInLink = "https://" + user.LinkedInLink;
+                    user.LinkedInLink = "https://" + WebUtility.UrlDecode(user.LinkedInLink);
                 }
                 liLogo.Click += LiLogo_Click;
             }
@@ -200,28 +201,28 @@ namespace BirdTouch
 
         private void LiLogo_Click(object sender, EventArgs e)
         {
-            var uri = Android.Net.Uri.Parse(user.LinkedInLink);
+            var uri = Android.Net.Uri.Parse(WebUtility.UrlDecode(user.LinkedInLink));
             var intent = new Intent(Intent.ActionView, uri);
             StartActivity(intent);
         }
 
         private void GpLogo_Click(object sender, EventArgs e)
         {
-            var uri = Android.Net.Uri.Parse(user.GPlusLink);
+            var uri = Android.Net.Uri.Parse(WebUtility.UrlDecode(user.GPlusLink));
             var intent = new Intent(Intent.ActionView, uri);
             StartActivity(intent);
         }
 
         private void TwLogo_Click(object sender, EventArgs e)
         {
-            var uri = Android.Net.Uri.Parse(user.TwitterLink);
+            var uri = Android.Net.Uri.Parse(WebUtility.UrlDecode(user.TwitterLink));
             var intent = new Intent(Intent.ActionView, uri);
             StartActivity(intent);
         }
 
         private void FbLogo_Click(object sender, EventArgs e)
         {
-                var uri = Android.Net.Uri.Parse(user.FbLink);
+                var uri = Android.Net.Uri.Parse(WebUtility.UrlDecode(user.FbLink));
                 var intent = new Intent(Intent.ActionView, uri);
                 StartActivity(intent);
         }

@@ -5,12 +5,12 @@
   <string name="webapi_ip_adress">192.168.0.23:57400</string>
   <string name="webapi_endpoint_registerUser">api/users</string>
   <string name="webapi_endpoint_getUserLogin">api/login</string>
-  <string name="webapi_endpoint_doesUsernameExist">api/users/doesusernameexist"</string>
+  <string name="webapi_endpoint_doesUsernameExist">api/users/doesusernameexist</string>
   <string name="webapi_endpoint_getPrivateInfo">api/users/getprivateinfo</string>
-  <string name="webapi_endpoint_getBusinessInfo">api/users/getbusinessinfo"</string>
+  <string name="webapi_endpoint_getBusinessInfo">api/users/getbusinessinfo</string>
+  <string name="webapi_endpoint_changePrivateUser">api/users/patchprivateinfo</string>
+  <string name="webapi_endpoint_changeBusinessUser">api/users/patchbusinessinfo</string>
 
-  <string name="webapi_endpoint_changePrivateUser">api/changeUserPrivateInfo"</string>
-  <string name="webapi_endpoint_changeBusinessUser">api/changeUserBusinessInfo"</string>
   <string name="webapi_endpoint_makeUserVisible">api/makeUserVisible"</string>
   <string name="webapi_endpoint_makeUserInvisible">api/makeUserInvisible"</string>
   <string name="webapi_endpoint_getPrivateUsersNearMe">api/getPrivateUsersNearMe"</string>

@@ -13,6 +13,7 @@ using Android.Graphics;
 using BirdTouch.Fragments;
 using Android.Support.V7.Widget;
 using BirdTouch.Activities;
+using System.Net;
 
 namespace BirdTouch
 {
@@ -102,9 +103,9 @@ namespace BirdTouch
             else
                 companyNameCardView.Visibility = ViewStates.Gone;
 
-            if (user.Website != null && !user.Website.Equals(""))
+            if (!string.IsNullOrEmpty(user.Website))
             {
-                websiteWrapper.Text = user.Website;
+                websiteWrapper.Text = WebUtility.UrlDecode(user.Website);
                 websiteCardView.Click += WebsiteCardView_Click;
             }
             else
@@ -130,10 +131,10 @@ namespace BirdTouch
         {
             if (!user.Website.Contains("http"))
             {
-                user.Website = "http://" + user.Website;
+                user.Website = "http://" + WebUtility.UrlDecode(user.Website);
             }
 
-            var uri = Android.Net.Uri.Parse(user.Website);
+            var uri = Android.Net.Uri.Parse(WebUtility.UrlDecode(user.Website));
             var intent = new Intent(Intent.ActionView, uri);
             StartActivity(intent);
 
