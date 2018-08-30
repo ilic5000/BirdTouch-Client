@@ -1,8 +1,8 @@
 using System;
 
-namespace BirdTouch.Fragments
+namespace BirdTouch.Constants
 {
-    class ActiveModes
+    class ActiveModeConstants
     {
         public static String PRIVATE = "1";
         public static String BUSINESS = "2";

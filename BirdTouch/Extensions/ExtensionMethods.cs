@@ -2,7 +2,7 @@ using System;
 using Android.Views;
 using Android.Support.V7.Widget;
 
-namespace BirdTouch.Fragments
+namespace BirdTouch.Extensions
 {
     public static class ExtensionMethods
     {

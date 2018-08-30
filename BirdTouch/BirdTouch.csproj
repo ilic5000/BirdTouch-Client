@@ -124,23 +124,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutActivity.cs" />
+    <Compile Include="Activities\AboutActivity.cs" />
     <Compile Include="Adapters\TabAdapter.cs" />
     <Compile Include="BusinessDetailActivity.cs" />
     <Compile Include="Constants\IntentConstants.cs" />
     <Compile Include="Constants\SharedPreferencesConstants.cs" />
     <Compile Include="Dialogs\SignUpDialog.cs" />
     <Compile Include="Dialogs\SignInDialog.cs" />
-    <Compile Include="EditBusinessUserInfoActivity.cs" />
-    <Compile Include="EditCelebrityUserInfoActivity.cs" />
-    <Compile Include="EditPrivateUserInfoActivity.cs" />
-    <Compile Include="Fragments\ActiveModes.cs" />
-    <Compile Include="Fragments\ExtensionMethods.cs" />
+    <Compile Include="Activities\EditBusinessUserInfoActivity.cs" />
+    <Compile Include="Activities\EditCelebrityUserInfoActivity.cs" />
+    <Compile Include="Activities\EditPrivateUserInfoActivity.cs" />
+    <Compile Include="Constants\ActiveModeConstants.cs" />
+    <Compile Include="Extensions\ExtensionMethods.cs" />
     <Compile Include="Fragments\Fragment1_Private.cs" />
     <Compile Include="Fragments\Fragment1_PrivateSavedUsers.cs" />
     <Compile Include="Fragments\Fragment2_Business.cs" />
     <Compile Include="Fragments\Fragment2_BusinessSavedUsers.cs" />
     <Compile Include="Fragments\Fragment3_Celebrity.cs" />
+    <Compile Include="Helpers\BitmapHelper.cs" />
     <Compile Include="Helpers\JwtTokenHelper.cs" />
     <Compile Include="Helpers\WebApiUrlGenerator.cs" />
     <Compile Include="MainActivity.cs" />
@@ -156,7 +157,6 @@
     <Compile Include="UserDetailActivity.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />

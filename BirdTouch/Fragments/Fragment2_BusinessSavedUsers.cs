@@ -17,6 +17,7 @@ using Android.Support.Design.Widget;
 using System.Collections.Specialized;
 using BirdTouch.Helpers;
 using BirdTouch.Activities;
+using BirdTouch.Extensions;
 
 namespace BirdTouch.Fragments
 {

@@ -21,6 +21,8 @@ using BirdTouch.Models;
 using Android.Views.Animations;
 using BirdTouch.Helpers;
 using BirdTouch.Activities;
+using BirdTouch.Constants;
+using BirdTouch.Extensions;
 
 namespace BirdTouch.Fragments
 {
@@ -238,7 +240,7 @@ namespace BirdTouch.Fragments
                 NameValueCollection parameters = new NameValueCollection();
                 parameters.Add("latitude", currLocation.Latitude.ToString().Replace(',','.'));
                 parameters.Add("longitude", currLocation.Longitude.ToString().Replace(',', '.'));
-                parameters.Add("mode", ActiveModes.PRIVATE); // mozda treba mode globalni, ali videcemo
+                parameters.Add("mode", ActiveModeConstants.PRIVATE); // mozda treba mode globalni, ali videcemo
                 parameters.Add("id", StartPageActivity.user.Id.ToString());
 
                 String restUriString = GetString(Resource.String.webapi_endpoint_makeUserVisible);

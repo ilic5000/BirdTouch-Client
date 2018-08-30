@@ -1,33 +1,30 @@
 using Android.App;
 using Android.OS;
 using Android.Views;
-using Android.Widget;
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 using Android.Support.V7.App;
-using Android.Support.Design.Widget;
 
-namespace BirdTouch
+namespace BirdTouch.Activities
 {
-    [Activity(Label = "AboutActivity", Theme = "@style/Theme.DesignDemo")]
-    public class AboutActivity : AppCompatActivity 
+    [Activity(Label = "EditCelebrityInfoActivity", Theme = "@style/Theme.DesignDemo")]
+    public class EditCelebrityUserInfoActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(savedInstanceState);
-            SetContentView(Resource.Layout.About_Activity);
+            //TODO: Celebrity mode is currently not implemented
 
-            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolbar_about); //MALO B, nije isti toolbar kao u startpage
+            // Create your application here
+            base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.Activity_EditCelebrityUserInfo);
+
+            // Not the same toolbar as in startpage
+            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolbar_edit_celebrity_info);
+
             SetSupportActionBar(toolBar);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-            SupportActionBar.Title = "";
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_arrow_back_black_24dp);
-          
-            CollapsingToolbarLayout collapsingToolBar = FindViewById<CollapsingToolbarLayout>(Resource.Id.collapsing_toolbar_about);
-            collapsingToolBar.Title = "About";
+            SupportActionBar.Title = "";
 
-            ImageView imageView = FindViewById<ImageView>(Resource.Id.author_picture);
-            imageView.SetImageResource(Resource.Drawable.author);
-            
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -41,6 +38,5 @@ namespace BirdTouch
             }
             return base.OnOptionsItemSelected(item);
         }
-  
     }
 }

@@ -1,6 +1,7 @@
 using Android.OS;
 using Android.Views;
 using SupportFragment = Android.Support.V4.App.Fragment;
+using BirdTouch.Extensions;
 
 namespace BirdTouch.Fragments
 {

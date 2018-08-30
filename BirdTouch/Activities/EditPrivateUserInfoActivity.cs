@@ -1,26 +1,23 @@
-using System;
-using System.Text;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.Design.Widget;
+using Android.Support.V7.App;
+using Android.Text;
 using Android.Views;
 using Android.Widget;
-using SupportToolbar = Android.Support.V7.Widget.Toolbar;
-using Android.Support.V7.App;
-using Android.Support.Design.Widget;
-using BirdTouch.Models;
-using Android.Text;
-using System.Net;
-using System.Collections.Specialized;
-using Android.Graphics;
-using System.IO;
-using BirdTouch.Helpers;
-using BirdTouch.Activities;
 using BirdTouch.Constants;
+using BirdTouch.Helpers;
+using BirdTouch.Models;
 using Newtonsoft.Json;
+using System;
+using System.IO;
+using System.Net;
+using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 
-namespace BirdTouch
+namespace BirdTouch.Activities
 {
     [Activity(Label = "EditUserInfoActivity", Theme = "@style/Theme.DesignDemo")]
     public class EditPrivateUserInfoActivity : AppCompatActivity
@@ -210,7 +207,8 @@ namespace BirdTouch
                      .Show();
 
                 // Update title in action bar with new Firstname and Lastname
-                StartPageActivity.actionBar.Title = _firstNameWrapper.EditText.Text + " " + _lastNameWrapper.EditText.Text;
+                StartPageActivity.actionBar.Title =
+                    _firstNameWrapper.EditText.Text + " " + _lastNameWrapper.EditText.Text;
 
                 // Update image in navigation menu with newly set image
                 if (pictureChanged)
@@ -228,23 +226,26 @@ namespace BirdTouch
             this.StartActivityForResult(Intent.CreateChooser(intent, "Select a Photo"), 0);
         }
 
-        private void ImageView_Click(object sender, EventArgs e) //klik na sliku, da bi se promenila profilna slika
+        private void ImageView_Click(object sender, EventArgs e)
         {
-            Intent intent = new Intent();
-            intent.SetType("image/*");
-            intent.SetAction(Intent.ActionGetContent);
-            this.StartActivityForResult(Intent.CreateChooser(intent, "Select a Photo"), 0);
+            FabInsertPhoto_Click(sender, e);
         }
 
-        protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data) //kada se dobije iz galerije nazad neki podatak
+        // When we get some result from the gallery
+        protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
 
             if(resultCode == Result.Ok)
             {
-                System.IO.Stream stream = ContentResolver.OpenInputStream(data.Data);
-            //  imageView.SetImageBitmap(BitmapFactory.DecodeStream(stream)); neefikasan nacin ucitavanja slika, nema skaliranja
-                _imageView.SetImageBitmap(DecodeBitmapFromStream(data.Data, 400, 300)); //mozda su prevelike dimenzije, moze da se podesi
+                var stream = ContentResolver.OpenInputStream(data.Data);
+
+                // TODO: Maybe change dimensions
+                _imageView.SetImageBitmap(BitmapHelper.DecodeBitmapFromStream(
+                                            ContentResolver,
+                                            data.Data,
+                                            400,
+                                            300));
                 pictureChanged = true;
             }
         }
@@ -258,54 +259,6 @@ namespace BirdTouch
                     return true;
             }
             return base.OnOptionsItemSelected(item);
-        }
-
-        private Bitmap DecodeBitmapFromStream(Android.Net.Uri data, int requestedWidth, int requestedHeight)
-        {
-            //Decode with inJustDecodeBounds = true to check dimensions
-            //proveravamo samo velicinu slike, da nije neka prevelika slika koja bi napunila memoriju
-            Stream stream = ContentResolver.OpenInputStream(data);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.InJustDecodeBounds = true;
-            BitmapFactory.DecodeStream(stream,null,options);
-
-            int imageHeight = options.OutHeight;
-            int imageWidth = options.OutWidth;
-
-
-            //Calculate InSampleSize
-            options.InSampleSize = CalculateInSampleSize(options, requestedWidth, requestedHeight);
-
-            //Decode bitmap with InSampleSize set
-            stream = ContentResolver.OpenInputStream(data); //must read again
-            options.InJustDecodeBounds = false;
-            Bitmap bitmap = BitmapFactory.DecodeStream(stream, null, options);
-
-            return bitmap;
-        }
-
-        private int CalculateInSampleSize(BitmapFactory.Options options, int requestedWidth, int requestedHeight)
-        {
-            //Raw height and width of image
-            int height = options.OutHeight;
-            int width = options.OutWidth;
-            int inSampleSize = 1;
-
-            if(height > requestedHeight || width > requestedWidth)
-            {
-                //slika je veca nego sto nam treba
-                int halfHeight = height / 2;
-                int halfWidth = width / 2;
-
-                while((halfHeight/inSampleSize)>=requestedHeight && (halfWidth / inSampleSize) >= requestedWidth)
-                {
-                    inSampleSize *= 2;
-                }
-            }
-            Console.WriteLine();
-            Console.WriteLine("SampleSizeBitmap: " + inSampleSize.ToString());
-            Console.WriteLine();
-            return inSampleSize;
         }
     }
 }
