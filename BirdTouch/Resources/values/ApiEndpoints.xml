@@ -10,11 +10,12 @@
   <string name="webapi_endpoint_getBusinessInfo">api/users/getbusinessinfo</string>
   <string name="webapi_endpoint_changePrivateUser">api/users/patchprivateinfo</string>
   <string name="webapi_endpoint_changeBusinessUser">api/users/patchbusinessinfo</string>
+  <string name="webapi_endpoint_makeUserVisible">api/users/makeuservisible</string>
+  <string name="webapi_endpoint_makeUserInvisible">api/users/makeuserinvisible</string>
+  <string name="webapi_endpoint_getPrivateUsersNearMe">api/users/getusersnearme</string>
 
-  <string name="webapi_endpoint_makeUserVisible">api/makeUserVisible"</string>
-  <string name="webapi_endpoint_makeUserInvisible">api/makeUserInvisible"</string>
-  <string name="webapi_endpoint_getPrivateUsersNearMe">api/getPrivateUsersNearMe"</string>
-  <string name="webapi_endpoint_getBusinessUsersNearMe">api/getBusinessUsersNearMe"</string>
-  <string name="webapi_endpoint_savePrivateSavedList">api/savePrivateSavedList"</string>
+  <string name="webapi_endpoint_getBusinessUsersNearMe">api/users/getUsersNearMe</string>
+
+  <string name="webapi_endpoint_savePrivateSavedList">api/savePrivateSavedList</string>
   <string name="webapi_endpoint_saveBusinessSavedList">api/saveBusinessSavedList"</string>
 </resources>

@@ -163,14 +163,6 @@ namespace BirdTouch.Activities
             }
         }
 
-        private void FabInsertPhoto_Click(object sender, EventArgs e)
-        {
-            Intent intent = new Intent();
-            intent.SetType("image/*");
-            intent.SetAction(Intent.ActionGetContent);
-            this.StartActivityForResult(Intent.CreateChooser(intent, "Select a Photo"), 0);
-        }
-
         private void WebClient_UploadStringCompleted(object sender, UploadStringCompletedEventArgs e)
         {
             if (e.Error != null)
@@ -192,12 +184,17 @@ namespace BirdTouch.Activities
             }
         }
 
-        private void ImageView_Click(object sender, EventArgs e)
+        private void FabInsertPhoto_Click(object sender, EventArgs e)
         {
             Intent intent = new Intent();
             intent.SetType("image/*");
             intent.SetAction(Intent.ActionGetContent);
             this.StartActivityForResult(Intent.CreateChooser(intent, "Select a Photo"), 0);
+        }
+
+        private void ImageView_Click(object sender, EventArgs e)
+        {
+            FabInsertPhoto_Click(sender, e);
         }
 
         // When we get some result from the gallery

@@ -30,413 +30,402 @@ namespace BirdTouch.Fragments
     {
         public static SwitchCompat switchVisibility;
 
-        private Clans.Fab.FloatingActionButton fab_menu_refresh;
-        private Clans.Fab.FloatingActionButton fab_menu_gps;
-        private Clans.Fab.FloatingActionMenu fab_menu;
+        private Clans.Fab.FloatingActionButton _fab_menu_refresh;
+        private Clans.Fab.FloatingActionButton _fab_menu_gps;
+        private Clans.Fab.FloatingActionMenu _fab_menu;
 
-        private FrameLayout frameLay;
-        private LinearLayout linearLayout;
-        private RecyclerView recycleView;
+        private FrameLayout _frameLay;
+        private LinearLayout _linearLayout;
+        private RecyclerView _recycleView;
 
-        private Location currLocation;
-        private LocationManager locationManager;
-        private ProgressBar progressBarLocation;
-        private ProgressBar progressBarGetPrivateUsers;
-        string _locationProvider;
+        private Location _currLocation;
+        private LocationManager _locationManager;
+        String _locationProvider;
+        // in ms
+        private long _locationTimeIntervalForChecking;
+        // in meter
+        private float _locationDistanceNeededForUpdateToTrigger;
+        // TODO: Implement setting page
+        private double _radiusOfSearch = 0.5;
 
-        private WebClient webClientMakeUserVisible;
-        private WebClient webClientMakeUserInvisible;
-        private WebClient webClientGetPrivateUsersNearMe;
-        private Uri uri;
+        private ProgressBar _progressBarLocation;
+        private ProgressBar _progressBarGetPrivateUsers;
 
-        private bool visible = false;
-        private bool GpsUpdateIndeterminate = false;
-        private List<UserInfoModel> listOfUsersAroundMe;
+        private WebClient _webClientMakeUserVisible;
+        private WebClient _webClientMakeUserInvisible;
+        private WebClient _webClientGetPrivateUsersNearMe;
+
+        private bool _visible;
+        private bool _gpsUpdateIndeterminate;
+
+        private List<UserInfoModel> _listOfUsersAroundMe;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            _visible = false;
+            _gpsUpdateIndeterminate = false;
+            _listOfUsersAroundMe = new List<UserInfoModel>();
 
+            _locationTimeIntervalForChecking = 0;
+            _locationDistanceNeededForUpdateToTrigger = 15;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-
+            // Inflate view with resource layout
             View view = inflater.Inflate(Resource.Layout.Fragment1_private, container, false);
 
-            recycleView = view.FindViewById<RecyclerView>(Resource.Id.recyclerViewPrivate);
-            progressBarLocation = view.FindViewById<ProgressBar>(Resource.Id.progressBarGetLocation);
-            progressBarGetPrivateUsers = view.FindViewById<ProgressBar>(Resource.Id.progressBarGetPrivateUsers);
-            frameLay = view.FindViewById<FrameLayout>(Resource.Id.coordinatorLayoutPrivate);
-            linearLayout = view.FindViewById<LinearLayout>(Resource.Id.fragment1LinearLayoutWrapper);
-            webClientMakeUserVisible = new WebClient();
-            webClientMakeUserInvisible = new WebClient();
-            webClientGetPrivateUsersNearMe = new WebClient();
+            // Get location manager
+            _locationManager = (LocationManager)Activity.GetSystemService(Context.LocationService);
 
-            webClientMakeUserVisible.DownloadDataCompleted += WebClientMakeUserVisible_DownloadDataCompleted;
-            webClientMakeUserInvisible.DownloadDataCompleted += WebClientMakeUserInvisible_DownloadDataCompleted;
-            webClientGetPrivateUsersNearMe.DownloadDataCompleted += WebClientGetPrivateUsersNearMe_DownloadDataCompleted;
-
-
-
-            listOfUsersAroundMe = new List<UserInfoModel>();
-
+            // Find components
+            _recycleView = view.FindViewById<RecyclerView>(Resource.Id.recyclerViewPrivate);
+            _progressBarLocation = view.FindViewById<ProgressBar>(Resource.Id.progressBarGetLocation);
+            _progressBarGetPrivateUsers = view.FindViewById<ProgressBar>(Resource.Id.progressBarGetPrivateUsers);
+            _frameLay = view.FindViewById<FrameLayout>(Resource.Id.coordinatorLayoutPrivate);
+            _linearLayout = view.FindViewById<LinearLayout>(Resource.Id.fragment1LinearLayoutWrapper);
             switchVisibility = view.FindViewById<SwitchCompat>(Resource.Id.activatePrivateSwitch);
-            fab_menu_refresh = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh_private);
+            _fab_menu_refresh = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh_private);
+            _fab_menu_gps = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_gps_private);
+            _fab_menu = view.FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu_private);
+            _fab_menu.Visibility = ViewStates.Gone;
 
-            fab_menu_gps = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_gps_private);
-            fab_menu = view.FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu_private);
+            // Initialize web clients
+            _webClientMakeUserVisible = new WebClient();
+            _webClientMakeUserInvisible = new WebClient();
+            _webClientGetPrivateUsersNearMe = new WebClient();
 
+            // Register events for web clients
+            _webClientMakeUserVisible.UploadStringCompleted += WebClientMakeUserVisible_UploadStringCompleted;
+            _webClientMakeUserInvisible.UploadStringCompleted += WebClientMakeUserInvisible_UploadStringCompleted;
+            _webClientGetPrivateUsersNearMe.DownloadDataCompleted += WebClientGetPrivateUsersNearMe_DownloadDataCompleted;
+
+            // Register events for components
+            _fab_menu.MenuToggle += Fab_menu_MenuToggle;
+            _fab_menu_gps.Click += Fab_menu_gps_Click;
+            _fab_menu_refresh.Click += Fab_menu_refresh_Click;
             switchVisibility.CheckedChange += SwitchVisibility_CheckedChange;
-            fab_menu_refresh.Click += Fab_menu_refresh_Click;
 
-            fab_menu_gps.Click += Fab_menu_gps_Click;
-
-            fab_menu.MenuToggle += Fab_menu_MenuToggle;
-
-            fab_menu.Visibility = ViewStates.Gone;
-
-            SetUpRecyclerView(recycleView, listOfUsersAroundMe);//inicijalizacija, nema veze to sto je lista Usera prazna
+            // Initialize recycle view (although its empty at the moment)
+            SetUpRecyclerView(_recycleView, _listOfUsersAroundMe);
 
             return view;
         }
 
-
-
         private void Fab_menu_MenuToggle(object sender, Clans.Fab.FloatingActionMenu.MenuToggleEventArgs e)
         {
-            if (e.Opened) //kada se otvori fab menu, recycle view da se sakrije, kako se ne bi kliknulo greskom. a i zbog preglednosti
+            // When fab menu is opened, we hide recycle view
+            // TODO: Maybe there is better way to handle uneccesary clicks on recycle view, maybe this is overkill
+            if (e.Opened)
             {
-
-                linearLayout.Click += linearLayoutClick;
-                recycleView.Visibility = ViewStates.Invisible;
-
+                _linearLayout.Click += linearLayoutClick;
+                _recycleView.Visibility = ViewStates.Invisible;
             }
             else
             {
-                linearLayout.Click -= linearLayoutClick;
-                recycleView.Visibility = ViewStates.Visible;
-
+                _linearLayout.Click -= linearLayoutClick;
+                _recycleView.Visibility = ViewStates.Visible;
             }
         }
 
         private void linearLayoutClick(object sender, EventArgs e)
         {
-            fab_menu.Close(true);
+            _fab_menu.Close(true);
         }
-
 
         private void Fab_menu_gps_Click(object sender, EventArgs e)
         {
-            if (GpsUpdateIndeterminate) //ako je u toku trazenje GPS a hocemo da odustanemo
+            // If gps update is already in process, we will cancel it
+            if (_gpsUpdateIndeterminate)
             {
-                fab_menu_gps.SetIndeterminate(false);
-                locationManager.RemoveUpdates(this);
-                GpsUpdateIndeterminate = false;
+                _fab_menu_gps.SetIndeterminate(false);
+                _locationManager.RemoveUpdates(this);
+                _gpsUpdateIndeterminate = false;
             }
             else
             {
-            GpsUpdateIndeterminate = true;
-            fab_menu_gps.SetIndeterminate(true);
-            locationManager.RequestLocationUpdates(_locationProvider, 0, 0, this);
+                _gpsUpdateIndeterminate = true;
+                _fab_menu_gps.SetIndeterminate(true);
+                _locationManager.RequestLocationUpdates(_locationProvider, 0, 0, this);
             }
         }
 
-        private void Fab_menu_automatically_Click(object sender, EventArgs e) //treba implementirati logiku, ali treba videti i razmisliti dobro sta i kako, za sada nije vidljivo dugme, mozda u buducnosti
+        // TODO: Implement automatically update gps location
+        private void Fab_menu_automatically_Click(object sender, EventArgs e)
         {
-
-            fab_menu.Close(true);
+            _fab_menu.Close(true);
         }
 
         private void Fab_menu_refresh_Click(object sender, EventArgs e)
         {
             GetPrivateUsersNearMe();
-            fab_menu.Close(true);
+            _fab_menu.Close(true);
         }
-
 
         private void SwitchVisibility_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
         {
+            // Visibility on
             if (e.IsChecked)
             {
-                InitializeLocationManager(); //svaki put kada se promeni switch na ON, da se vidi da li postoji GPS ili NETWORK location
-                if (!_locationProvider.Equals(string.Empty))//ako postoje provideri za lokaciju koje smo dobili u InitializeLocationManager()
+                // Everytime we switch visibility on, we check if we can get location provider (gps or network)
+                _locationProvider = LocationHelper.TryToFindLocationProvider(_locationManager, Activity);
+
+                // If there are some location providers (set in InitializeLocationManager), then we proceed to make user visible
+                if (!_locationProvider.Equals(string.Empty))
                 {
-                    locationManager.RequestLocationUpdates(_locationProvider, 0, 0, this);
-                    progressBarLocation.Visibility = ViewStates.Visible;
+                    _locationManager.RequestLocationUpdates(
+                        _locationProvider,
+                        _locationTimeIntervalForChecking,
+                        _locationDistanceNeededForUpdateToTrigger,
+                        this);
+
+                    _progressBarLocation.Visibility = ViewStates.Visible;
                 }
                 else
                 {
-                    Snackbar.Make(frameLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">No GPS or Network Geolocation available</font>"), Snackbar.LengthLong).Show();
+                    Snackbar.Make(
+                        _frameLay,
+                        Html.FromHtml("<font color=\"#ffffff\">No GPS or Network Geolocation available</font>"),
+                        Snackbar.LengthLong)
+                         .Show();
                 }
-
             }
+            // Visibility off
             else
             {
-
-                fab_menu.Visibility = ViewStates.Gone;
-                locationManager.RemoveUpdates(this);
+                _fab_menu.Visibility = ViewStates.Gone;
+                _locationManager.RemoveUpdates(this);
+                _progressBarLocation.Visibility = ViewStates.Invisible;
                 GoInvisible();
-                progressBarLocation.Visibility = ViewStates.Invisible;
             }
         }
-
-        private void InitializeLocationManager()//ovde treba videti kako uzeti lepo lokaciju sa mreze ako nema gps, ali to nije za betu
-        {
-            locationManager = (LocationManager)Activity.GetSystemService(Context.LocationService);
-            Criteria criteriaForLocationService = new Criteria
-            {
-                Accuracy = Accuracy.Fine
-            };
-            IList<string> acceptableLocationProviders = locationManager.GetProviders(criteriaForLocationService, true);
-
-            if (acceptableLocationProviders.Any())
-            {
-                _locationProvider = acceptableLocationProviders.First();
-            }
-            else
-            {
-                Criteria criteriaForLocationServiceBackup = new Criteria
-                {
-                    Accuracy = Accuracy.Coarse
-                };
-                IList<string> acceptableLocationProvidersBackup = locationManager.GetProviders(criteriaForLocationServiceBackup, true);
-                if (acceptableLocationProvidersBackup.Any())
-                {
-                    _locationProvider = acceptableLocationProvidersBackup.First();
-
-                }else
-                {
-                    _locationProvider = string.Empty;
-                }
-            }
-            Log.Debug("log debug tag", "Using " + _locationProvider + ".");
-        }
-
-
 
         public void OnLocationChanged(Location location)
         {
-            currLocation = location;
-            if (this.currLocation == null)
-            {
-                Snackbar.Make(frameLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">Unable to determine location</font>"), Snackbar.LengthLong).Show();
+            _currLocation = location;
 
+            if (location == null)
+            {
+                Snackbar.Make(
+                    _frameLay,
+                    Html.FromHtml("<font color=\"#ffffff\">Unable to determine location</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
             }
             else
             {
                 SendLocationToDatabase();
             }
-            locationManager.RemoveUpdates(this); //samo jednom da uzme gps koordinate, da ne refreshuje stalno
 
+            // TODO: Maybe enable refreshing all the time
+            // Remove listening for location change, we dont want to refresh all the time
+            _locationManager.RemoveUpdates(this);
         }
 
         private void SendLocationToDatabase()
         {
-            if (Reachability.IsOnline(Activity) && !webClientMakeUserVisible.IsBusy)
+            if (Reachability.IsOnline(Activity)
+                && !_webClientMakeUserVisible.IsBusy)
             {
+                var userLocationUpdate = new UserLocationUpdate()
+                {
+                    ActiveMode = ActiveModeConstants.PRIVATE,
+                    LocationLatitude = _currLocation.Latitude,
+                    LocationLongitude = _currLocation.Longitude
+                };
 
-                //insert parameters for header for web request
-                NameValueCollection parameters = new NameValueCollection();
-                parameters.Add("latitude", currLocation.Latitude.ToString().Replace(',','.'));
-                parameters.Add("longitude", currLocation.Longitude.ToString().Replace(',', '.'));
-                parameters.Add("mode", ActiveModeConstants.PRIVATE); // mozda treba mode globalni, ali videcemo
-                parameters.Add("id", StartPageActivity.user.Id.ToString());
+                var uri = WebApiUrlGenerator
+                            .GenerateWebApiUrl(Resource.String.webapi_endpoint_makeUserVisible);
 
-                String restUriString = GetString(Resource.String.webapi_endpoint_makeUserVisible);
-                uri = new Uri(restUriString);
+                _webClientMakeUserVisible.Headers.Clear();
+                _webClientMakeUserVisible.Headers.Add(
+                                HttpRequestHeader.Authorization,
+                                "Bearer " + JwtTokenHelper.GetTokenFromSharedPreferences(Context));
+                _webClientMakeUserVisible.Headers.Add(HttpRequestHeader.ContentType, "application/json");
 
-                webClientMakeUserVisible.Headers.Clear();
-                webClientMakeUserVisible.Headers.Add(parameters);
-                webClientMakeUserVisible.DownloadDataAsync(uri);
-
+                _webClientMakeUserVisible.UploadStringAsync(uri, "POST", userLocationUpdate.ToJson());
             }
             else
             {
-
-                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
-
+                Snackbar.Make(
+                    _frameLay,
+                    Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
             }
         }
 
-
-        private void WebClientMakeUserVisible_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void WebClientMakeUserVisible_UploadStringCompleted(object sender, UploadStringCompletedEventArgs e)
         {
             if (e.Error != null)
             {
-                //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
+                // TODO: Add error type
+                Snackbar.Make(
+                    _frameLay,
+                    Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
 
-                Console.WriteLine("*******Error webclient data save changes error");
-                Console.WriteLine(e.Error.Message);
-                Console.WriteLine("******************************************************");
-                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
-                visible = false;
-                fab_menu_gps.SetIndeterminate(false);
-                fab_menu.Close(true);
+                _visible = false;
+                _fab_menu_gps.SetIndeterminate(false);
+                _fab_menu.Close(true);
             }
             else
             {
+                _visible = true;
+                _progressBarLocation.Visibility = ViewStates.Invisible;
+                _fab_menu_gps.SetIndeterminate(false);
+                _gpsUpdateIndeterminate = false;
+                _fab_menu.Close(true);
 
-                Console.WriteLine("Success!");
-                string jsonResult = Encoding.UTF8.GetString(e.Result);
-                Console.Out.WriteLine(jsonResult);
-                visible = true;
-                progressBarLocation.Visibility = ViewStates.Invisible;
-
-                fab_menu_gps.SetIndeterminate(false);
-                GpsUpdateIndeterminate = false;
-                fab_menu.Close(true);
-
-               //Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now visible in private mode</font>"), Snackbar.LengthLong).Show();
-
-                GetPrivateUsersNearMe();//nakon uspesnog postavljanja lokacije, a mozda i da se skloni odavde, pa samo po potrebi
+                // If location is succesfully updated
+                GetPrivateUsersNearMe();
             }
         }
-
-
 
         private void GoInvisible()
         {
-            if (Reachability.IsOnline(Activity) && !webClientMakeUserInvisible.IsBusy)
+            if (Reachability.IsOnline(Activity)
+                && !_webClientMakeUserInvisible.IsBusy)
             {
+                var userLocationUpdate = new UserLocationUpdate()
+                {
+                    ActiveMode = ActiveModeConstants.PRIVATE
+                };
 
-                //insert parameters for header for web request
-                NameValueCollection parameters = new NameValueCollection();
-                parameters.Add("mode", "1");
-                parameters.Add("id", StartPageActivity.user.Id.ToString());
+                var uri = WebApiUrlGenerator
+                            .GenerateWebApiUrl(Resource.String.webapi_endpoint_makeUserInvisible);
 
-                String restUriString = GetString(Resource.String.webapi_endpoint_makeUserInvisible);
-                uri = new Uri(restUriString);
+                _webClientMakeUserInvisible.Headers.Clear();
+                _webClientMakeUserInvisible.Headers.Add(
+                                HttpRequestHeader.Authorization,
+                                "Bearer " + JwtTokenHelper.GetTokenFromSharedPreferences(Context));
+                _webClientMakeUserInvisible.Headers.Add(HttpRequestHeader.ContentType, "application/json");
 
-                webClientMakeUserInvisible.Headers.Clear();
-                webClientMakeUserInvisible.Headers.Add(parameters);
-                webClientMakeUserInvisible.DownloadDataAsync(uri);
-
+                _webClientMakeUserInvisible.UploadStringAsync(uri, "DELETE", userLocationUpdate.ToJson());
             }
             else
             {
-
-                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
-
+                Snackbar.Make(
+                    _frameLay,
+                    Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
             }
         }
 
-
-        private void WebClientMakeUserInvisible_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void WebClientMakeUserInvisible_UploadStringCompleted(object sender, UploadStringCompletedEventArgs e)
         {
             if (e.Error != null)
             {
-                //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
-
-                Console.WriteLine("*******Error webclient data save changes error");
-                Console.WriteLine(e.Error.Message);
-                Console.WriteLine("******************************************************");
-                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
-                visible = true;
+                 Snackbar.Make(
+                     _frameLay,
+                     Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"),
+                     Snackbar.LengthLong)
+                      .Show();
+                _visible = true;
             }
             else
             {
-
-                Console.WriteLine("Success!");
-                string jsonResult = Encoding.UTF8.GetString(e.Result);
-                Console.Out.WriteLine(jsonResult);
-                visible = false;
-              //  Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">" + StartPageActivity.user.Username.ToString() + " is now invisible in private mode</font>"), Snackbar.LengthLong).Show();
+                _visible = false;
             }
         }
-
 
         private void GetPrivateUsersNearMe()
         {
-
-            if (Reachability.IsOnline(Activity) && !webClientGetPrivateUsersNearMe.IsBusy)
+            if (Reachability.IsOnline(Activity)
+                && !_webClientGetPrivateUsersNearMe.IsBusy)
             {
+                // You can get other users near you only if you are visible
+                if (_visible)
+                {
+                    _progressBarGetPrivateUsers.Visibility = ViewStates.Visible;
 
+                    var uri = WebApiUrlGenerator
+                            .GenerateWebApiUrl(Resource.String.webapi_endpoint_getPrivateUsersNearMe);
 
-                if (visible) { //ako je korisnik visible tj. u active_users bazi upisan
+                    _webClientGetPrivateUsersNearMe.Headers.Clear();
+                    _webClientGetPrivateUsersNearMe.Headers.Add(
+                                HttpRequestHeader.Authorization,
+                                "Bearer " + JwtTokenHelper.GetTokenFromSharedPreferences(Context));
 
-                progressBarGetPrivateUsers.Visibility = ViewStates.Visible;
+                    NameValueCollection parameters = new NameValueCollection();
+                    parameters.Add("activeMode", Constants.ActiveModeConstants.PRIVATE);
+                    parameters.Add("radiusOfSearch", _radiusOfSearch.ToString());
 
-                //insert parameters for header for web request
-                NameValueCollection parameters = new NameValueCollection();
-                parameters.Add("id", StartPageActivity.user.Id.ToString());
-
-                String restUriString = GetString(Resource.String.webapi_endpoint_getPrivateUsersNearMe);
-                uri = new Uri(restUriString);
-
-                webClientGetPrivateUsersNearMe.Headers.Clear();
-                webClientGetPrivateUsersNearMe.Headers.Add(parameters);
-                webClientGetPrivateUsersNearMe.DownloadDataAsync(uri);
+                    _webClientGetPrivateUsersNearMe.QueryString.Clear();
+                    _webClientGetPrivateUsersNearMe.QueryString.Add(parameters);
+                    _webClientGetPrivateUsersNearMe.DownloadDataAsync(uri);
                 }
                 else
                 {
-                    Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">You are not visible to others</font>"), Snackbar.LengthLong).Show();
-
+                    Snackbar.Make(
+                        _frameLay,
+                        Html.FromHtml("<font color=\"#ffffff\">You are not visible to others</font>"),
+                        Snackbar.LengthLong)
+                         .Show();
                 }
-
             }
             else
             {
-
-                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"), Snackbar.LengthLong).Show();
-
+                Snackbar.Make(
+                    _frameLay,
+                    Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
             }
-
-
         }
-
 
         private void WebClientGetPrivateUsersNearMe_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
             if (e.Error != null)
             {
-                //ovde naknadno ubaciti proveru da li je doslo do nestanka neta, a ne da postoji samo jedan error, ali za betu je ovo dovoljno
-
-                Console.WriteLine("*******Error webclient data error");
-                Console.WriteLine(e.Error.Message);
-                Console.WriteLine("******************************************************");
-                Snackbar.Make(frameLay, Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"), Snackbar.LengthLong).Show();
-                progressBarGetPrivateUsers.Visibility = ViewStates.Gone;
+                // TODO: Add error type
+                Snackbar.Make(
+                    _frameLay,
+                    Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
+                _progressBarGetPrivateUsers.Visibility = ViewStates.Gone;
             }
             else
             {
+                List<UserInfoModel> newListOfUsersAroundMe = Newtonsoft.Json.JsonConvert.DeserializeObject
+                                                                <List<UserInfoModel>>(Encoding.UTF8.GetString(e.Result));
 
-                Console.WriteLine("Success!");
-                string jsonResult = Encoding.UTF8.GetString(e.Result);
+                SetUpRecyclerView(_recycleView, newListOfUsersAroundMe);
 
-                List<UserInfoModel> newListOfUsersAroundMe = Newtonsoft.Json.JsonConvert.DeserializeObject<List<UserInfoModel>>(jsonResult);
-                SetUpRecyclerView(recycleView, newListOfUsersAroundMe);
-
-                fab_menu.Visibility = ViewStates.Visible;
-                progressBarGetPrivateUsers.Visibility = ViewStates.Gone;
+                _fab_menu.Visibility = ViewStates.Visible;
+                _progressBarGetPrivateUsers.Visibility = ViewStates.Gone;
             }
         }
 
-
-
-
-
-
-
-
-        //*********************************************************
-        //LocationListener interfejs, mozda nekad implementirati
-
+        //LocationListener interface
+        // TODO: Maybe implement in future
         public void OnProviderDisabled(string provider)
         {
-            Snackbar.Make(frameLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">" + provider + " is disabled</font>"), Snackbar.LengthLong).Show();
-
+            Snackbar.Make(
+                _frameLay,
+                Android.Text.Html.FromHtml("<font color=\"#ffffff\">" + provider + " is disabled</font>"),
+                Snackbar.LengthLong)
+                 .Show();
         }
 
+        // TODO: Maybe implement in future
         public void OnProviderEnabled(string provider)
         {
-            Snackbar.Make(frameLay, Android.Text.Html.FromHtml("<font color=\"#ffffff\">" + provider + " is enabled</font>"), Snackbar.LengthLong).Show();
-
+            Snackbar.Make(
+                _frameLay,
+                Android.Text.Html.FromHtml("<font color=\"#ffffff\">" + provider + " is enabled</font>"),
+                Snackbar.LengthLong)
+                 .Show();
         }
 
+        // TODO: Maybe implement in future
         public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
         {
-            //mozda nekad implementirati, ali nema potrebe
+
         }
 
         //public override void OnPause()
@@ -450,28 +439,26 @@ namespace BirdTouch.Fragments
         //    base.OnResume();
         //    locationManager.RequestLocationUpdates(_locationProvider, 0, 0, this);
         //}
-
-
-
-
-
-
         //*********************************************
+
         //RecycleView setup
-
-
         private void SetUpRecyclerView(RecyclerView recyclerView, List<UserInfoModel> listOfUsersAroundMe) //ovde da se napravi lista dobijenih korisnika
         {
+            recyclerView.SetLayoutManager(
+                new LinearLayoutManager(recyclerView.Context));
 
-            recyclerView.SetLayoutManager(new LinearLayoutManager(recyclerView.Context));
-            recyclerView.SetAdapter(new SimpleStringRecyclerViewAdapter(recyclerView.Context, listOfUsersAroundMe, Activity.Resources, recycleView));
-
+            recyclerView.SetAdapter(
+                new SimpleStringRecyclerViewAdapter(
+                    recyclerView.Context,
+                    listOfUsersAroundMe,
+                    Activity.Resources,
+                    _recycleView));
         }
 
 
         public void NotifyDataSetChangedFromAnotherFragment()
         {
-            recycleView.GetAdapter().NotifyDataSetChanged();
+            _recycleView.GetAdapter().NotifyDataSetChanged();
         }
 
 
@@ -490,7 +477,6 @@ namespace BirdTouch.Fragments
                 mValues = items;
                 mResource = res;
                 recycleView = rv;
-
             }
 
             public override int ItemCount
@@ -501,18 +487,18 @@ namespace BirdTouch.Fragments
                 }
             }
 
-
             public override async void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
                 var simpleHolder = holder as SimpleViewHolder;
 
                 simpleHolder.mBoundString = mValues[position].Id.ToString();
                 simpleHolder.mTxtView.Text = mValues[position].FirstName + " " + mValues[position].LastName;
+                simpleHolder.mTxtViewDescription.Text = mValues[position].Description;
 
                 if (mValues[position].ProfilePictureData != null)
                 {
                     Bitmap bm = BitmapFactory.DecodeByteArrayAsync(mValues[position].ProfilePictureData, 0, mValues[position].ProfilePictureData.Length).Result;
-                    simpleHolder.mImageView.SetImageBitmap(Bitmap.CreateScaledBitmap(bm,200,100,false));// mozda treba malo da se igra sa ovim
+                    simpleHolder.mImageView.SetImageBitmap(Bitmap.CreateScaledBitmap(bm, 200, 100, false));// mozda treba malo da se igra sa ovim
                 }
                 else
                 {
@@ -534,9 +520,9 @@ namespace BirdTouch.Fragments
                 simpleHolder.mView.Click -= MView_Click; //da se ne bi gomilali delegati
                 simpleHolder.mView.Click += MView_Click;
 
-               // Random rand = new Random(); //igramo se, ali pravi probleme
+                // Random rand = new Random(); //igramo se, ali pravi probleme
                 //if(rand.Next() % 2 == 1)
-               // setScaleAnimation(holder.ItemView);
+                // setScaleAnimation(holder.ItemView);
                 //else
                 //setFadeAnimation(holder.ItemView);
 
@@ -618,9 +604,8 @@ namespace BirdTouch.Fragments
                         string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
                         if (serializedDictionary != String.Empty)
                         {
-
-                           var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
-                                <Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
+                            var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
+                                 <Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
 
                             if (!dictionary.ContainsKey(userId))
                             {//ako user nije uopste dodavao usere
@@ -636,12 +621,10 @@ namespace BirdTouch.Fragments
                             edit.Remove("SavedPrivateUsersDictionary");
                             edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                             edit.Apply();
-                            Fragment1_PrivateSavedUsers refToSavedUsersFragment =(Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+                            Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
                             refToSavedUsersFragment.SetUpRecyclerView();
                         }
-
                     }
-
                 }
                 else
                 {//unchecked
@@ -659,7 +642,6 @@ namespace BirdTouch.Fragments
                         Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
                         refToSavedUsersFragment.SetUpRecyclerView();
                     }
-
                 }
             }
 
@@ -667,7 +649,7 @@ namespace BirdTouch.Fragments
             {
                 int FADE_DURATION = 1400; // in milliseconds
                 AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
-                anim.Duration=FADE_DURATION;
+                anim.Duration = FADE_DURATION;
                 view.StartAnimation(anim);
             }
 
@@ -689,7 +671,6 @@ namespace BirdTouch.Fragments
                 intent.PutExtra("userInformation", Newtonsoft.Json.JsonConvert.SerializeObject(mValues[position]));
                 intent.PutExtra("isSaved", (svh.checkbox.Checked));
                 context.StartActivity(intent);
-
             }
 
             private int CalculateInSampleSize(BitmapFactory.Options options, int requestedWidth, int requestedHeight)
@@ -731,6 +712,7 @@ namespace BirdTouch.Fragments
             public readonly View mView;
             public readonly ImageView mImageView;
             public readonly TextView mTxtView;
+            public readonly TextView mTxtViewDescription;
             public readonly CheckBox checkbox;
 
             public SimpleViewHolder(View view) : base(view)
@@ -738,6 +720,7 @@ namespace BirdTouch.Fragments
                 mView = view;
                 mImageView = view.FindViewById<ImageView>(Resource.Id.avatar); //profilna slika usera
                 mTxtView = view.FindViewById<TextView>(Resource.Id.text1); //ime + prezime usera
+                mTxtViewDescription = view.FindViewById<TextView>(Resource.Id.text2);
                 checkbox = view.FindViewById<CheckBox>(Resource.Id.checkboxSaveUserRecycleViewRow);
             }
 
@@ -746,36 +729,5 @@ namespace BirdTouch.Fragments
                 return base.ToString() + " '" + mTxtView.Text;
             }
         }
-
-
-
-
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//private List<string> GetRandomSubList(List<string> items, int amount)
-//{
-//    List<string> list = new List<string>();
-//    Random random = new Random();
-//    while (list.Count < amount)
-//    {
-//        list.Add(items[random.Next(items.Count)]);
-//    }
-//    return list;
-//}

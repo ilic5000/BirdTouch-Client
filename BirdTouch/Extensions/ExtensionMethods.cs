@@ -6,12 +6,14 @@ namespace BirdTouch.Extensions
 {
     public static class ExtensionMethods
     {
+        // TODO: Remove if we dont need this
         public static void SetItemClickListener(this RecyclerView rv, Action<RecyclerView, int, View> action)
         {
             rv.AddOnChildAttachStateChangeListener(new AttachStateChangeListener(rv, action));
         }
     }
 
+    // TODO: Remove if we dont need this
     public class AttachStateChangeListener : Java.Lang.Object, RecyclerView.IOnChildAttachStateChangeListener
     {
         private RecyclerView mRecyclerview;
