@@ -63,6 +63,7 @@ namespace BirdTouch.Fragments
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
             _visible = false;
             _gpsUpdateIndeterminate = false;
             _listOfUsersAroundMe = new List<UserInfoModel>();
@@ -319,11 +320,11 @@ namespace BirdTouch.Fragments
         {
             if (e.Error != null)
             {
-                 Snackbar.Make(
-                     _frameLay,
-                     Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"),
-                     Snackbar.LengthLong)
-                      .Show();
+                Snackbar.Make(
+                    _frameLay,
+                    Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
                 _visible = true;
             }
             else
@@ -407,7 +408,7 @@ namespace BirdTouch.Fragments
         {
             Snackbar.Make(
                 _frameLay,
-                Android.Text.Html.FromHtml("<font color=\"#ffffff\">" + provider + " is disabled</font>"),
+                Html.FromHtml("<font color=\"#ffffff\">" + provider + " is disabled</font>"),
                 Snackbar.LengthLong)
                  .Show();
         }
@@ -417,7 +418,7 @@ namespace BirdTouch.Fragments
         {
             Snackbar.Make(
                 _frameLay,
-                Android.Text.Html.FromHtml("<font color=\"#ffffff\">" + provider + " is enabled</font>"),
+                Html.FromHtml("<font color=\"#ffffff\">" + provider + " is enabled</font>"),
                 Snackbar.LengthLong)
                  .Show();
         }
@@ -442,105 +443,134 @@ namespace BirdTouch.Fragments
         //*********************************************
 
         //RecycleView setup
-        private void SetUpRecyclerView(RecyclerView recyclerView, List<UserInfoModel> listOfUsersAroundMe) //ovde da se napravi lista dobijenih korisnika
+        private void SetUpRecyclerView(RecyclerView recyclerView, List<UserInfoModel> listOfUsersAroundMe)
         {
             recyclerView.SetLayoutManager(
                 new LinearLayoutManager(recyclerView.Context));
 
             recyclerView.SetAdapter(
-                new SimpleStringRecyclerViewAdapter(
+                new RecyclerViewAdapter(
                     recyclerView.Context,
                     listOfUsersAroundMe,
                     Activity.Resources,
                     _recycleView));
         }
 
-
         public void NotifyDataSetChangedFromAnotherFragment()
         {
             _recycleView.GetAdapter().NotifyDataSetChanged();
         }
 
-
-        public class SimpleStringRecyclerViewAdapter : RecyclerView.Adapter
+        public class RecyclerViewAdapter : RecyclerView.Adapter
         {
-            private readonly TypedValue mTypedValue = new TypedValue();
-            private int mBackground;
-            private List<UserInfoModel> mValues;
-            private RecyclerView recycleView;
-            Resources mResource;
+            private readonly TypedValue _typedValue = new TypedValue();
+            private int _background;
+            private List<UserInfoModel> _values;
+            private RecyclerView _recycleView;
+            Resources _resource;
 
-            public SimpleStringRecyclerViewAdapter(Context context, List<UserInfoModel> items, Resources res, RecyclerView rv)
+            public RecyclerViewAdapter(Context context, List<UserInfoModel> items, Resources res, RecyclerView rv)
             {
-                context.Theme.ResolveAttribute(Resource.Attribute.selectableItemBackground, mTypedValue, true);
-                mBackground = mTypedValue.ResourceId;
-                mValues = items;
-                mResource = res;
-                recycleView = rv;
+                context.Theme.ResolveAttribute(
+                    Resource.Attribute.selectableItemBackground,
+                    _typedValue,
+                    true);
+
+                _background = _typedValue.ResourceId;
+                _values = items;
+                _resource = res;
+                _recycleView = rv;
             }
 
             public override int ItemCount
             {
                 get
                 {
-                    return mValues.Count;
+                    return _values.Count;
                 }
             }
 
             public override async void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
-                var simpleHolder = holder as SimpleViewHolder;
+                var simpleHolder = holder as ViewHolder;
 
-                simpleHolder.mBoundString = mValues[position].Id.ToString();
-                simpleHolder.mTxtView.Text = mValues[position].FirstName + " " + mValues[position].LastName;
-                simpleHolder.mTxtViewDescription.Text = mValues[position].Description;
+                simpleHolder._boundString = _values[position].Id.ToString();
+                simpleHolder._txtViewName.Text = _values[position].FirstName + " " + _values[position].LastName;
+                simpleHolder._txtViewDescription.Text = _values[position].Description;
 
-                if (mValues[position].ProfilePictureData != null)
+                if (_values[position].ProfilePictureData != null)
                 {
-                    Bitmap bm = BitmapFactory.DecodeByteArrayAsync(mValues[position].ProfilePictureData, 0, mValues[position].ProfilePictureData.Length).Result;
-                    simpleHolder.mImageView.SetImageBitmap(Bitmap.CreateScaledBitmap(bm, 200, 100, false));// mozda treba malo da se igra sa ovim
+                    Bitmap bm = BitmapFactory.DecodeByteArrayAsync(
+                        _values[position].ProfilePictureData,
+                        0,
+                        _values[position].ProfilePictureData.Length)
+                         .Result;
+
+                    // TODO: Maybe this parameters can be played with
+                    simpleHolder._profileImageView.SetImageBitmap(
+                        Bitmap.CreateScaledBitmap(
+                            bm,
+                            200,
+                            100,
+                            false));
                 }
                 else
                 {
-                    //ako korisnik nije postavio profilnu sliku
-
+                    // If user does not have custom profile image
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.InJustDecodeBounds = true;
 
-                    BitmapFactory.DecodeResource(mResource, Resource.Drawable.blank_navigation, options);
+                    BitmapFactory.DecodeResource(
+                        _resource,
+                        Resource.Drawable.blank_navigation,
+                        options);
 
-                    options.InSampleSize = CalculateInSampleSize(options, 100, 100);
+                    options.InSampleSize = BitmapHelper.CalculateInSampleSize(options, 100, 100);
                     options.InJustDecodeBounds = false;
 
-                    var bitMap = await BitmapFactory.DecodeResourceAsync(mResource, Resource.Drawable.blank_navigation, options);
+                    var bitMap = await BitmapFactory.DecodeResourceAsync(
+                        _resource,
+                        Resource.Drawable.blank_navigation,
+                        options);
 
-                    simpleHolder.mImageView.SetImageBitmap(bitMap);
+                    simpleHolder._profileImageView.SetImageBitmap(bitMap);
                 }
 
-                simpleHolder.mView.Click -= MView_Click; //da se ne bi gomilali delegati
-                simpleHolder.mView.Click += MView_Click;
+                // In order to not stack delegats
+                simpleHolder._view.Click -= MView_Click;
+                simpleHolder._view.Click += MView_Click;
 
-                // Random rand = new Random(); //igramo se, ali pravi probleme
+                // TODO: Animation are causing troubles, maybe investigate when have more time
+                // Random rand = new Random();
                 //if(rand.Next() % 2 == 1)
                 // setScaleAnimation(holder.ItemView);
                 //else
                 //setFadeAnimation(holder.ItemView);
 
-                simpleHolder.checkbox.CheckedChange -= Checkbox_CheckedChange;//stavljeno ovde da ne bi redovi ispod izazvali pozivanje event listenera
+                // Needs to be here in order to prevent lines below to trigger event listener
+                simpleHolder._checkbox.CheckedChange -= Checkbox_CheckedChange;
 
-                if (isUserInSavedContacts(mValues[position].Id, simpleHolder)) simpleHolder.checkbox.Checked = true; //da li je vec u saved contacts
-                else simpleHolder.checkbox.Checked = false;
+                if (IsUserInSavedContacts(_values[position].Id, simpleHolder))
+                {
+                    simpleHolder._checkbox.Checked = true;
+                }
+                else
+                {
+                    simpleHolder._checkbox.Checked = false;
+                }
 
-                simpleHolder.checkbox.Tag = simpleHolder.mView; //potrebno zbog pozicije u adapteru koja nam je potrebna u Checkbox_CheckedChange
-                simpleHolder.checkbox.CheckedChange += Checkbox_CheckedChange;
+                // Needed because we need position in adapter in Checkbox_CheckedChange
+                simpleHolder._checkbox.Tag = simpleHolder._view;
+                simpleHolder._checkbox.CheckedChange += Checkbox_CheckedChange;
             }
 
 
-            private bool isUserInSavedContacts(Guid userIdRecyclerView, SimpleViewHolder svh)
+            private bool IsUserInSavedContacts(Guid userIdRecyclerView, ViewHolder svh)
             {
                 Guid userId = StartPageActivity.user.Id;
 
-                ISharedPreferences pref = svh.ItemView.Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
+                ISharedPreferences pref = svh.ItemView.Context
+                    .ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
                 ISharedPreferencesEditor edit = pref.Edit();
 
                 List<UserInfoModel> listSavedPrivateUsers = new List<UserInfoModel>();
@@ -553,20 +583,25 @@ namespace BirdTouch.Fragments
                         var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
                             <Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
 
+                        // If user has already added some users to saved
                         if (dictionary.ContainsKey(userId))
-                        {//ako je user dodavao usere
-                            if (dictionary[userId].ContainsKey(1))
-                            {//ako je dodavao private usere
-                                listSavedPrivateUsers = dictionary[userId][1];
+                        {
+                            if (dictionary[userId].ContainsKey(int.Parse(ActiveModeConstants.PRIVATE)))
+                            {
+                                listSavedPrivateUsers = dictionary[userId][int.Parse(ActiveModeConstants.PRIVATE)];
                             }
                         }
-
                     }
-
                 }
 
-                if (!(listSavedPrivateUsers.Find(a => a.Id == userIdRecyclerView) == null)) return true;
-                else return false;
+                if (!(listSavedPrivateUsers.Find(a => a.Id == userIdRecyclerView) == null))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             private void Checkbox_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
@@ -574,32 +609,31 @@ namespace BirdTouch.Fragments
                 CheckBox vsender = sender as CheckBox;
 
                 View mView = (View)vsender.Tag;
-                int position = recycleView.GetChildAdapterPosition(mView);
+                int position = _recycleView.GetChildAdapterPosition(mView);
                 Guid userId = StartPageActivity.user.Id;
 
-                ISharedPreferences pref = vsender.Context.ApplicationContext.GetSharedPreferences("SavedUsers", FileCreationMode.Private);
+                ISharedPreferences pref = vsender.Context.ApplicationContext
+                    .GetSharedPreferences("SavedUsers", FileCreationMode.Private);
                 ISharedPreferencesEditor edit = pref.Edit();
 
                 if (e.IsChecked)
-                {//checked
-
-                    if (!pref.Contains("SavedPrivateUsersDictionary")) //prvi put u aplikaciji dodajemo private usera u saved
+                {
+                    if (!pref.Contains("SavedPrivateUsersDictionary"))
                     {
-
                         var dictionary = new Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>();
 
                         dictionary.Add(userId, new Dictionary<int, List<UserInfoModel>>());
-                        dictionary[userId].Add(1, new List<UserInfoModel>());// 1 je private mode
-                        dictionary[userId][1].Add(mValues[position]);
+                        dictionary[userId].Add(int.Parse(ActiveModeConstants.PRIVATE), new List<UserInfoModel>());
+                        dictionary[userId][int.Parse(ActiveModeConstants.PRIVATE)].Add(_values[position]);
 
                         edit.Remove("SavedPrivateUsersDictionary");
                         edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();
-                        Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+                        Fragment1_PrivateSavedUsers refToSavedUsersFragment =
+                            (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(ActiveModeConstants.PRIVATE));
                         refToSavedUsersFragment.SetUpRecyclerView();
-
                     }
-                    else //vec postoji dictionary
+                    else
                     {
                         string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
                         if (serializedDictionary != String.Empty)
@@ -608,44 +642,45 @@ namespace BirdTouch.Fragments
                                  <Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
 
                             if (!dictionary.ContainsKey(userId))
-                            {//ako user nije uopste dodavao usere
+                            {
                                 dictionary.Add(userId, new Dictionary<int, List<UserInfoModel>>());
                             }
-                            if (!dictionary[userId].ContainsKey(1))
-                            {//ako nije dodavao private usere
-                                dictionary[userId].Add(1, new List<UserInfoModel>());
+                            if (!dictionary[userId].ContainsKey(int.Parse(ActiveModeConstants.PRIVATE)))
+                            {
+                                dictionary[userId].Add(int.Parse(ActiveModeConstants.PRIVATE), new List<UserInfoModel>());
                             }
 
-                            //samo dodamo private usera iz recyclerViewa
-                            dictionary[userId][1].Add(mValues[position]);
+                            // Add private user from recycler view
+                            dictionary[userId][int.Parse(ActiveModeConstants.PRIVATE)].Add(_values[position]);
                             edit.Remove("SavedPrivateUsersDictionary");
                             edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                             edit.Apply();
-                            Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+                            Fragment1_PrivateSavedUsers refToSavedUsersFragment =
+                                (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(ActiveModeConstants.PRIVATE));
                             refToSavedUsersFragment.SetUpRecyclerView();
                         }
                     }
                 }
                 else
-                {//unchecked
-
+                {
                     string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
                     if (serializedDictionary != String.Empty)
                     {
                         var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
                             <Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
 
-                        dictionary[userId][1].RemoveAll(a => a.Id == mValues[position].Id);
+                        dictionary[userId][int.Parse(ActiveModeConstants.PRIVATE)].RemoveAll(a => a.Id == _values[position].Id);
                         edit.Remove("SavedPrivateUsersDictionary");
                         edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();
-                        Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+                        Fragment1_PrivateSavedUsers refToSavedUsersFragment =
+                            (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(ActiveModeConstants.PRIVATE));
                         refToSavedUsersFragment.SetUpRecyclerView();
                     }
                 }
             }
 
-            private void setFadeAnimation(View view)
+            private void SetFadeAnimation(View view)
             {
                 int FADE_DURATION = 1400; // in milliseconds
                 AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
@@ -653,7 +688,7 @@ namespace BirdTouch.Fragments
                 view.StartAnimation(anim);
             }
 
-            private void setScaleAnimation(View view)
+            private void SetScaleAnimation(View view)
             {
                 int FADE_DURATION = 1000; // in milliseconds
                 ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f);
@@ -663,70 +698,47 @@ namespace BirdTouch.Fragments
 
             private void MView_Click(object sender, EventArgs e)
             {
-                int position = recycleView.GetChildAdapterPosition((View)sender);
-                SimpleViewHolder svh = (SimpleViewHolder)recycleView.GetChildViewHolder((View)sender);
+                int position = _recycleView.GetChildAdapterPosition((View)sender);
+                ViewHolder svh = (ViewHolder)_recycleView.GetChildViewHolder((View)sender);
 
-                Context context = recycleView.Context;
+                Context context = _recycleView.Context;
                 Intent intent = new Intent(context, typeof(UserDetailActivity));
-                intent.PutExtra("userInformation", Newtonsoft.Json.JsonConvert.SerializeObject(mValues[position]));
-                intent.PutExtra("isSaved", (svh.checkbox.Checked));
+                intent.PutExtra("userInformation", Newtonsoft.Json.JsonConvert.SerializeObject(_values[position]));
+                intent.PutExtra("isSaved", (svh._checkbox.Checked));
                 context.StartActivity(intent);
-            }
-
-            private int CalculateInSampleSize(BitmapFactory.Options options, int requestedWidth, int requestedHeight)
-            {
-                //Raw height and width of image
-                int height = options.OutHeight;
-                int width = options.OutWidth;
-                int inSampleSize = 1;
-
-                if (height > requestedHeight || width > requestedWidth)
-                {
-                    //slika je veca nego sto nam treba
-                    int halfHeight = height / 2;
-                    int halfWidth = width / 2;
-
-                    while ((halfHeight / inSampleSize) >= requestedHeight && (halfWidth / inSampleSize) >= requestedWidth)
-                    {
-                        inSampleSize *= 2;
-                    }
-                }
-                Console.WriteLine();
-                Console.WriteLine("SampleSizeBitmap: " + inSampleSize.ToString());
-                Console.WriteLine();
-                return inSampleSize;
             }
 
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
             {
-                View view = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.List_Item, parent, false);
-                view.SetBackgroundResource(mBackground);
+                View view = LayoutInflater
+                    .From(parent.Context).Inflate(Resource.Layout.List_Item, parent, false);
+                view.SetBackgroundResource(_background);
 
-                return new SimpleViewHolder(view);
+                return new ViewHolder(view);
             }
         }
 
-        public class SimpleViewHolder : RecyclerView.ViewHolder
+        public class ViewHolder : RecyclerView.ViewHolder
         {
-            public string mBoundString;
-            public readonly View mView;
-            public readonly ImageView mImageView;
-            public readonly TextView mTxtView;
-            public readonly TextView mTxtViewDescription;
-            public readonly CheckBox checkbox;
+            public string _boundString;
+            public readonly View _view;
+            public readonly ImageView _profileImageView;
+            public readonly TextView _txtViewName;
+            public readonly TextView _txtViewDescription;
+            public readonly CheckBox _checkbox;
 
-            public SimpleViewHolder(View view) : base(view)
+            public ViewHolder(View view) : base(view)
             {
-                mView = view;
-                mImageView = view.FindViewById<ImageView>(Resource.Id.avatar); //profilna slika usera
-                mTxtView = view.FindViewById<TextView>(Resource.Id.text1); //ime + prezime usera
-                mTxtViewDescription = view.FindViewById<TextView>(Resource.Id.text2);
-                checkbox = view.FindViewById<CheckBox>(Resource.Id.checkboxSaveUserRecycleViewRow);
+                _view = view;
+                _profileImageView = view.FindViewById<ImageView>(Resource.Id.avatar);
+                _txtViewName = view.FindViewById<TextView>(Resource.Id.text1);
+                _txtViewDescription = view.FindViewById<TextView>(Resource.Id.text2);
+                _checkbox = view.FindViewById<CheckBox>(Resource.Id.checkboxSaveUserRecycleViewRow);
             }
 
             public override string ToString()
             {
-                return base.ToString() + " '" + mTxtView.Text;
+                return base.ToString() + " '" + _txtViewName.Text;
             }
         }
     }

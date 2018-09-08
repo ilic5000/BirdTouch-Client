@@ -13,9 +13,11 @@
   <string name="webapi_endpoint_makeUserVisible">api/users/makeuservisible</string>
   <string name="webapi_endpoint_makeUserInvisible">api/users/makeuserinvisible</string>
   <string name="webapi_endpoint_getPrivateUsersNearMe">api/users/getusersnearme</string>
+  <string name="webapi_endpoint_savePrivateSavedList">api/users/savePrivateSavedList</string>
+
+
+
+  <string name="webapi_endpoint_saveBusinessSavedList">api/saveBusinessSavedList"</string>
 
   <string name="webapi_endpoint_getBusinessUsersNearMe">api/users/getUsersNearMe</string>
-
-  <string name="webapi_endpoint_savePrivateSavedList">api/savePrivateSavedList</string>
-  <string name="webapi_endpoint_saveBusinessSavedList">api/saveBusinessSavedList"</string>
 </resources>

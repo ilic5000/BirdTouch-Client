@@ -34,10 +34,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/refresh_24dp"
-        app:fab_label="Make available to see from other devices"
+        app:fab_label="Save to Birdtouch cloud"
         app:fab_size="mini" />
     <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fab_menu_load_from_cloud"
+        android:visibility="gone"
         app:fab_colorNormal="#FF4081"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

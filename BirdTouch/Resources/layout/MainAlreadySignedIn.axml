@@ -32,6 +32,22 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:shadowColor="#b4b4b4ff" />
+        <TextView
+            android:text="Server connection problem, please restart application"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:id="@+id/txtAlreadySignInServerError"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:height="0dp"
+            android:textColor="#660000"
+            android:gravity="center"
+            android:textStyle="normal"
+            android:textSize="12dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:shadowColor="#b4b4b4ff"
+            android:visibility="invisible"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

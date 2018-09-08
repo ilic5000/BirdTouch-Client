@@ -1,7 +1,9 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Support.Design.Widget;
 using Android.Support.V4.App;
+using Android.Text;
 using Android.Widget;
 using BirdTouch.Activities;
 using BirdTouch.Constants;
@@ -84,12 +86,19 @@ namespace BirdTouch
 
         private void WebClientSignedIn_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
+            var errorText = FindViewById<TextView>(Resource.Id.txtAlreadySignInServerError);
+
             if (e.Error == null)
             {
+                errorText.Visibility = Android.Views.ViewStates.Gone;
                 Intent intent = new Intent(this, typeof(StartPageActivity));
                 intent.PutExtra(IntentConstants.LOGGED_IN_USER, Encoding.UTF8.GetString(e.Result));
                 this.StartActivity(intent);
                 this.Finish();
+            }
+            else
+            {
+                errorText.Visibility = Android.Views.ViewStates.Visible;
             }
         }
     }
