@@ -120,17 +120,17 @@ namespace BirdTouch.Fragments
             // TODO: Maybe there is better way to handle uneccesary clicks on recycle view, maybe this is overkill
             if (e.Opened)
             {
-                _linearLayout.Click += linearLayoutClick;
+                _linearLayout.Click += LinearLayoutClick;
                 _recycleView.Visibility = ViewStates.Invisible;
             }
             else
             {
-                _linearLayout.Click -= linearLayoutClick;
+                _linearLayout.Click -= LinearLayoutClick;
                 _recycleView.Visibility = ViewStates.Visible;
             }
         }
 
-        private void linearLayoutClick(object sender, EventArgs e)
+        private void LinearLayoutClick(object sender, EventArgs e)
         {
             _fab_menu.Close(true);
         }
@@ -630,7 +630,7 @@ namespace BirdTouch.Fragments
                         edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();
                         Fragment1_PrivateSavedUsers refToSavedUsersFragment =
-                            (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(ActiveModeConstants.PRIVATE));
+                            (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.SAVEDPRIVATE));
                         refToSavedUsersFragment.SetUpRecyclerView();
                     }
                     else
@@ -656,7 +656,7 @@ namespace BirdTouch.Fragments
                             edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                             edit.Apply();
                             Fragment1_PrivateSavedUsers refToSavedUsersFragment =
-                                (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(ActiveModeConstants.PRIVATE));
+                                (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.SAVEDPRIVATE));
                             refToSavedUsersFragment.SetUpRecyclerView();
                         }
                     }
@@ -674,7 +674,7 @@ namespace BirdTouch.Fragments
                         edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();
                         Fragment1_PrivateSavedUsers refToSavedUsersFragment =
-                            (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(ActiveModeConstants.PRIVATE));
+                            (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.SAVEDPRIVATE));
                         refToSavedUsersFragment.SetUpRecyclerView();
                     }
                 }

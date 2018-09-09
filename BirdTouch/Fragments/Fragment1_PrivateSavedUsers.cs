@@ -75,7 +75,6 @@ namespace BirdTouch.Fragments
         private void Fab_menu_load_Click(object sender, EventArgs e)
         {
             // TODO: Implement download contacts from server
-
             Snackbar.Make(
              _frameLay,
              Html.FromHtml("<font color=\"#ffffff\">Currently not implemented</font>"),
@@ -239,6 +238,7 @@ namespace BirdTouch.Fragments
                             0,
                             _values[position].ProfilePictureData.Length)
                              .Result;
+
                     simpleHolder._imageView.SetImageBitmap(
                         Bitmap.CreateScaledBitmap(
                             bm,
@@ -288,22 +288,21 @@ namespace BirdTouch.Fragments
                     {
                         var dictionary = new Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>();
                         dictionary.Add(userId, new Dictionary<int, List<UserInfoModel>>());
-                        dictionary[userId].Add(1, new List<UserInfoModel>());
-                        dictionary[userId][1].Add(_values[position]);
+                        dictionary[userId].Add(int.Parse(ActiveModeConstants.PRIVATE), new List<UserInfoModel>());
+                        dictionary[userId][int.Parse(ActiveModeConstants.PRIVATE)].Add(_values[position]);
 
                         edit.Remove("SavedPrivateUsersDictionary");
                         edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();
-                        Fragment1_PrivateSavedUsers refToSavedUsersFragment = (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+                        Fragment1_PrivateSavedUsers refToSavedUsersFragment =
+                            (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.SAVEDPRIVATE));
                         refToSavedUsersFragment.SetUpRecyclerView();
-
                     }
                     else
                     {
                         string serializedDictionary = pref.GetString("SavedPrivateUsersDictionary", String.Empty);
                         if (serializedDictionary != String.Empty)
                         {
-
                             var dictionary =
                                 Newtonsoft.Json.JsonConvert.DeserializeObject<
                                     Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
@@ -312,17 +311,17 @@ namespace BirdTouch.Fragments
                             {
                                 dictionary.Add(userId, new Dictionary<int, List<UserInfoModel>>());
                             }
-                            if (!dictionary[userId].ContainsKey(1))
+                            if (!dictionary[userId].ContainsKey(int.Parse(ActiveModeConstants.PRIVATE)))
                             {
-                                dictionary[userId].Add(1, new List<UserInfoModel>());
+                                dictionary[userId].Add(int.Parse(ActiveModeConstants.PRIVATE), new List<UserInfoModel>());
                             }
 
-                            dictionary[userId][1].Add(_values[position]);
+                            dictionary[userId][int.Parse(ActiveModeConstants.PRIVATE)].Add(_values[position]);
                             edit.Remove("SavedPrivateUsersDictionary");
                             edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                             edit.Apply();
                             Fragment1_PrivateSavedUsers refToSavedUsersFragment =
-                                (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(1);
+                                (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.SAVEDPRIVATE));
 
                             refToSavedUsersFragment.SetUpRecyclerView();
                         }
@@ -336,13 +335,14 @@ namespace BirdTouch.Fragments
                         var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject
                             <Dictionary<Guid, Dictionary<int, List<UserInfoModel>>>>(serializedDictionary);
 
-                        dictionary[userId][1].RemoveAll(a => a.Id == _values[position].Id);
+                        dictionary[userId][int.Parse(ActiveModeConstants.PRIVATE)].RemoveAll(a => a.Id == _values[position].Id);
                         edit.Remove("SavedPrivateUsersDictionary");
                         edit.PutString("SavedPrivateUsersDictionary", Newtonsoft.Json.JsonConvert.SerializeObject(dictionary));
                         edit.Apply();
-                        _values = dictionary[userId][1];
+                        _values = dictionary[userId][int.Parse(ActiveModeConstants.PRIVATE)];
                         NotifyItemRemoved(position);
-                        Fragment1_Private refToSavedUsersFragment = (Fragment1_Private)StartPageActivity.adapter.GetItem(0);
+                        Fragment1_Private refToSavedUsersFragment =
+                            (Fragment1_Private)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.PRIVATE));
                         refToSavedUsersFragment.NotifyDataSetChangedFromAnotherFragment();
                     }
                 }

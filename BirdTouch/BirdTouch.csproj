@@ -126,7 +126,8 @@
   <ItemGroup>
     <Compile Include="Activities\AboutActivity.cs" />
     <Compile Include="Adapters\TabAdapter.cs" />
-    <Compile Include="BusinessDetailActivity.cs" />
+    <Compile Include="Activities\BusinessDetailActivity.cs" />
+    <Compile Include="Constants\AdapterFragmentsOrder.cs" />
     <Compile Include="Constants\IntentConstants.cs" />
     <Compile Include="Constants\SharedPreferencesConstants.cs" />
     <Compile Include="Dialogs\SignUpDialog.cs" />
@@ -156,7 +157,7 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Activities\StartPageActivity.cs" />
-    <Compile Include="UserDetailActivity.cs" />
+    <Compile Include="Activities\UserDetailActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

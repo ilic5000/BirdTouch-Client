@@ -67,7 +67,7 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
-          <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView
                 android:id="@+id/cardViewLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -90,6 +90,28 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
           <android.support.v7.widget.CardView
+             android:id="@+id/cardViewDescription"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="@dimen/card_margin"
+             android:layout_marginLeft="@dimen/card_margin"
+             android:layout_marginRight="@dimen/card_margin">
+            <LinearLayout
+                style="@style/Widget.CardContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+              <TextView
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Description"
+                  android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+              <TextView
+                  android:id="@+id/textViewPrivateUserShowDetailDescription"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content" />
+            </LinearLayout>
+          </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
                 android:id="@+id/cardViewEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -112,7 +134,7 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
-              android:id="@+id/cardViewPhoneNumber"
+                android:id="@+id/cardViewPhoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/card_margin"
@@ -133,8 +155,8 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
-          <android.support.v7.widget.CardView
-            android:id="@+id/cardViewDateOfBirth"
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewDateOfBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/card_margin"
@@ -156,7 +178,7 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
-              android:id="@+id/cardViewAdress"
+                android:id="@+id/cardViewAdress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/card_margin"

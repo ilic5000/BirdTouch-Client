@@ -173,6 +173,7 @@ namespace BirdTouch.Activities
         {
             adapter = new TabAdapter(SupportFragmentManager);
 
+            // When changing order, update Constants.AdapterFragmentsOrder
             adapter.AddFragment(new Fragment1_Private(), "Private");
             adapter.AddFragment(new Fragment1_PrivateSavedUsers(), "Saved private");
             adapter.AddFragment(new Fragment2_Business(), "Business");
