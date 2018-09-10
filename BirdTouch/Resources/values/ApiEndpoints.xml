@@ -6,19 +6,14 @@
   <string name="webapi_endpoint_registerUser">api/users</string>
   <string name="webapi_endpoint_getUserLogin">api/login</string>
   <string name="webapi_endpoint_doesUsernameExist">api/users/doesusernameexist</string>
-  <string name="webapi_endpoint_getPrivateInfo">api/users/getprivateinfo</string>
-  <string name="webapi_endpoint_getBusinessInfo">api/users/getbusinessinfo</string>
-  <string name="webapi_endpoint_changePrivateUser">api/users/patchprivateinfo</string>
-  <string name="webapi_endpoint_changeBusinessUser">api/users/patchbusinessinfo</string>
-  <string name="webapi_endpoint_makeUserVisible">api/users/makeuservisible</string>
-  <string name="webapi_endpoint_makeUserInvisible">api/users/makeuserinvisible</string>
-  <string name="webapi_endpoint_getPrivateUsersNearMe">api/users/getusersnearme</string>
-  <string name="webapi_endpoint_getBusinessUsersNearMe">api/users/getusersnearme</string>
-  <string name="webapi_endpoint_savePrivateSavedList">api/users/savePrivateSavedList</string>
-  <string name="webapi_endpoint_saveBusinessSavedList">api/users/saveBusinessSavedList"</string>
-
-
-
-
-
+  <string name="webapi_endpoint_getPrivateInfo">api/privateinfo</string>
+  <string name="webapi_endpoint_changePrivateUser">api/privateinfo</string>
+  <string name="webapi_endpoint_getBusinessInfo">api/businessinfo</string>
+  <string name="webapi_endpoint_changeBusinessUser">api/businessinfo</string>
+  <string name="webapi_endpoint_makeUserVisible">api/activeusers</string>
+  <string name="webapi_endpoint_makeUserInvisible">api/activeusers</string>
+  <string name="webapi_endpoint_getPrivateUsersNearMe">api/activeusers/getusersnearme</string>
+  <string name="webapi_endpoint_getBusinessUsersNearMe">api/activeusers/getusersnearme</string>
+  <string name="webapi_endpoint_savePrivateSavedList">api/savedprivate</string>
+  <string name="webapi_endpoint_saveBusinessSavedList">api/savedbusiness"</string>
 </resources>
