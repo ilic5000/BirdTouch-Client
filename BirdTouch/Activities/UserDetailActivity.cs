@@ -217,7 +217,7 @@ namespace BirdTouch.Activities
                 _twLogo.Visibility = ViewStates.Gone;
             }
 
-            if (string.IsNullOrEmpty(_user.GPlusLink))
+            if (!string.IsNullOrEmpty(_user.GPlusLink))
             {
                 if (!_user.GPlusLink.Contains("https://"))
                 {
@@ -230,7 +230,7 @@ namespace BirdTouch.Activities
                 _gpLogo.Visibility = ViewStates.Gone;
             }
 
-            if (string.IsNullOrEmpty(_user.LinkedInLink))
+            if (!string.IsNullOrEmpty(_user.LinkedInLink))
             {
                 if (!_user.LinkedInLink.Contains("https://"))
                 {

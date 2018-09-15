@@ -1,8 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <resources>
-
- 
-  
   <style name="dialog_animation">
     <item name="android:windowEnterAnimation">@anim/slideUp</item>
     <item name="android:windowExitAnimation">@anim/slideRight</item>
@@ -40,7 +37,7 @@
     <item name="sv_backgroundColor">#673AB7</item>
     <item name="sv_showcaseColor">#512DA8</item>
     <item name="sv_buttonText">Next</item>
-    
+
     <item name="sv_tintButtonColor">true</item>
     <item name="sv_titleTextAppearance">@style/CustomTitle2</item>
     <item name="sv_detailTextAppearance">@style/CustomText2</item>

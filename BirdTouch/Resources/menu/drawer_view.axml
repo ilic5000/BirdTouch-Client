@@ -5,15 +5,13 @@
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Home" />
-
-
     <item android:title="Update info">
       <menu>
         <group >
           <item
               android:id="@+id/nav_private"
               android:icon="@drawable/ic_people_black_24dp"
-              android:title="Private" />
+              android:title="Private"/>
           <item
               android:id="@+id/nav_business"
               android:icon="@drawable/ic_business_center_black_24dp"
@@ -24,13 +22,11 @@
               android:title="Celebrity" />
         </group>
         </menu>
-    
   </item>
     </group>
   <item android:title="More options">
     <menu>
       <group >
-     
       <item
            android:id="@+id/nav_settings"
           android:icon="@drawable/ic_settings_black_24dp"
@@ -43,18 +39,15 @@
            android:id="@+id/nav_logout"
           android:icon="@drawable/ic_power_settings_new_black_24dp"
           android:title="Log Out" />
-        
-
       </group>
     </menu>
   </item>
-    
 </menu>
 
 
 <!-- <group android:checkableBehavior="single" >-->
 
 <!--<item
-        android:id="@+id/nav_saved_contacts" 
+        android:id="@+id/nav_saved_contacts"
         android:icon="@drawable/ic_dashboard"
           android:title="Saved contacts" />-->

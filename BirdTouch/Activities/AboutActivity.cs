@@ -28,13 +28,15 @@ namespace BirdTouch.Activities
 
             CollapsingToolbarLayout collapsingToolBar = FindViewById<CollapsingToolbarLayout>
                                                             (Resource.Id.collapsing_toolbar_about);
+
             ImageView imageView = FindViewById<ImageView>(Resource.Id.author_picture);
 
             // Set title
             collapsingToolBar.Title = "About";
+            collapsingToolBar.Visibility = ViewStates.Visible;
 
             // Set author image
-            imageView.SetImageResource(Resource.Drawable.author);
+            //imageView.SetImageResource(Resource.Drawable.blank);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)

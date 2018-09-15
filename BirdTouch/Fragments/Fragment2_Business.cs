@@ -493,8 +493,17 @@ namespace BirdTouch.Fragments
                 var simpleHolder = holder as ViewHolder;
 
                 simpleHolder._boundString = _values[position].FkUserId.ToString();
-                simpleHolder._txtViewName.Text = _values[position].CompanyName;
-                simpleHolder._txtViewDescription.Text = _values[position].Description;
+
+                if (string.IsNullOrEmpty(_values[position].CompanyName)
+                    && string.IsNullOrEmpty(_values[position].Description))
+                {
+                    simpleHolder._txtViewDescription.Text = "waiting on a business info update";
+                }
+                else
+                {
+                    simpleHolder._txtViewName.Text = _values[position].CompanyName;
+                    simpleHolder._txtViewDescription.Text = _values[position].Description;
+                }
 
                 if (_values[position].ProfilePictureData != null)
                 {

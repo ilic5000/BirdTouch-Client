@@ -407,12 +407,11 @@ namespace BirdTouch.Activities
                     break;
 
                 case 4:
-                    target = new ViewTarget(_viewPager.GetChildAt(0).
-                        FindViewById<SwitchCompat>(Resource.Id.activatePrivateSwitch));
+                    target = new ViewTarget(_toolBar.GetChildAt(1));
                     _showcaseView = new ShowcaseView.Builder(this)
                       .SetTarget(target)
-                      .SetContentTitle("Be visible")
-                      .SetContentText("Make yourself visible to others. You can also scan for nearby Birdtouch users. Remember: if you are not visible, they cannot find you. Also, you cannot find them.")
+                      .SetContentTitle("Update your information")
+                      .SetContentText("Change your personal/business information")
                       .SetStyle(Resource.Style.CustomShowcaseTheme)
                       .HideOnTouchOutside()
                       .Build();
@@ -420,16 +419,20 @@ namespace BirdTouch.Activities
                     break;
 
                 case 5:
-                    target = new ViewTarget(_toolBar.GetChildAt(1));
+                    target = new ViewTarget(_viewPager.FocusedChild.
+                        FindViewById<SwitchCompat>(Resource.Id.activatePrivateSwitch));
                     _showcaseView = new ShowcaseView.Builder(this)
                       .SetTarget(target)
-                      .SetContentTitle("Update your information")
-                      .SetContentText("Change your personal/business information")
+                      .SetContentTitle("Be visible")
+                      .SetContentText("Make yourself visible to others. You can also scan for nearby Birdtouch users. Remember: if you are not visible, they cannot find you. Also, you cannot find them.")
                       .SetStyle(Resource.Style.CustomShowcaseThemeFinalShowcase)
                       .HideOnTouchOutside()
                       .Build();
+                    _showcaseView.OverrideButtonClick(this);
                     break;
-
+                case 6:
+                    _drawerLayout.OpenDrawer((int)GravityFlags.Left);
+                    break;
                 default:
                     break;
             }
