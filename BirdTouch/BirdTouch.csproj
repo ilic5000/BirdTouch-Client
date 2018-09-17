@@ -133,6 +133,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\SettingsActivity.cs" />
     <Compile Include="Activities\AboutActivity.cs" />
     <Compile Include="Adapters\TabAdapter.cs" />
     <Compile Include="Activities\BusinessDetailActivity.cs" />
@@ -230,6 +231,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout-land\Main.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\Settings_Activity.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

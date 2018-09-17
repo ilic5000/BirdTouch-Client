@@ -31,8 +31,10 @@ namespace BirdTouch.Activities
 
             ImageView imageView = FindViewById<ImageView>(Resource.Id.author_picture);
 
-            // Set title
+            // Set title without image (different than in other views)
+            collapsingToolBar.TitleEnabled = false;
             collapsingToolBar.Title = "About";
+            toolBar.Title = "About";
             collapsingToolBar.Visibility = ViewStates.Visible;
 
             // Set author image

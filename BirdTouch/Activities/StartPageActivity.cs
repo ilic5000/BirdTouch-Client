@@ -270,16 +270,22 @@ namespace BirdTouch.Activities
 
                      // When clicked on celebrity user edit info
                      case Resource.Id.nav_celebrity:
-                         Context context22 = navigationView.Context;
-                         Intent intent22 = new Intent(context22, typeof(EditCelebrityUserInfoActivity));
-                         context22.StartActivity(intent22);
+                         Intent intentCelebrity =
+                            new Intent(navigationView.Context, typeof(EditCelebrityUserInfoActivity));
+                         navigationView.Context.StartActivity(intentCelebrity);
                          break;
 
                      // When clicked on about
                      case Resource.Id.nav_about:
-                         Context context2 = navigationView.Context;
-                         Intent intent2 = new Intent(context2, typeof(AboutActivity));
-                         context2.StartActivity(intent2);
+                         Intent intentAbout =
+                             new Intent(navigationView.Context, typeof(AboutActivity));
+                         navigationView.Context.StartActivity(intentAbout);
+                         break;
+
+                     // When clicked on about
+                     case Resource.Id.nav_settings:
+                         Intent intentSettings = new Intent(navigationView.Context, typeof(SettingsActivity));
+                         navigationView.Context.StartActivity(intentSettings);
                          break;
 
                      // When clicked on logout
