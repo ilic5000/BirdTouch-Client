@@ -87,7 +87,16 @@ namespace BirdTouch.Activities
             // Enable it for home button
             actionBar.SetDisplayHomeAsUpEnabled(true);
 
-            actionBar.Title = user.FirstName + " " + user.LastName;
+            if (string.IsNullOrEmpty(user.FirstName)
+                && string.IsNullOrEmpty(user.FirstName))
+            {
+                actionBar.Title = "Please update profile information";
+            }
+            else
+            {
+                actionBar.Title = $"{user.FirstName} {user.LastName}";
+            }
+
             actionBar.SetIcon(Resource.Drawable.app_bar_logov2);
 
             if (user.ProfilePictureData != null)

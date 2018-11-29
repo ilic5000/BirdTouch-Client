@@ -167,7 +167,7 @@ namespace BirdTouch.Activities
 
         private void WebsiteCardView_Click(object sender, EventArgs e)
         {
-            if (!_user.Website.Contains("http"))
+            if (!WebUtility.UrlDecode(_user.Website).Contains("http://"))
             {
                 _user.Website = "http://" + WebUtility.UrlDecode(_user.Website);
             }

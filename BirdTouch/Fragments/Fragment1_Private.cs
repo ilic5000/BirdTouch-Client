@@ -169,6 +169,19 @@ namespace BirdTouch.Fragments
             // Visibility on
             if (e.IsChecked)
             {
+                if (string.IsNullOrEmpty(StartPageActivity.user.FirstName)
+                    && string.IsNullOrEmpty(StartPageActivity.user.LastName))
+                {
+                    Snackbar.Make(
+                        _frameLay,
+                        Html.FromHtml("<font color=\"#ffffff\">You need to set at least first and last name for your account.</font>"),
+                        Snackbar.LengthLong)
+                         .Show();
+                    switchVisibility.Checked = false;
+
+                    return;
+                }
+
                 // Everytime we switch visibility on, we check if we can get location provider (gps or network)
                 _locationProvider = LocationHelper.TryToFindLocationProvider(_locationManager, Activity);
 
@@ -496,7 +509,7 @@ namespace BirdTouch.Fragments
 
                 simpleHolder._boundString = _values[position].Id.ToString();
 
-                if(string.IsNullOrEmpty(_values[position].FirstName)
+                if (string.IsNullOrEmpty(_values[position].FirstName)
                     && string.IsNullOrEmpty(_values[position].LastName)
                     && string.IsNullOrEmpty(_values[position].Description))
                 {

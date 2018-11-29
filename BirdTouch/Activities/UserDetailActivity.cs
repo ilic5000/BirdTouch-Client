@@ -191,7 +191,7 @@ namespace BirdTouch.Activities
         {
             if (!string.IsNullOrEmpty(_user.FbLink))
             {
-                if (!_user.FbLink.Contains("https://"))
+                if (!WebUtility.UrlDecode(_user.FbLink).Contains("https://"))
                 {
                     _user.FbLink = "https://" + WebUtility.UrlDecode(_user.FbLink);
                 }
@@ -205,7 +205,7 @@ namespace BirdTouch.Activities
 
             if (!string.IsNullOrEmpty(_user.TwitterLink))
             {
-                if (!_user.TwitterLink.Contains("https://"))
+                if (!WebUtility.UrlDecode(_user.TwitterLink).Contains("https://"))
                 {
                     _user.TwitterLink = "https://" + WebUtility.UrlDecode(_user.TwitterLink);
                 }
@@ -219,7 +219,7 @@ namespace BirdTouch.Activities
 
             if (!string.IsNullOrEmpty(_user.GPlusLink))
             {
-                if (!_user.GPlusLink.Contains("https://"))
+                if (!WebUtility.UrlDecode(_user.GPlusLink).Contains("https://"))
                 {
                     _user.GPlusLink = "https://" + WebUtility.UrlDecode(_user.GPlusLink);
                 }
@@ -232,7 +232,7 @@ namespace BirdTouch.Activities
 
             if (!string.IsNullOrEmpty(_user.LinkedInLink))
             {
-                if (!_user.LinkedInLink.Contains("https://"))
+                if (!WebUtility.UrlDecode(_user.LinkedInLink).Contains("https://"))
                 {
                     _user.LinkedInLink = "https://" + WebUtility.UrlDecode(_user.LinkedInLink);
                 }
