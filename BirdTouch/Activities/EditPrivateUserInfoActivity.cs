@@ -2,6 +2,7 @@ using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.OS;
+using Android.Provider;
 using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Support.V7.App;
@@ -201,8 +202,8 @@ namespace BirdTouch.Activities
             else
             {
                 Snackbar.Make(
-                    _fabSaveChanges,
-                    Html.FromHtml("<font color=\"#ffffff\">Changes saved successfully</font>"),
+                    StartPageActivity.profilePictureNavigationHeader,
+                    Html.FromHtml("<font color=\"#ffffff\">Changes saved successfully.</font>"),
                     Snackbar.LengthLong)
                      .Show();
 
@@ -215,6 +216,8 @@ namespace BirdTouch.Activities
                 {
                     StartPageActivity.UpdateProfileImage();
                 }
+
+                Finish();
             }
         }
 

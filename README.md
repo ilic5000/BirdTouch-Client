@@ -2,7 +2,7 @@
 ## Summary
 BirtTouch client is an application for Android (Jelly Bean and later), written in .Net (Xamarin).
 
-In order for app to work correctly, you'll need BirdTouch-Web-API server.
+In order for app to work correctly, you'll need BirdTouchWebAPI server.
 
 ## Configuration
 If endpoints, protocol or ip adress of server changes, you need to modify 

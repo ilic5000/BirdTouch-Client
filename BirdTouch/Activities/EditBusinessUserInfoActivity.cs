@@ -177,10 +177,11 @@ namespace BirdTouch.Activities
             else
             {
                 Snackbar.Make(
-                    _fabSaveChanges,
+                    StartPageActivity.profilePictureNavigationHeader,
                     Html.FromHtml("<font color=\"#ffffff\">Changes saved successfully</font>"),
                     Snackbar.LengthLong)
                      .Show();
+                Finish();
             }
         }
 

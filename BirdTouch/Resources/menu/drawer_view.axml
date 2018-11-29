@@ -5,21 +5,21 @@
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Home" />
-    <item android:title="Update info">
+    <item android:title="Update">
       <menu>
         <group >
           <item
               android:id="@+id/nav_private"
               android:icon="@drawable/ic_people_black_24dp"
-              android:title="Private"/>
+              android:title="Private account"/>
           <item
               android:id="@+id/nav_business"
               android:icon="@drawable/ic_business_center_black_24dp"
-              android:title="Business" />
+              android:title="Business account" />
           <item
               android:id="@+id/nav_celebrity"
               android:icon="@drawable/ic_star_black_24dp"
-              android:title="Celebrity" />
+              android:title="Celebrity mode" />
         </group>
         </menu>
   </item>
