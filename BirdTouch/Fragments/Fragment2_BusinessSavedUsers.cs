@@ -20,6 +20,7 @@ using BirdTouch.Activities;
 using BirdTouch.Extensions;
 using Newtonsoft.Json;
 using BirdTouch.Constants;
+using BirdTouch.RecyclerViewCustom;
 
 namespace BirdTouch.Fragments
 {
@@ -71,6 +72,9 @@ namespace BirdTouch.Fragments
 
             // Initialize recycle view
             SetUpRecyclerView();
+
+            // Add custom scroll listener for the recycler view (for hiding/showing fab menu button)
+            _recycleView.AddOnScrollListener(new OnScrollListenerCustom(_fabMenu));
 
             return view;
         }

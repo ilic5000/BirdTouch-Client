@@ -13,7 +13,7 @@
         android:minHeight="400dp"
         android:gravity="center">
         <TextView xmlns:tools="http://schemas.android.com/tools"
-            android:text="Please register"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,6 +27,7 @@
             android:layout_marginTop="20dp">
         <EditText
             android:id="@+id/txtFirstname"
+            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Firstname" />
@@ -38,6 +39,8 @@
             android:layout_marginTop="20dp">
         <EditText
             android:id="@+id/txtLastname"
+            android:layout_below="@id/txtFirstname"
+            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Lastname" />
@@ -49,6 +52,8 @@
             android:layout_marginTop="20dp">
         <EditText
             android:id="@+id/txtDescription"
+            android:layout_below="@id/txtLastname"
+            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Profile description (e.g. Football player)" />
@@ -60,6 +65,8 @@
             android:layout_marginTop="20dp">
             <EditText
                 android:id="@+id/txtUsername"
+                android:inputType="text"
+                android:layout_below="@id/txtDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Username" />
@@ -71,6 +78,7 @@
             <EditText
                 android:id="@+id/txtPassword"
                 android:inputType="textPassword"
+                android:layout_below="@id/txtUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password" />
@@ -80,15 +88,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
-                android:id="@+id/txtPasswordCheck"
+                android:id="@+id/txtPassword"
                 android:inputType="textPassword"
+                android:layout_below="@id/txtUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password again" />
         </android.support.design.widget.TextInputLayout>
         <Button
             android:layout_marginTop="20dp"
-            android:text="Register"
+            android:text="Sign up"
+            android:layout_below="@id/txtPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnDialogRegister"

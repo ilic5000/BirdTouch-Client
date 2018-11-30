@@ -23,6 +23,7 @@ using BirdTouch.Helpers;
 using BirdTouch.Activities;
 using BirdTouch.Constants;
 using BirdTouch.Extensions;
+using BirdTouch.RecyclerViewCustom;
 
 namespace BirdTouch.Fragments
 {
@@ -32,7 +33,7 @@ namespace BirdTouch.Fragments
 
         private Clans.Fab.FloatingActionButton _fab_menu_refresh;
         private Clans.Fab.FloatingActionButton _fab_menu_gps;
-        private Clans.Fab.FloatingActionMenu _fab_menu;
+        private Clans.Fab.FloatingActionMenu _fabMenu;
 
         private FrameLayout _frameLay;
         private LinearLayout _linearLayout;
@@ -87,8 +88,8 @@ namespace BirdTouch.Fragments
             switchVisibility = view.FindViewById<SwitchCompat>(Resource.Id.activateBusinessSwitch);
             _fab_menu_refresh = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_refresh_business);
             _fab_menu_gps = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_gps_business);
-            _fab_menu = view.FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu_business);
-            _fab_menu.Visibility = ViewStates.Gone;
+            _fabMenu = view.FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu_business);
+            _fabMenu.Visibility = ViewStates.Gone;
 
             // Initialize web clients
             _webClientMakeUserVisible = new WebClient();
@@ -103,11 +104,14 @@ namespace BirdTouch.Fragments
             // Register events for components
             _fab_menu_refresh.Click += Fab_menu_refresh_Click;
             _fab_menu_gps.Click += Fab_menu_gps_Click;
-            _fab_menu.MenuToggle += Fab_menu_MenuToggle;
+            _fabMenu.MenuToggle += Fab_menu_MenuToggle;
             switchVisibility.CheckedChange += SwitchVisibility_CheckedChange;
 
             // Initialize recycle view (although its empty at the moment)
             SetUpRecyclerView(_recycleView, _listOfUsersAroundMe);
+
+            // Add custom scroll listener for the recycler view (for hiding/showing fab menu button)
+            _recycleView.AddOnScrollListener(new OnScrollListenerCustom(_fabMenu));
 
             return view;
         }
@@ -130,7 +134,7 @@ namespace BirdTouch.Fragments
 
         private void LinearLayoutClick(object sender, EventArgs e)
         {
-            _fab_menu.Close(true);
+            _fabMenu.Close(true);
         }
 
         private void Fab_menu_gps_Click(object sender, EventArgs e)
@@ -153,13 +157,13 @@ namespace BirdTouch.Fragments
         // TODO: Implement automatically update gps location
         private void Fab_menu_automatically_Click(object sender, EventArgs e)
         {
-            _fab_menu.Close(true);
+            _fabMenu.Close(true);
         }
 
         private void Fab_menu_refresh_Click(object sender, EventArgs e)
         {
             GetBusinessUsersNearMe();
-            _fab_menu.Close(true);
+            _fabMenu.Close(true);
         }
 
         private void SwitchVisibility_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
@@ -193,7 +197,7 @@ namespace BirdTouch.Fragments
             // Visibility off
             else
             {
-                _fab_menu.Visibility = ViewStates.Gone;
+                _fabMenu.Visibility = ViewStates.Gone;
                 _locationManager.RemoveUpdates(this);
                 GoInvisible();
                 _progressBarLocation.Visibility = ViewStates.Invisible;
@@ -268,7 +272,7 @@ namespace BirdTouch.Fragments
 
                 _visible = false;
                 _fab_menu_gps.SetIndeterminate(false);
-                _fab_menu.Close(true);
+                _fabMenu.Close(true);
             }
             else
             {
@@ -276,7 +280,7 @@ namespace BirdTouch.Fragments
                 _progressBarLocation.Visibility = ViewStates.Invisible;
                 _fab_menu_gps.SetIndeterminate(false);
                 _gpsUpdateIndeterminate = false;
-                _fab_menu.Close(true);
+                _fabMenu.Close(true);
 
                 // If location is succesfully updated
                 GetBusinessUsersNearMe();
@@ -395,7 +399,7 @@ namespace BirdTouch.Fragments
                                                                     <List<BusinessInfoModel>>(Encoding.UTF8.GetString(e.Result));
                 SetUpRecyclerView(_recycleView, newListOfUsersAroundMe);
 
-                _fab_menu.Visibility = ViewStates.Visible;
+                _fabMenu.Visibility = ViewStates.Visible;
                 _progressBarGetBusinessUsers.Visibility = ViewStates.Gone;
             }
         }
