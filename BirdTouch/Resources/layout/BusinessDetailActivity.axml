@@ -59,12 +59,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Company name"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="Company name" />
                     <TextView
                         android:id="@+id/textViewBusinessCompanyNameShowDetail"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -79,12 +80,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Description"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="Description" />
                     <TextView
                         android:id="@+id/textViewBusinessDescription"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -101,12 +103,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Adress"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="Address" />
                     <TextView
                         android:id="@+id/textViewBusinessAdressShowDetail"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -123,12 +126,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Email"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="Email" />
                     <TextView
                         android:id="@+id/textViewBusinessEmailShowDetail"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -145,12 +149,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Phone Number"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="Phone Number" />
                     <TextView
                         android:id="@+id/textViewBusinessPhoneNumberShowDetail"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -167,12 +172,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Website"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="Website" />
                     <TextView
                         android:id="@+id/textViewBusinessWebsiteShowDetail"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>

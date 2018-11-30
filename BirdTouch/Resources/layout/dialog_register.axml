@@ -20,6 +20,39 @@
             android:id="@+id/enterCredentials"
             android:textColor="@android:color/background_dark"
             android:layout_centerHorizontal="true" />
+      <android.support.design.widget.TextInputLayout
+            android:id="@+id/txtInputLayoutRegisterFirstname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+        <EditText
+            android:id="@+id/txtFirstname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Firstname" />
+      </android.support.design.widget.TextInputLayout>
+      <android.support.design.widget.TextInputLayout
+            android:id="@+id/txtInputLayoutRegisterLastname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+        <EditText
+            android:id="@+id/txtLastname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Lastname" />
+      </android.support.design.widget.TextInputLayout>
+      <android.support.design.widget.TextInputLayout
+            android:id="@+id/txtInputLayoutRegisterDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+        <EditText
+            android:id="@+id/txtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Profile description (e.g. Football player)" />
+      </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:id="@+id/txtInputLayoutRegisterUsername"
             android:layout_width="match_parent"

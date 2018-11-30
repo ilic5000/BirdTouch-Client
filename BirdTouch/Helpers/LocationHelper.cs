@@ -14,30 +14,28 @@ namespace BirdTouch.Helpers
         {
             locationManager = (LocationManager)activity.GetSystemService(Context.LocationService);
 
-            // GPS location criteria
+            // Network location criteria
             Criteria criteriaForLocationService = new Criteria
             {
-                Accuracy = Accuracy.Fine
+                Accuracy = Accuracy.Coarse
             };
 
-            IList<string> acceptableLocationProviders = locationManager.GetProviders(
-                                                            criteriaForLocationService,
-                                                            true);
+            IList<string> acceptableLocationProviders = locationManager.GetProviders(criteriaForLocationService,
+                                                                                     true);
+
+            acceptableLocationProviders = locationManager.GetProviders(criteriaForLocationService,
+                                                                       true);
 
             if (acceptableLocationProviders.Any())
             {
                 return acceptableLocationProviders.First();
             }
 
-            // Network location criteria
-            Criteria criteriaForLocationServiceBackup = new Criteria
+            // GPS location criteria
+            criteriaForLocationService = new Criteria
             {
-                Accuracy = Accuracy.Coarse
+                Accuracy = Accuracy.Fine
             };
-
-            acceptableLocationProviders = locationManager.GetProviders(
-                                            criteriaForLocationServiceBackup,
-                                            true);
 
             if (acceptableLocationProviders.Any())
             {

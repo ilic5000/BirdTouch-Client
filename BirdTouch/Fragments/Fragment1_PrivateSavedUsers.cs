@@ -37,6 +37,8 @@ namespace BirdTouch.Fragments
 
         private List<UserInfoModel> _listSavedPrivateUsers;
 
+        private TextView _infoAtTheTop;
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -53,6 +55,7 @@ namespace BirdTouch.Fragments
             _fabMenuLoad = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_load_from_cloud);
             _fabMenuSave = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_save_to_cloud);
             _fabMenu = view.FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu_private_saved);
+            _infoAtTheTop = view.FindViewById<TextView>(Resource.Id.textViewPrivateSavedUsersOnTopInfo);
 
             // Initialize web clients
             _webClientLoadList = new WebClient();
@@ -222,6 +225,29 @@ namespace BirdTouch.Fragments
                 }
             }
 
+            /// <summary>
+            /// It looks like this event is triggered only on SetUpRecyclerView()?
+            /// </summary>
+            /// <param name="observer"></param>
+            public override void RegisterAdapterDataObserver(RecyclerView.AdapterDataObserver observer)
+            {
+                base.RegisterAdapterDataObserver(observer);
+
+                Fragment1_PrivateSavedUsers refToSavedUsersFragment =
+                               (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.SAVEDPRIVATE));
+
+                if (_values.Count > 0)
+                {
+                    refToSavedUsersFragment._infoAtTheTop.Visibility = ViewStates.Gone;
+                    refToSavedUsersFragment._fabMenu.Visibility = ViewStates.Visible;
+                }
+                else
+                {
+                    refToSavedUsersFragment._infoAtTheTop.Visibility = ViewStates.Visible;
+                    refToSavedUsersFragment._fabMenu.Visibility = ViewStates.Gone;
+                }
+            }
+
             public override async void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
                 var simpleHolder = holder as ViewHolder;
@@ -341,9 +367,15 @@ namespace BirdTouch.Fragments
                         edit.Apply();
                         _values = dictionary[userId][int.Parse(ActiveModeConstants.PRIVATE)];
                         NotifyItemRemoved(position);
-                        Fragment1_Private refToSavedUsersFragment =
+                        NotifyDataSetChanged();
+                        Fragment1_Private refToPrivateUsersFragment =
                             (Fragment1_Private)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.PRIVATE));
-                        refToSavedUsersFragment.NotifyDataSetChangedFromAnotherFragment();
+                        refToPrivateUsersFragment.NotifyDataSetChangedFromAnotherFragment();
+
+                        Fragment1_PrivateSavedUsers refToSavedUsersFragment =
+                                (Fragment1_PrivateSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.SAVEDPRIVATE));
+
+                        refToSavedUsersFragment.SetUpRecyclerView();
                     }
                 }
             }

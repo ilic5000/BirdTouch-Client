@@ -30,12 +30,14 @@ namespace BirdTouch.Fragments
 
         private Clans.Fab.FloatingActionButton _fab_menu_save;
         private Clans.Fab.FloatingActionButton _fab_menu_load;
-        private Clans.Fab.FloatingActionMenu _fab_menu;
+        private Clans.Fab.FloatingActionMenu _fabMenu;
 
         private WebClient _webClientSaveList;
         private WebClient _webClientLoadList;
 
         List<BusinessInfoModel> _listSavedBusinessUsers;
+
+        private TextView _infoAtTheTop;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -52,7 +54,8 @@ namespace BirdTouch.Fragments
             _frameLay = view.FindViewById<FrameLayout>(Resource.Id.coordinatorLayoutBusinessSavedUsers);
             _fab_menu_load = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_load_from_cloud_business);
             _fab_menu_save = view.FindViewById<Clans.Fab.FloatingActionButton>(Resource.Id.fab_menu_save_to_cloud_business);
-            _fab_menu = view.FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu_business_saved);
+            _fabMenu = view.FindViewById<Clans.Fab.FloatingActionMenu>(Resource.Id.fab_menu_business_saved);
+            _infoAtTheTop = view.FindViewById<TextView>(Resource.Id.textViewBusinessSavedUsersOnTopInfo);
 
             // Initialize web clients
             _webClientLoadList = new WebClient();
@@ -85,7 +88,7 @@ namespace BirdTouch.Fragments
         private void Fab_menu_save_Click(object sender, EventArgs e)
         {
             SaveListToDatabase();
-            _fab_menu.Close(true);
+            _fabMenu.Close(true);
         }
 
         private void SaveListToDatabase()
@@ -222,6 +225,29 @@ namespace BirdTouch.Fragments
                 }
             }
 
+            /// <summary>
+            /// It looks like this event is triggered only on SetUpRecyclerView()?
+            /// </summary>
+            /// <param name="observer"></param>
+            public override void RegisterAdapterDataObserver(RecyclerView.AdapterDataObserver observer)
+            {
+                base.RegisterAdapterDataObserver(observer);
+
+                Fragment2_BusinessSavedUsers refToSavedBusinessFragment =
+                               (Fragment2_BusinessSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.SAVEDBUSINESS));
+
+                if (_values.Count > 0)
+                {
+                    refToSavedBusinessFragment._infoAtTheTop.Visibility = ViewStates.Gone;
+                    refToSavedBusinessFragment._fabMenu.Visibility = ViewStates.Visible;
+                }
+                else
+                {
+                    refToSavedBusinessFragment._infoAtTheTop.Visibility = ViewStates.Visible;
+                    refToSavedBusinessFragment._fabMenu.Visibility = ViewStates.Gone;
+                }
+            }
+
             public override async void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
             {
                 var simpleHolder = holder as ViewHolder;
@@ -339,27 +365,17 @@ namespace BirdTouch.Fragments
                         edit.Apply();
                         _values = dictionary[userId][int.Parse(ActiveModeConstants.BUSINESS)];
                         NotifyItemRemoved(position);
-                        Fragment2_Business refToSavedUsersFragment =
+
+                        Fragment2_Business refToBusinessUsersFragment =
                             (Fragment2_Business)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.BUSINESS));
-                        refToSavedUsersFragment.NotifyDataSetChangedFromAnotherFragment();
+                        refToBusinessUsersFragment.NotifyDataSetChangedFromAnotherFragment();
+
+                        Fragment2_BusinessSavedUsers refToSavedBusinessFragment =
+                               (Fragment2_BusinessSavedUsers)StartPageActivity.adapter.GetItem(int.Parse(AdapterFragmentsOrder.SAVEDBUSINESS));
+
+                        refToSavedBusinessFragment.SetUpRecyclerView();
                     }
                 }
-            }
-
-            private void SetFadeAnimation(View view)
-            {
-                int FADE_DURATION = 1400; // in milliseconds
-                AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
-                anim.Duration = FADE_DURATION;
-                view.StartAnimation(anim);
-            }
-
-            private void SetScaleAnimation(View view)
-            {
-                int FADE_DURATION = 1000; // in milliseconds
-                ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f);
-                anim.Duration = FADE_DURATION;
-                view.StartAnimation(anim);
             }
 
             private void MView_Click(object sender, EventArgs e)
@@ -372,7 +388,6 @@ namespace BirdTouch.Fragments
                 intent.PutExtra("userInformation", Newtonsoft.Json.JsonConvert.SerializeObject(_values[position]));
                 intent.PutExtra("isSaved", (svh._checkbox.Checked));
                 context.StartActivity(intent);
-
             }
 
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)

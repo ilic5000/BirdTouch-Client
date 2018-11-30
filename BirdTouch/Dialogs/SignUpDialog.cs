@@ -13,6 +13,7 @@ using System;
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
+using Android.Text;
 
 namespace BirdTouch.Dialogs
 {
@@ -22,6 +23,10 @@ namespace BirdTouch.Dialogs
         private TextInputLayout _usernameWrapper;
         private TextInputLayout _passwordWrapper;
         private TextInputLayout _passwordCheckWrapper;
+        private TextInputLayout _firstnameWrapper;
+        private TextInputLayout _lastnameWrapper;
+        private TextInputLayout _descriptionCheckWrapper;
+
         private ProgressBar _progressBar;
         private WebClient _webClientUsernameAvailabilityChecker;
         private WebClient _webClientRegister;
@@ -37,6 +42,9 @@ namespace BirdTouch.Dialogs
             _usernameWrapper = view.FindViewById<TextInputLayout>(Resource.Id.txtInputLayoutRegisterUsername);
             _passwordWrapper = view.FindViewById<TextInputLayout>(Resource.Id.txtInputLayoutRegisterPassword);
             _passwordCheckWrapper = view.FindViewById<TextInputLayout>(Resource.Id.txtInputLayoutRegisterPasswordCheck);
+            _firstnameWrapper = view.FindViewById<TextInputLayout>(Resource.Id.txtInputLayoutRegisterFirstname);
+            _lastnameWrapper = view.FindViewById<TextInputLayout>(Resource.Id.txtInputLayoutRegisterLastname);
+            _descriptionCheckWrapper = view.FindViewById<TextInputLayout>(Resource.Id.txtInputLayoutRegisterDescription);
             _progressBar = view.FindViewById<ProgressBar>(Resource.Id.progressBarRegister);
             _btnRegister = view.FindViewById<Button>(Resource.Id.btnDialogRegister);
 
@@ -55,6 +63,7 @@ namespace BirdTouch.Dialogs
 
             // Set up events for text input components
             _usernameWrapper.EditText.FocusChange += UsernameEditText_AfterFocusChanged;
+            _usernameWrapper.EditText.AfterTextChanged += UsernameEditText_AfterTextChanged;
             _passwordCheckWrapper.EditText.AfterTextChanged += PasswordCheckEditText_AfterTextChanged;
 
             // Sign up new user
@@ -71,6 +80,9 @@ namespace BirdTouch.Dialogs
                 // Checks if text fields are not empty, and if passwords match
                 if (string.IsNullOrEmpty(_usernameWrapper.Error)
                     && string.IsNullOrEmpty(_passwordCheckWrapper.Error)
+                    && !string.IsNullOrEmpty(_firstnameWrapper.EditText.Text)
+                    && !string.IsNullOrEmpty(_lastnameWrapper.EditText.Text)
+                    && !string.IsNullOrEmpty(_descriptionCheckWrapper.EditText.Text)
                     && !string.IsNullOrEmpty(_usernameWrapper.EditText.Text)
                     && !string.IsNullOrEmpty(_passwordWrapper.EditText.Text)
                     && !string.IsNullOrEmpty(_passwordCheckWrapper.EditText.Text)
@@ -84,7 +96,10 @@ namespace BirdTouch.Dialogs
                     LoginCredentials loginCredentials = new LoginCredentials()
                     {
                         Username = _usernameWrapper.EditText.Text,
-                        Password = _passwordCheckWrapper.EditText.Text
+                        Password = _passwordCheckWrapper.EditText.Text,
+                        Firstname = _firstnameWrapper.EditText.Text,
+                        Lastname = _lastnameWrapper.EditText.Text,
+                        Description = _descriptionCheckWrapper.EditText.Text,
                     };
 
                     _webClientRegister.Headers.Clear();
@@ -96,7 +111,7 @@ namespace BirdTouch.Dialogs
                 {
                     Snackbar.Make(
                         this.View,
-                        Android.Text.Html.FromHtml("<font color=\"#ffffff\">Pease fix username/password</font>"),
+                        Android.Text.Html.FromHtml("<font color=\"#ffffff\">Pease fill out all of the fields in the form.</font>"),
                         Snackbar.LengthLong)
                          .Show();
                 }
@@ -139,6 +154,18 @@ namespace BirdTouch.Dialogs
             _progressBar.Visibility = ViewStates.Gone;
         }
 
+        private void UsernameEditText_AfterTextChanged(object sender, AfterTextChangedEventArgs e)
+        {
+            if (_usernameWrapper.EditText.Text.Contains(" "))
+            {
+                _usernameWrapper.Error = "Invalid username";
+            }
+            else
+            {
+                _usernameWrapper.Error = string.Empty;
+            }
+        }
+
         private void PasswordCheckEditText_AfterTextChanged(object sender, Android.Text.AfterTextChangedEventArgs e)
         {
             if (!_passwordWrapper.EditText.Text.Equals(_passwordCheckWrapper.EditText.Text))
@@ -153,6 +180,11 @@ namespace BirdTouch.Dialogs
 
         private void UsernameEditText_AfterFocusChanged(object sender, View.FocusChangeEventArgs e)
         {
+            if (_usernameWrapper.Error != string.Empty)
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(_usernameWrapper.EditText.Text)
                 && Reachability.IsOnline(Activity)
                 && !_webClientUsernameAvailabilityChecker.IsBusy)

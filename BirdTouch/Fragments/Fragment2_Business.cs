@@ -494,10 +494,13 @@ namespace BirdTouch.Fragments
 
                 simpleHolder._boundString = _values[position].FkUserId.ToString();
 
-                if (string.IsNullOrEmpty(_values[position].CompanyName)
-                    && string.IsNullOrEmpty(_values[position].Description))
+                if ((string.IsNullOrEmpty(_values[position].CompanyName)
+                     && string.IsNullOrEmpty(_values[position].Description))
+                    || (string.IsNullOrEmpty(_values[position].Email)
+                        && string.IsNullOrEmpty(_values[position].PhoneNumber)))
                 {
-                    simpleHolder._txtViewDescription.Text = "waiting on a business info update";
+                    simpleHolder._txtViewName.Text = "Incognito user";
+                    simpleHolder._checkbox.Visibility = ViewStates.Gone;
                 }
                 else
                 {
@@ -703,6 +706,11 @@ namespace BirdTouch.Fragments
             {
                 int position = _recycleView.GetChildAdapterPosition((View)sender);
                 ViewHolder svh = (ViewHolder)_recycleView.GetChildViewHolder((View)sender);
+
+                if (svh._txtViewName.Text == "Incognito user")
+                {
+                    return;
+                }
 
                 Context context = _recycleView.Context;
                 Intent intent = new Intent(context, typeof(BusinessDetailActivity));

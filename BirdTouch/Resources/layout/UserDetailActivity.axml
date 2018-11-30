@@ -59,12 +59,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="First Name"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="First Name"/>
                     <TextView
                         android:id="@+id/textViewPrivateUserShowDetailFirstname"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -81,12 +82,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Last Name"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="Last Name" />
                     <TextView
                         android:id="@+id/textViewPrivateUserShowDetailLastname"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
           <android.support.v7.widget.CardView
@@ -103,12 +105,13 @@
               <TextView
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="Description"
-                  android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                  android:text="Description" />
               <TextView
                   android:id="@+id/textViewPrivateUserShowDetailDescription"
                   android:layout_width="match_parent"
-                  android:layout_height="wrap_content" />
+                  android:layout_height="wrap_content"
+                  android:textIsSelectable="true"
+                  android:textAppearance="@style/TextAppearance.AppCompat.Title" />
             </LinearLayout>
           </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -125,12 +128,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Email"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="Email" />
                     <TextView
                         android:id="@+id/textViewPrivateUserShowDetailEmail"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -147,12 +151,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Phone Number"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="Phone Number" />
                     <TextView
                         android:id="@+id/textViewPrivateUserShowDetailPhoneNumber"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -169,12 +174,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Date of birth"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="Date of birth" />
                     <TextView
                         android:id="@+id/textViewPrivateUserShowDetailDateOfBirth"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -191,12 +197,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="City"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="City" />
                     <TextView
                         android:id="@+id/textViewPrivateUserShowDetailAdress"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
         <!--<android.support.v7.widget.CardView
