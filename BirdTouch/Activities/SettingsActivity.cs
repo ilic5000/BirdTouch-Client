@@ -7,6 +7,7 @@ using Android.Support.V7.App;
 using Android.Support.Design.Widget;
 using Android.Text;
 using System;
+using BirdTouch.Helpers;
 
 namespace BirdTouch.Activities
 {
@@ -50,7 +51,7 @@ namespace BirdTouch.Activities
 
             _imageView = FindViewById<ImageView>(Resource.Id.settings_picture);
 
-            _seekBar.Progress = 40;
+            _seekBar.Progress = SearchRadiusSettingsHelper.GetSearchRadiusFromSharedPreferences(BaseContext) - _progressMinimumValue;
             _searchRadiusCurrent.Text = String.Format("{0} meters", _seekBar.Progress + _progressMinimumValue);
 
             _seekBar.ProgressChanged += SeekBar_ProgressChanged;
@@ -59,13 +60,18 @@ namespace BirdTouch.Activities
 
         private void SeekBar_StopTrackingTouch(object sender, SeekBar.StopTrackingTouchEventArgs e)
         {
+            var actualRadiusSet = e.SeekBar.Progress + _progressMinimumValue;
+
             Snackbar.Make(
                     sender as SeekBar,
                     Html.FromHtml(string
                     .Format("<font color=\"#ffffff\">Search radius is set to {0} meters</font>",
-                                e.SeekBar.Progress + _progressMinimumValue)),
+                            actualRadiusSet)),
                     Snackbar.LengthLong)
                      .Show();
+
+            SearchRadiusSettingsHelper.AddSearchRadiusToSharedPreferences(e.SeekBar.Context,
+                                                                          actualRadiusSet.ToString());
         }
 
         private void SeekBar_ProgressChanged(object sender, SeekBar.ProgressChangedEventArgs e)

@@ -46,8 +46,6 @@ namespace BirdTouch.Fragments
         private long _locationTimeIntervalForChecking;
         // in meter
         private float _locationDistanceNeededForUpdateToTrigger;
-        // TODO: Implement setting page
-        private double _radiusOfSearch = 0.5;
 
         private ProgressBar _progressBarLocation;
         private ProgressBar _progressBarGetPrivateUsers;
@@ -370,7 +368,8 @@ namespace BirdTouch.Fragments
 
                     NameValueCollection parameters = new NameValueCollection();
                     parameters.Add("activeMode", Constants.ActiveModeConstants.PRIVATE);
-                    parameters.Add("radiusOfSearch", _radiusOfSearch.ToString());
+                    parameters.Add("radiusOfSearch",
+                                   SearchRadiusSettingsHelper.GetSearchRadiusInKm(Context).ToString());
 
                     _webClientGetPrivateUsersNearMe.QueryString.Clear();
                     _webClientGetPrivateUsersNearMe.QueryString.Add(parameters);

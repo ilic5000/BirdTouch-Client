@@ -14,7 +14,9 @@ namespace BirdTouch.Constants
 {
     public static class SharedPreferencesConstants
     {
-        public static string JWTSTORAGE = "JwtTokenStorage";
-        public static string JWTTOKENKEY = "token";
+        public static string JWT_STORAGE = "JwtTokenStorage";
+        public static string JWT_TOKEN_KEY = "token";
+        public static string SEARCH_RADIUS_STORAGE = "SearchRadiusStorage";
+        public static string SEARCH_RADIUS_KEY = "SearchRadiusKey";
     }
 }

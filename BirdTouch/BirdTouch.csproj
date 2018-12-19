@@ -157,6 +157,7 @@
     <Compile Include="Helpers\BitmapHelper.cs" />
     <Compile Include="Helpers\JwtTokenHelper.cs" />
     <Compile Include="Helpers\LocationHelper.cs" />
+    <Compile Include="Helpers\SearchRadiusSettingsHelper.cs" />
     <Compile Include="Helpers\WebApiUrlGenerator.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Models\BusinessInfoModel.cs" />

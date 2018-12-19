@@ -8,9 +8,9 @@ namespace BirdTouch.Helpers
         public static bool IsUserSignedIn(Context context)
         {
             ISharedPreferences pref = context.GetSharedPreferences(
-                SharedPreferencesConstants.JWTSTORAGE, FileCreationMode.Private);
+                SharedPreferencesConstants.JWT_STORAGE, FileCreationMode.Private);
 
-            if (pref.Contains(SharedPreferencesConstants.JWTTOKENKEY))
+            if (pref.Contains(SharedPreferencesConstants.JWT_TOKEN_KEY))
             {
                 return true;
             }
@@ -21,32 +21,32 @@ namespace BirdTouch.Helpers
         public static void AddTokenToSharedPreferences(Context context, string token)
         {
             ISharedPreferences pref = context.GetSharedPreferences(
-                SharedPreferencesConstants.JWTSTORAGE, FileCreationMode.Private);
+                SharedPreferencesConstants.JWT_STORAGE, FileCreationMode.Private);
 
-            pref.Edit().PutString(SharedPreferencesConstants.JWTTOKENKEY, token).Commit();
+            pref.Edit().PutString(SharedPreferencesConstants.JWT_TOKEN_KEY, token).Commit();
         }
 
         public static string GetTokenFromSharedPreferences(Context context)
         {
             ISharedPreferences pref = context.GetSharedPreferences(
-                SharedPreferencesConstants.JWTSTORAGE, FileCreationMode.Private);
+                SharedPreferencesConstants.JWT_STORAGE, FileCreationMode.Private);
 
             if (!IsUserSignedIn(context))
             {
                 return null;
             }
 
-            return pref.GetString(SharedPreferencesConstants.JWTTOKENKEY, string.Empty);
+            return pref.GetString(SharedPreferencesConstants.JWT_TOKEN_KEY, string.Empty);
         }
 
         public static void RemoveTokenFromSharedPreferences(Context context)
         {
             ISharedPreferences pref = context.GetSharedPreferences(
-                SharedPreferencesConstants.JWTSTORAGE, FileCreationMode.Private);
+                SharedPreferencesConstants.JWT_STORAGE, FileCreationMode.Private);
 
             if (IsUserSignedIn(context))
             {
-                pref.Edit().Remove(SharedPreferencesConstants.JWTTOKENKEY).Commit();
+                pref.Edit().Remove(SharedPreferencesConstants.JWT_TOKEN_KEY).Commit();
             }
         }
     }

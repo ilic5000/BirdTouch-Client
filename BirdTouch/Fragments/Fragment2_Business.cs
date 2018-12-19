@@ -48,8 +48,6 @@ namespace BirdTouch.Fragments
         private long _locationTimeIntervalForChecking;
         // in meter
         private float _locationDistanceNeededForUpdateToTrigger;
-        // TODO: Implement setting page
-        private double _radiusOfSearch = 0.5;
 
         private WebClient _webClientMakeUserVisible;
         private WebClient _webClientMakeUserInvisible;
@@ -355,7 +353,8 @@ namespace BirdTouch.Fragments
 
                     NameValueCollection parameters = new NameValueCollection();
                     parameters.Add("activeMode", Constants.ActiveModeConstants.BUSINESS);
-                    parameters.Add("radiusOfSearch", _radiusOfSearch.ToString());
+                    parameters.Add("radiusOfSearch",
+                                   SearchRadiusSettingsHelper.GetSearchRadiusInKm(Context).ToString());
 
                     _webClientGetBusinessUsersNearMe.QueryString.Clear();
                     _webClientGetBusinessUsersNearMe.QueryString.Add(parameters);

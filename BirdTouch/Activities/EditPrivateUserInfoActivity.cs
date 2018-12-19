@@ -207,9 +207,12 @@ namespace BirdTouch.Activities
                     Snackbar.LengthLong)
                      .Show();
 
-                // Update title in action bar with new Firstname and Lastname
-                StartPageActivity.actionBar.Title =
-                    _firstNameWrapper.EditText.Text + " " + _lastNameWrapper.EditText.Text;
+                // Update text in drawer header
+                StartPageActivity.
+                _navigationView.GetHeaderView(0).FindViewById
+                    <Android.Support.V7.Widget.AppCompatTextView>
+                    (Resource.Id.nav_header_username_textView)
+                     .Text = $"{_firstNameWrapper.EditText.Text} {_lastNameWrapper.EditText.Text}";
 
                 // Update image in navigation menu with newly set image
                 if (pictureChanged)

@@ -33,6 +33,7 @@ namespace BirdTouch.Activities
         public static SupportActionBar actionBar;
         public static ImageView profilePictureNavigationHeader;
         public static TabAdapter adapter;
+        public static NavigationView _navigationView;
 
         public static byte[] picDataProfileNavigation;
 
@@ -40,7 +41,6 @@ namespace BirdTouch.Activities
         public static Bitmap navBitmap;
 
         private DrawerLayout _drawerLayout;
-        private NavigationView _navigationView;
         private SupportToolbar _toolBar;
         private TabLayout _tabs;
         private ViewPager _viewPager;
@@ -87,15 +87,7 @@ namespace BirdTouch.Activities
             // Enable it for home button
             actionBar.SetDisplayHomeAsUpEnabled(true);
 
-            if (string.IsNullOrEmpty(user.FirstName)
-                && string.IsNullOrEmpty(user.FirstName))
-            {
-                actionBar.Title = "Please update profile information";
-            }
-            else
-            {
-                actionBar.Title = $"{user.FirstName} {user.LastName}";
-            }
+            actionBar.Title = "Birdtouch";
 
             actionBar.SetIcon(Resource.Drawable.app_bar_logov2);
 
@@ -115,11 +107,22 @@ namespace BirdTouch.Activities
                 SetUpDrawerContent(_navigationView);
             }
 
-            // Set username in drawer header
-            _navigationView.GetHeaderView(0).FindViewById
-                <Android.Support.V7.Widget.AppCompatTextView>
-                (Resource.Id.nav_header_username_textView)
-                 .Text = user.Username;
+            if (string.IsNullOrEmpty(user.FirstName)
+                && string.IsNullOrEmpty(user.FirstName))
+            {
+                _navigationView.GetHeaderView(0).FindViewById
+                    <Android.Support.V7.Widget.AppCompatTextView>
+                    (Resource.Id.nav_header_username_textView)
+                     .Text = string.Empty;
+            }
+            else
+            {
+                // Set text in drawer header
+                _navigationView.GetHeaderView(0).FindViewById
+                    <Android.Support.V7.Widget.AppCompatTextView>
+                    (Resource.Id.nav_header_username_textView)
+                     .Text =  $"{user.FirstName} {user.LastName}";
+            }
 
             _tabs = FindViewById<TabLayout>(Resource.Id.tabs);
             _viewPager = FindViewById<ViewPager>(Resource.Id.viewpager);
