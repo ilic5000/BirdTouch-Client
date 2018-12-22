@@ -8,6 +8,8 @@ using Android.Support.Design.Widget;
 using Android.Text;
 using System;
 using BirdTouch.Helpers;
+using Android.Content;
+using System.Net;
 
 namespace BirdTouch.Activities
 {
@@ -17,6 +19,9 @@ namespace BirdTouch.Activities
         private TextView _searchRadiusCurrent;
         private SeekBar _seekBar;
         private ImageView _imageView;
+        private Button _buttonRemoveAccount;
+        private WebClient _webClientRemoveAccount;
+
         private int _progressMinimumValue = 10;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -49,13 +54,93 @@ namespace BirdTouch.Activities
             _searchRadiusCurrent = FindViewById<TextView>
                 (Resource.Id.seekBarInfoCurrentSearchRadius);
 
+            _buttonRemoveAccount = FindViewById<Button>
+                (Resource.Id.buttonRemoveAccount);
+
             _imageView = FindViewById<ImageView>(Resource.Id.settings_picture);
+
+            // Initialize web clients
+            _webClientRemoveAccount = new WebClient();
+
+            // Set up events for web clients
+            _webClientRemoveAccount.UploadStringCompleted += _webClientRemoveAccount_UploadStringCompleted;
 
             _seekBar.Progress = SearchRadiusSettingsHelper.GetSearchRadiusFromSharedPreferences(BaseContext) - _progressMinimumValue;
             _searchRadiusCurrent.Text = String.Format("{0} meters", _seekBar.Progress + _progressMinimumValue);
 
             _seekBar.ProgressChanged += SeekBar_ProgressChanged;
             _seekBar.StopTrackingTouch += SeekBar_StopTrackingTouch;
+
+            _buttonRemoveAccount.Click += _buttonRemoveAccount_Click;
+        }
+
+        private void _buttonRemoveAccount_Click(object sender, EventArgs e)
+        {
+            new Android.Support.V7.App.AlertDialog.Builder(this).SetTitle("Confirm account deletion?")
+                        .SetMessage("Are you sure? There is no going back (we do not keep backups of your data).")
+                        .SetPositiveButton("YES", _buttonRemoveAccount_Click_Yes)
+                        .SetNegativeButton("NO", _buttonRemoveAccount_Click_No)
+                        .Create()
+                        .Show();
+        }
+
+        private void _buttonRemoveAccount_Click_Yes(object sender, EventArgs e)
+        {
+            new Android.Support.V7.App.AlertDialog.Builder(this).SetTitle("Confirm one more time")
+                        .SetMessage("This action will permanently remove all data associated with your account. This is what you really want?")
+                        .SetPositiveButton("YES, DELETE EVERYTHING", _buttonRemoveAccount_Click_YesConfirmed)
+                        .SetNegativeButton("NO", _buttonRemoveAccount_Click_No)
+                        .Create()
+                        .Show();
+        }
+
+        private void _buttonRemoveAccount_Click_No(object sender, EventArgs e)
+        {
+        }
+
+        private void _buttonRemoveAccount_Click_YesConfirmed(object sender, EventArgs e)
+        {
+            var uri = WebApiUrlGenerator
+                            .GenerateWebApiUrl(Resource.String.webapi_endpoint_deleteAccount);
+
+            _webClientRemoveAccount.Headers.Clear();
+            _webClientRemoveAccount.Headers.Add(
+                HttpRequestHeader.ContentType,
+                "application/json");
+            _webClientRemoveAccount.Headers.Add(
+               HttpRequestHeader.Authorization,
+               "Bearer " + JwtTokenHelper.GetTokenFromSharedPreferences(ApplicationContext));
+
+            _webClientRemoveAccount.UploadStringAsync(uri, "DELETE", string.Empty);
+        }
+
+        private void _webClientRemoveAccount_UploadStringCompleted(object sender, UploadStringCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                // TODO: Add type of error
+                Snackbar.Make(
+                    _seekBar,
+                    Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
+            }
+            else
+            {
+                JwtTokenHelper.RemoveTokenFromSharedPreferences(ApplicationContext);
+                new Android.Support.V7.App.AlertDialog.Builder(this).SetTitle("Farewell")
+                       .SetMessage("We are sad to see you go, godspeed.")
+                       .SetPositiveButton("Close application", _buttonRemoveAccount_Click_YesAccountDeleted)
+                       .Create()
+                       .Show();
+            }
+        }
+
+        private void _buttonRemoveAccount_Click_YesAccountDeleted(object sender, EventArgs e)
+        {
+            MoveTaskToBack(true);
+            Process.KillProcess(Process.MyPid());
+            System.Environment.Exit(1);
         }
 
         private void SeekBar_StopTrackingTouch(object sender, SeekBar.StopTrackingTouchEventArgs e)

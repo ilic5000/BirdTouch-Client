@@ -98,6 +98,7 @@
                   android:layout_height="wrap_content"
                   android:text="If you are unhappy with the application or you think that your consumer rights are being violated, you can easily remove your account from the Birdtouch system.\nPlease note that all records will be removed. This action cannot be undone." />
               <Button
+                android:id="@+id/buttonRemoveAccount"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:width="200dp"

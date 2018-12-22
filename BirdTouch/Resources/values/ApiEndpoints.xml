@@ -15,5 +15,6 @@
   <string name="webapi_endpoint_getPrivateUsersNearMe">api/activeusers/getusersnearme</string>
   <string name="webapi_endpoint_getBusinessUsersNearMe">api/activeusers/getusersnearme</string>
   <string name="webapi_endpoint_savePrivateSavedList">api/savedprivate</string>
-  <string name="webapi_endpoint_saveBusinessSavedList">api/savedbusiness"</string>
+  <string name="webapi_endpoint_saveBusinessSavedList">api/savedbusiness</string>
+  <string name="webapi_endpoint_deleteAccount">api/users</string>
 </resources>
