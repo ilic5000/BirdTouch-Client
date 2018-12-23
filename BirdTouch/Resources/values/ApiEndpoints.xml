@@ -2,7 +2,7 @@
 
 <resources>
   <string name="webapi_http_protocol">http://</string>
-  <string name="webapi_ip_adress">192.168.0.23:57400</string>
+  <string name="webapi_ip_adress">35.183.27.80:5000</string>
   <string name="webapi_endpoint_registerUser">api/users</string>
   <string name="webapi_endpoint_getUserLogin">api/login</string>
   <string name="webapi_endpoint_doesUsernameExist">api/users/doesusernameexist</string>

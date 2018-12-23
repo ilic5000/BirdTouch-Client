@@ -78,6 +78,8 @@ namespace BirdTouch.Activities
             profilePictureNavigationHeader = _navigationView.GetHeaderView(0)
                 .FindViewById<ImageView>(Resource.Id.nav_header_imgViewHeader);
 
+            profilePictureNavigationHeader.Click += ProfilePictureNavigationHeader_Click;
+
             // Set up action bar
             actionBar = SupportActionBar;
 
@@ -160,6 +162,16 @@ namespace BirdTouch.Activities
             }
         }
 
+        private void ProfilePictureNavigationHeader_Click(object sender, EventArgs e)
+        {
+            if (!JwtTokenHelper.IsUserSignedIn(ApplicationContext))
+            {
+                LogoutAndGoBackToMainScreen(_navigationView);
+            }
+
+            GetDataForPrivateInfoAndOpenActivity(_navigationView);
+        }
+
         /// <summary>
         /// Updates image on navigation menu from some other activity
         /// </summary>
@@ -228,26 +240,7 @@ namespace BirdTouch.Activities
                              break;
                          }
 
-                         if (Reachability.IsOnline(this))
-                         {
-                             var uri = WebApiUrlGenerator
-                                .GenerateWebApiUrl(Resource.String.webapi_endpoint_getPrivateInfo);
-
-                             _webClientUserPrivateDataUponOpeningEditDataActivity.Headers.Clear();
-                             _webClientUserPrivateDataUponOpeningEditDataActivity.Headers.Add(
-                                HttpRequestHeader.Authorization,
-                                "Bearer " + JwtTokenHelper.GetTokenFromSharedPreferences(ApplicationContext));
-
-                             _webClientUserPrivateDataUponOpeningEditDataActivity.DownloadDataAsync(uri);
-                         }
-                         else
-                         {
-                             Snackbar.Make(
-                                 navigationView,
-                                 Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"),
-                                 Snackbar.LengthLong)
-                                  .Show();
-                         }
+                         GetDataForPrivateInfoAndOpenActivity(navigationView);
                          break;
 
                      // When clicked on business user edit info
@@ -308,6 +301,30 @@ namespace BirdTouch.Activities
 
                  _drawerLayout.CloseDrawers();
              };
+        }
+
+        private void GetDataForPrivateInfoAndOpenActivity(NavigationView navigationView)
+        {
+            if (Reachability.IsOnline(this))
+            {
+                var uri = WebApiUrlGenerator
+                   .GenerateWebApiUrl(Resource.String.webapi_endpoint_getPrivateInfo);
+
+                _webClientUserPrivateDataUponOpeningEditDataActivity.Headers.Clear();
+                _webClientUserPrivateDataUponOpeningEditDataActivity.Headers.Add(
+                   HttpRequestHeader.Authorization,
+                   "Bearer " + JwtTokenHelper.GetTokenFromSharedPreferences(ApplicationContext));
+
+                _webClientUserPrivateDataUponOpeningEditDataActivity.DownloadDataAsync(uri);
+            }
+            else
+            {
+                Snackbar.Make(
+                    navigationView,
+                    Android.Text.Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
+            }
         }
 
         private void LogoutAndGoBackToMainScreen(NavigationView navigationView)
