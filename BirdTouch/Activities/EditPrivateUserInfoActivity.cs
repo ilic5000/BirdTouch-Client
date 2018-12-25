@@ -1,5 +1,6 @@
 using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
 using Android.Provider;
@@ -12,9 +13,13 @@ using Android.Widget;
 using BirdTouch.Constants;
 using BirdTouch.Helpers;
 using BirdTouch.Models;
+using Com.Yalantis.Ucrop;
+using Java.Lang;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 
@@ -242,17 +247,51 @@ namespace BirdTouch.Activities
         {
             base.OnActivityResult(requestCode, resultCode, data);
 
-            if(resultCode == Result.Ok)
+            switch (resultCode)
             {
-                var stream = ContentResolver.OpenInputStream(data.Data);
+                case Result.Ok:
+                    switch (requestCode)
+                    {
+                        case 0:
+                            var stream = ContentResolver.OpenInputStream(data.Data);
 
-                // TODO: Maybe change dimensions
-                _imageView.SetImageBitmap(BitmapHelper.DecodeBitmapFromStream(
-                                            ContentResolver,
-                                            data.Data,
-                                            400,
-                                            300));
-                pictureChanged = true;
+                            var cropOptions = new UCrop.Options();
+                            cropOptions.SetCircleDimmedLayer(true);
+                            cropOptions.SetShowCropGrid(false);
+                            cropOptions.SetShowCropFrame(true);
+                            cropOptions.SetHideBottomControls(true);
+
+                            cropOptions.SetToolbarTitle("Please crop your profile image");
+
+                            UCrop.Of(data.Data, Android.Net.Uri.FromFile(new Java.IO.File(CacheDir, Guid.NewGuid().ToString())))
+                             .WithOptions(cropOptions)
+                             .WithAspectRatio(16, 9)
+                                .WithMaxResultSize(600, 600)
+                                .Start(this);
+                            break;
+
+                        case UCrop.RequestCrop:
+                            // TODO: Maybe change dimensions
+                            var resultCropUri = UCrop.GetOutput(data);
+
+                            _imageView.SetImageBitmap(BitmapHelper.DecodeBitmapFromStream(
+                                                        ContentResolver,
+                                                        resultCropUri,
+                                                        400,
+                                                        400));
+                            pictureChanged = true;
+                            break;
+
+                        default:
+                            Snackbar.Make(this._imageView,
+                                          Html.FromHtml("<font color=\"#ffffff\">Unexpected result.</font>"),
+                                           Snackbar.LengthLong).Show();
+                            break;
+                    }
+                    break;
+
+                default:
+                    break;
             }
         }
 

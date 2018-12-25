@@ -23,7 +23,7 @@
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleMarginEnd="64dp">
         <!--profil image mozda kasnije promena u kruznu-->
-          <refractored.controls.CircleImageView
+          <ImageView
               android:id="@+id/profile_picture_private_userinfo_show_detail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

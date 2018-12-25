@@ -89,7 +89,7 @@ namespace BirdTouch.Activities
             // Enable it for home button
             actionBar.SetDisplayHomeAsUpEnabled(true);
 
-            actionBar.Title = "Birdtouch";
+            actionBar.Title = " Birdtouch";
 
             actionBar.SetIcon(Resource.Drawable.app_bar_logov2);
 
@@ -143,7 +143,7 @@ namespace BirdTouch.Activities
             ISharedPreferences pref = ApplicationContext.GetSharedPreferences("FirstTimeRun", FileCreationMode.Private);
             if (pref.GetBoolean(user.Username + "FirstRodeo", true))
             {
-                var target = new ViewTarget(((SlidingTabStrip)_tabs.GetChildAt(0)).GetChildAt(0));
+                var target = new ViewTarget(_tabs.GetTabAt(0).CustomView);
 
                 _showcaseView = new ShowcaseView.Builder(this)
                   .SetTarget(target)
@@ -406,7 +406,7 @@ namespace BirdTouch.Activities
             switch (_countShowcase)
             {
                 case 1:
-                    var target = new ViewTarget(((SlidingTabStrip)_tabs.GetChildAt(0)).GetChildAt(1));
+                    var target = new ViewTarget(_tabs.GetTabAt(1).CustomView);
                     _showcaseView = new ShowcaseView.Builder(this)
                         .SetTarget(target)
                         .SetContentTitle("Saved private users")
@@ -418,7 +418,7 @@ namespace BirdTouch.Activities
                     break;
 
                 case 2:
-                    target = new ViewTarget(((SlidingTabStrip)_tabs.GetChildAt(0)).GetChildAt(2));
+                    target = new ViewTarget(_tabs.GetTabAt(2).CustomView);
                     _showcaseView = new ShowcaseView.Builder(this)
                       .SetTarget(target)
                       .SetContentTitle("Business users")
@@ -430,7 +430,7 @@ namespace BirdTouch.Activities
                     break;
 
                 case 3:
-                    target = new ViewTarget(((SlidingTabStrip)_tabs.GetChildAt(0)).GetChildAt(3));
+                    target = new ViewTarget(_tabs.GetTabAt(3).CustomView);
                     _showcaseView = new ShowcaseView.Builder(this)
                       .SetTarget(target)
                       .SetContentTitle("Saved business users")

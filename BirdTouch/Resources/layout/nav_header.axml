@@ -5,11 +5,12 @@
     android:layout_height="192dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
     <refractored.controls.CircleImageView
-      android:id="@+id/nav_header_imgViewHeader"
-      android:layout_gravity="center_vertical|center_horizontal"
-      android:layout_width="140dp"
-      android:layout_height="140dp"
-      android:layout_marginRight="1dp"/>
+        android:id="@+id/nav_header_imgViewHeader"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:src="@drawable/blank_navigation"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginRight="1dp" />
     <TextView
         android:id="@+id/nav_header_username_textView"
         android:layout_width="wrap_content"
