@@ -396,7 +396,7 @@ namespace BirdTouch.Fragments
 
             public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
             {
-                View view = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.List_Item, parent, false);
+                View view = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.List_Item_Business, parent, false);
                 view.SetBackgroundResource(_background);
 
                 return new ViewHolder(view);
@@ -415,7 +415,7 @@ namespace BirdTouch.Fragments
             public ViewHolder(View view) : base(view)
             {
                 _view = view;
-                _imageView = view.FindViewById<ImageView>(Resource.Id.avatar);
+                _imageView = view.FindViewById<ImageView>(Resource.Id.businessCardListItem);
                 _txtViewName = view.FindViewById<TextView>(Resource.Id.text1);
                 _txtViewDescription = view.FindViewById<TextView>(Resource.Id.text2);
                 _checkbox = view.FindViewById<CheckBox>(Resource.Id.checkboxSaveUserRecycleViewRow);
