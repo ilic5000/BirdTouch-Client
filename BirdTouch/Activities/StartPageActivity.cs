@@ -143,7 +143,7 @@ namespace BirdTouch.Activities
             ISharedPreferences pref = ApplicationContext.GetSharedPreferences("FirstTimeRun", FileCreationMode.Private);
             if (pref.GetBoolean(user.Username + "FirstRodeo", true))
             {
-                var target = new ViewTarget(_tabs.GetTabAt(0).CustomView);
+                var target = new ViewTarget(((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(0));
 
                 _showcaseView = new ShowcaseView.Builder(this)
                   .SetTarget(target)
@@ -403,10 +403,12 @@ namespace BirdTouch.Activities
         {
             _countShowcase++;
             _showcaseView.Hide();
+            ViewTarget target = null;
+
             switch (_countShowcase)
             {
                 case 1:
-                    var target = new ViewTarget(_tabs.GetTabAt(1).CustomView);
+                    target = new ViewTarget(((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(1));
                     _showcaseView = new ShowcaseView.Builder(this)
                         .SetTarget(target)
                         .SetContentTitle("Saved private users")
@@ -418,7 +420,7 @@ namespace BirdTouch.Activities
                     break;
 
                 case 2:
-                    target = new ViewTarget(_tabs.GetTabAt(2).CustomView);
+                    target = new ViewTarget(((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(2));
                     _showcaseView = new ShowcaseView.Builder(this)
                       .SetTarget(target)
                       .SetContentTitle("Business users")
@@ -430,7 +432,7 @@ namespace BirdTouch.Activities
                     break;
 
                 case 3:
-                    target = new ViewTarget(_tabs.GetTabAt(3).CustomView);
+                    target = new ViewTarget(((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(3));
                     _showcaseView = new ShowcaseView.Builder(this)
                       .SetTarget(target)
                       .SetContentTitle("Saved business users")
