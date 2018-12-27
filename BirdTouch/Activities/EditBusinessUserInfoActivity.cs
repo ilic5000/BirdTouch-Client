@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Mail;
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace BirdTouch.Activities
@@ -108,6 +109,40 @@ namespace BirdTouch.Activities
         {
             View view = sender as View;
 
+            // TODO: Maybe do this via some sort of smarter validation
+            if (string.IsNullOrEmpty(_emailWrapper.EditText.Text)
+                || string.IsNullOrEmpty(_companyNameWrapper.EditText.Text))
+            {
+                if (string.IsNullOrEmpty(_emailWrapper.EditText.Text))
+                {
+                    _emailWrapper.EditText.Error = "Required field";
+                }
+
+                if (string.IsNullOrEmpty(_companyNameWrapper.EditText.Text))
+                {
+                    _companyNameWrapper.EditText.Error = "Required field";
+                }
+
+                Snackbar.Make(
+                    view,
+                    Html.FromHtml("<font color=\"#ffffff\">Required fields must be provided</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
+                return;
+            }
+
+            if (!IsEmailValid(_emailWrapper.EditText.Text))
+            {
+                _emailWrapper.EditText.Error = "Invalid email";
+
+                Snackbar.Make(
+                    view,
+                    Html.FromHtml("<font color=\"#ffffff\">Invalid email</font>"),
+                    Snackbar.LengthLong)
+                     .Show();
+                return;
+            }
+
             if (Reachability.IsOnline(this) && !_webClient.IsBusy)
             {
                 //get ImageView (businessProfileImage) as  array of bytes
@@ -161,6 +196,20 @@ namespace BirdTouch.Activities
                     Html.FromHtml("<font color=\"#ffffff\">No connectivity, check your network</font>"),
                     Snackbar.LengthLong)
                      .Show();
+            }
+        }
+
+        public bool IsEmailValid(string emailaddress)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(emailaddress);
+
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
             }
         }
 
