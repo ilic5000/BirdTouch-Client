@@ -532,13 +532,7 @@ namespace BirdTouch.Fragments
                         _values[position].ProfilePictureData.Length)
                          .Result;
 
-                    // TODO: Maybe this parameters can be played with
-                    simpleHolder._profileImageView.SetImageBitmap(
-                        Bitmap.CreateScaledBitmap(
-                            bm,
-                            200,
-                            100,
-                            false));
+                    simpleHolder._profileImageView.SetImageBitmap(bm);
                 }
                 else
                 {

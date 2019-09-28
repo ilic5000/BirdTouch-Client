@@ -269,12 +269,7 @@ namespace BirdTouch.Fragments
                             _values[position].ProfilePictureData.Length)
                              .Result;
 
-                    simpleHolder._imageView.SetImageBitmap(
-                        Bitmap.CreateScaledBitmap(
-                            bm,
-                            200,
-                            100,
-                            false));
+                    simpleHolder._imageView.SetImageBitmap(bm);
                 }
                 else
                 {

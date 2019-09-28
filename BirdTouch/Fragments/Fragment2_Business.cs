@@ -497,19 +497,8 @@ namespace BirdTouch.Fragments
 
                 simpleHolder._boundString = _values[position].FkUserId.ToString();
 
-                if ((string.IsNullOrEmpty(_values[position].CompanyName)
-                     && string.IsNullOrEmpty(_values[position].Description))
-                    || (string.IsNullOrEmpty(_values[position].Email)
-                        && string.IsNullOrEmpty(_values[position].PhoneNumber)))
-                {
-                    simpleHolder._txtViewName.Text = "Incognito user";
-                    simpleHolder._checkbox.Visibility = ViewStates.Gone;
-                }
-                else
-                {
-                    simpleHolder._txtViewName.Text = _values[position].CompanyName;
-                    simpleHolder._txtViewDescription.Text = _values[position].Description;
-                }
+                simpleHolder._txtViewName.Text = _values[position].CompanyName;
+                simpleHolder._txtViewDescription.Text = _values[position].Description;
 
                 if (_values[position].ProfilePictureData != null)
                 {
@@ -520,13 +509,7 @@ namespace BirdTouch.Fragments
                             _values[position].ProfilePictureData.Length)
                              .Result;
 
-                    // TODO: Maybe this parameters can be played with
-                    simpleHolder._imageView.SetImageBitmap(
-                        Bitmap.CreateScaledBitmap(
-                            bm,
-                            200,
-                            100,
-                            false));
+                    simpleHolder._imageView.SetImageBitmap(bm);
                 }
                 else
                 {
@@ -709,11 +692,6 @@ namespace BirdTouch.Fragments
             {
                 int position = _recycleView.GetChildAdapterPosition((View)sender);
                 ViewHolder svh = (ViewHolder)_recycleView.GetChildViewHolder((View)sender);
-
-                if (svh._txtViewName.Text == "Incognito user")
-                {
-                    return;
-                }
 
                 Context context = _recycleView.Context;
                 Intent intent = new Intent(context, typeof(BusinessDetailActivity));
