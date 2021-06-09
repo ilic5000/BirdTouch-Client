@@ -15,8 +15,6 @@ using BirdTouch.Constants;
 using BirdTouch.Fragments;
 using BirdTouch.Helpers;
 using BirdTouch.Models;
-using Com.Github.Amlcurran.Showcaseview;
-using Com.Github.Amlcurran.Showcaseview.Targets;
 using System;
 using System.Collections.Specialized;
 using System.Net;
@@ -25,10 +23,14 @@ using static Android.Support.Design.Widget.TabLayout;
 using SupportActionBar = Android.Support.V7.App.ActionBar;
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 
+using Xama.JTPorts.ShowcaseView.Interfaces;
+using IO.Blushine.Android.UI.Showcase;
+using static BirdTouch.Resource;
+
 namespace BirdTouch.Activities
 {
     [Activity(Label = "StartPageActivity", Theme = "@style/Theme.DesignDemo")]
-    public class StartPageActivity : AppCompatActivity, View.IOnClickListener
+    public class StartPageActivity : AppCompatActivity, OnViewInflateListener
     {
         public static SupportActionBar actionBar;
         public static ImageView profilePictureNavigationHeader;
@@ -47,9 +49,6 @@ namespace BirdTouch.Activities
 
         private WebClient _webClientUserPrivateDataUponOpeningEditDataActivity;
         private WebClient _webClientUserBusinessDataUponOpeningEditDataActivity;
-
-        private ShowcaseView _showcaseView;
-        private int _countShowcase = 0;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -123,7 +122,7 @@ namespace BirdTouch.Activities
                 _navigationView.GetHeaderView(0).FindViewById
                     <Android.Support.V7.Widget.AppCompatTextView>
                     (Resource.Id.nav_header_username_textView)
-                     .Text =  $"{user.FirstName} {user.LastName}";
+                     .Text = $"{user.FirstName} {user.LastName}";
             }
 
             _tabs = FindViewById<TabLayout>(Resource.Id.tabs);
@@ -137,28 +136,88 @@ namespace BirdTouch.Activities
             _tabs.SetupWithViewPager(_viewPager);
 
             // First start of the app for this user
-            // If first start, then it needs to show guide, but next time, guide will not be shown
+            // If it is a first start, then it needs to show guide, but next time, guide will not be shown
             // pref.GetBoolean returns true if cannot find value in preferences
             // Be careful with childview, if changed, then order in guide will be wrong, or something can be null
             ISharedPreferences pref = ApplicationContext.GetSharedPreferences("FirstTimeRun", FileCreationMode.Private);
             if (pref.GetBoolean(user.Username + "FirstRodeo", true))
             {
-                var target = new ViewTarget(((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(0));
+                var SHOWCASE_ID = "NEW-USER-SHOWCASE";
 
-                _showcaseView = new ShowcaseView.Builder(this)
-                  .SetTarget(target)
-                  .SetContentTitle("Private users")
-                  .SetContentText("Here you can see all users who are currently using application for social purposes")
-                  .SetStyle(Resource.Style.CustomShowcaseTheme)
-                  .HideOnTouchOutside()
-                  .Build();
+                // For more info about his library:
+                // https://github.com/deano2390/MaterialShowcaseView/blob/master/sample/src/main/java/uk/co/deanwild/materialshowcaseviewsample/SequenceExample.java
 
-                //this because this activity inherits ionclicklistener
-                // for more logic, please see View.IOnClickListener.OnClick in this file
-                _showcaseView.OverrideButtonClick(this);
+                ShowcaseConfig config = new ShowcaseConfig(this)
+                {
+                    Delay = 300 // in milliseconds
+                };
+
+                MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+                sequence.SetConfig(config);
+
+                var target = ((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(0);
+                sequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
+                    .SetTarget(target)
+                    .SetTitleText("Private users")
+                    .SetDismissText("GOT IT")
+                    .SetContentText("Here you can see all users who are currently using application for social purposes")
+                    .SetSingleUse(SHOWCASE_ID)
+                    .SetDelay(200) // optional but starting animations immediately in onCreate can make them choppy
+                    .Show());
+
+                var target2 = ((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(1);
+                sequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
+                    .SetTarget(target2)
+                    .SetTitleText("Saved private users")
+                    .SetDismissText("GOT IT")
+                    .SetContentText("You can save private users to have them for future use. Here you can find all private users that you saved. You can see them anytime.")
+                    .SetSingleUse(SHOWCASE_ID)
+                    .Show());
+
+                var target3 = ((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(2);
+                sequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
+                    .SetTarget(target3)
+                    .SetTitleText("Business users")
+                    .SetDismissText("GOT IT")
+                    .SetContentText("Here you can see all users who are currently using application for business purposes. If some user is using application for both social and business purposes, in this tab you will only see his business info.")
+                    .SetSingleUse(SHOWCASE_ID)
+                    .Show());
+
+                var target4 = ((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(3);
+                sequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
+                    .SetTarget(target4)
+                    .SetTitleText("Saved business users")
+                    .SetDismissText("GOT IT")
+                    .SetContentText("You can save business users to have them for future use. Here you can find all business users that you saved. You can see them anytime.")
+                    .SetSingleUse(SHOWCASE_ID)
+                    .Show());
+
+                var target5 = _toolBar.GetChildAt(1);
+                sequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
+                    .SetTarget(target5)
+                    .SetTitleText("Update your information")
+                    .SetDismissText("GOT IT")
+                    .SetContentText("Change your personal/business information")
+                    .SetSingleUse(SHOWCASE_ID)
+                    .Show());
+
+                //var target6 = _viewPager.GetChildAt(0);
+
+                //sequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
+                //    .SetTarget(target6)
+                //    .SetTitleText("Go visible")
+                //    .SetDismissText("GOT IT")
+                //    .SetContentText("Make yourself visible to others. You can also scan for nearby Birdtouch users. Remember: if you are not visible, they cannot find you. Also, you cannot find them.")
+                //    .SetSingleUse(SHOWCASE_ID)
+                //    .Show());
+
+                sequence._showNow();
+
+                //_drawerLayout.OpenDrawer((int)GravityFlags.Left);
 
                 // Disable show guide for next time login
-                pref.Edit().PutBoolean(user.Username + "FirstRodeo", false).Commit();
+                //todo: uncomment after finish testing
+                //pref.Edit().PutBoolean(user.Username + "FirstRodeo", false).Commit();
             }
         }
 
@@ -392,87 +451,9 @@ namespace BirdTouch.Activities
             MoveTaskToBack(true);
         }
 
-        /// <summary>
-        /// Guide for new users
-        /// My remarks, cannot understand them right now:
-        /// "mora ovako jer c# ne dozvoljava pravljenje OnClickListenera unutar OverrideButtonClick kao sto bi trebalo.
-        /// Zato sam nasledio taj interfejs i ovde ga overridovao i onda u overridebuttonclick ga povezem preko this."
-        /// </summary>
-        /// <param name="v"></param>
-        void View.IOnClickListener.OnClick(View v)
+        public void OnViewInflated(View view)
         {
-            _countShowcase++;
-            _showcaseView.Hide();
-            ViewTarget target = null;
-
-            switch (_countShowcase)
-            {
-                case 1:
-                    target = new ViewTarget(((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(1));
-                    _showcaseView = new ShowcaseView.Builder(this)
-                        .SetTarget(target)
-                        .SetContentTitle("Saved private users")
-                        .SetContentText("You can save private users to have them for future use. Here you can find all private users that you saved. You can see them anytime.")
-                        .SetStyle(Resource.Style.CustomShowcaseTheme)
-                        .HideOnTouchOutside()
-                        .Build();
-                    _showcaseView.OverrideButtonClick(this);
-                    break;
-
-                case 2:
-                    target = new ViewTarget(((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(2));
-                    _showcaseView = new ShowcaseView.Builder(this)
-                      .SetTarget(target)
-                      .SetContentTitle("Business users")
-                      .SetContentText("Here you can see all users who are currently using application for business purposes. If some user is using application for both social and business purposes, in this tab you will only see his business info.")
-                      .SetStyle(Resource.Style.CustomShowcaseTheme)
-                      .HideOnTouchOutside()
-                      .Build();
-                    _showcaseView.OverrideButtonClick(this);
-                    break;
-
-                case 3:
-                    target = new ViewTarget(((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(3));
-                    _showcaseView = new ShowcaseView.Builder(this)
-                      .SetTarget(target)
-                      .SetContentTitle("Saved business users")
-                      .SetContentText("You can save business users to have them for future use. Here you can find all business users that you saved. You can see them anytime.")
-                      .SetStyle(Resource.Style.CustomShowcaseTheme)
-                      .HideOnTouchOutside()
-                      .Build();
-                    _showcaseView.OverrideButtonClick(this);
-                    break;
-
-                case 4:
-                    target = new ViewTarget(_toolBar.GetChildAt(1));
-                    _showcaseView = new ShowcaseView.Builder(this)
-                      .SetTarget(target)
-                      .SetContentTitle("Update your information")
-                      .SetContentText("Change your personal/business information")
-                      .SetStyle(Resource.Style.CustomShowcaseTheme)
-                      .HideOnTouchOutside()
-                      .Build();
-                    _showcaseView.OverrideButtonClick(this);
-                    break;
-
-                case 5:
-                    target = new ViewTarget(_viewPager.FocusedChild.
-                        FindViewById<SwitchCompat>(Resource.Id.activatePrivateSwitch));
-                    _showcaseView = new ShowcaseView.Builder(this)
-                      .SetTarget(target)
-                      .SetContentTitle("Be visible")
-                      .SetContentText("Make yourself visible to others. You can also scan for nearby Birdtouch users. Remember: if you are not visible, they cannot find you. Also, you cannot find them.")
-                      .SetStyle(Resource.Style.CustomShowcaseThemeFinalShowcase)
-                      .HideOnTouchOutside()
-                      .Build();
-                    _showcaseView.OverrideButtonClick(this);
-                    break;
-                case 6:
-                    _drawerLayout.OpenDrawer((int)GravityFlags.Left);
-                    break;
-                default:
-                    break;
-            }
+            //
         }
     }
 }
