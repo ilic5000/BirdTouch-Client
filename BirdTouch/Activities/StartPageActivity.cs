@@ -94,6 +94,7 @@ namespace BirdTouch.Activities
 
             actionBar.SetIcon(Resource.Drawable.app_bar_logov2);
 
+            // Set profile image
             if (user.ProfilePictureData != null)
             {
                 Bitmap bm = BitmapFactory.DecodeByteArrayAsync(

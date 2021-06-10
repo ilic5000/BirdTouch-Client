@@ -75,6 +75,14 @@
                        android:textAlignment="center"
                        android:gravity="center"
                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                  <EditText
+                        android:id="@+id/txtDebugOverrideSearchRadius"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:inputType="number"
+                        android:hint="Custom radius"
+                        android:visibility="gone"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
           <android.support.v7.widget.CardView

@@ -18,6 +18,7 @@ namespace BirdTouch.Dialogs
         private EditText _editWebApiAddress;
         private EditText _editWebApiPort;
         private Button _btnSave;
+        private Button _btnCancel;
         private ProgressBar _progressBar;
         private WebClient _webClientLoginSettings;
         private string _newProtocol;
@@ -32,6 +33,7 @@ namespace BirdTouch.Dialogs
 
             // Find components
             _btnSave = view.FindViewById<Button>(Resource.Id.btnDialogLoginSetting);
+            _btnCancel = view.FindViewById<Button>(Resource.Id.btnDialogLoginSettingCancel);
             _editWebApiProtocol = view.FindViewById<EditText>(Resource.Id.txtApiServerProtocol);
             _editWebApiAddress = view.FindViewById<EditText>(Resource.Id.txtApiServerAddress);
             _editWebApiPort = view.FindViewById<EditText>(Resource.Id.txtApiServerPort);
@@ -45,13 +47,21 @@ namespace BirdTouch.Dialogs
 
             var sharedPreferences = WebApiUrlGenerator.GetSharedPreferencesForWebApiSettings();
             _editWebApiProtocol.Text = WebApiUrlGenerator.GetProtocol(sharedPreferences);
-            _editWebApiAddress.Text = WebApiUrlGenerator.GetIpAddress(sharedPreferences);
+            _editWebApiAddress.Text = WebApiUrlGenerator.GetAddress(sharedPreferences);
             _editWebApiPort.Text = WebApiUrlGenerator.GetPort(sharedPreferences);
 
             // Save changes
             _btnSave.Click += SaveBtnClick;
 
+            // Cancel current changes
+            _btnCancel.Click += Cancel_Click;
+
             return view;
+        }
+
+        private void Cancel_Click(object sender, EventArgs e)
+        {
+            Dismiss();
         }
 
         private void WebClientLoginSettings_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
@@ -62,14 +72,14 @@ namespace BirdTouch.Dialogs
             {
                 Snackbar.Make(
                     this.View,
-                    Html.FromHtml("<font color=\"#ffffff\">Something is wrong...</font>"),
+                    Html.FromHtml("<font color=\"#ffffff\">Connection error...</font>"),
                     Snackbar.LengthLong)
                      .Show();
             }
             else
             {
                 WebApiUrlGenerator.SetProtocol(_newProtocol);
-                WebApiUrlGenerator.SetIpAddress(_newAddress);
+                WebApiUrlGenerator.SetAddress(_newAddress);
                 WebApiUrlGenerator.SetPort(_newPort);
 
                 // Sleep for the effect of something happening

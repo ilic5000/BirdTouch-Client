@@ -55,7 +55,16 @@
                 android:layout_gravity="center"
                 android:inputType="textEmailAddress"
                 android:hint="WebAPI port" />
-        </android.support.design.widget.TextInputLayout> 
+        </android.support.design.widget.TextInputLayout>
+        <LinearLayout
+        android:id="@+id/btnDialogLoginSettingButtons"
+        android:background="#DEDEDC"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="300dp"
+        android:minHeight="200dp"
+        android:gravity="center">
         <Button
             android:layout_marginTop="20dp"
             android:text="Save"
@@ -68,14 +77,27 @@
             android:height="7dp"
             android:background="@drawable/buttonSignInStyle"
             android:gravity="center" />
+        <Button
+            android:layout_marginTop="20dp"
+            android:text="Cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnDialogLoginSettingCancel"
+            android:textSize="20dp"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:height="7dp"
+            android:background="@drawable/buttonSignInStyle"
+            android:gravity="center" />
+        </LinearLayout>
         <ProgressBar
-            android:layout_below="@id/btnDialogLoginSetting"
+            android:layout_below="@id/btnDialogLoginSettingButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/progressBarLoginSetting"
             android:indeterminate="false"
             android:background="@drawable/progressbarstylesignin"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:gravity="center" />
     </LinearLayout>
 </FrameLayout>

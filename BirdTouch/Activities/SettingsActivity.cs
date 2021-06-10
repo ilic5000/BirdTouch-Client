@@ -17,7 +17,9 @@ namespace BirdTouch.Activities
     public class SettingsActivity : AppCompatActivity
     {
         private TextView _searchRadiusCurrent;
+        private EditText _debugRadiusOverrideEditText;
         private SeekBar _seekBar;
+        private int _seekBarDefaultMaxValue;
         private ImageView _imageView;
         private Button _buttonRemoveAccount;
         private WebClient _webClientRemoveAccount;
@@ -51,13 +53,23 @@ namespace BirdTouch.Activities
             _seekBar = FindViewById<SeekBar>
                 (Resource.Id.radiusSearchSeekBarId);
 
+            _seekBarDefaultMaxValue = _seekBar.Max;
+
             _searchRadiusCurrent = FindViewById<TextView>
                 (Resource.Id.seekBarInfoCurrentSearchRadius);
+
+            _debugRadiusOverrideEditText = FindViewById<EditText>
+                (Resource.Id.txtDebugOverrideSearchRadius);
+
+            _debugRadiusOverrideEditText.AfterTextChanged += _debugRadiusOverrideEditText_AfterTextChanged;
 
             _buttonRemoveAccount = FindViewById<Button>
                 (Resource.Id.buttonRemoveAccount);
 
             _imageView = FindViewById<ImageView>(Resource.Id.settings_picture);
+
+            // Debug mode
+            toolBar.LongClick += ToolBar_LongClick;
 
             // Initialize web clients
             _webClientRemoveAccount = new WebClient();
@@ -72,6 +84,39 @@ namespace BirdTouch.Activities
             _seekBar.StopTrackingTouch += SeekBar_StopTrackingTouch;
 
             _buttonRemoveAccount.Click += _buttonRemoveAccount_Click;
+        }
+
+        private void _debugRadiusOverrideEditText_AfterTextChanged(object sender, AfterTextChangedEventArgs e)
+        {
+            try
+            {
+                _seekBar.Progress = int.Parse(_debugRadiusOverrideEditText.Text);
+            }
+            catch (Exception)
+            {
+                _seekBar.Progress = 50;
+            }
+
+            UpdateSearchRadiusInSharedPreferencesFromSeekBar();
+        }
+
+        private void ToolBar_LongClick(object sender, View.LongClickEventArgs e)
+        {
+            if (_seekBar.Max != int.MaxValue)
+            {
+                _seekBar.Max = int.MaxValue;
+                _debugRadiusOverrideEditText.Visibility = ViewStates.Visible;
+            }
+            else
+            {
+                _seekBar.Max = _seekBarDefaultMaxValue;
+                _debugRadiusOverrideEditText.Visibility = ViewStates.Gone;
+            }
+
+            // not sure if we need these calls here
+            var actualRadiusSet = _seekBar.Progress + _progressMinimumValue;
+            SearchRadiusSettingsHelper.AddSearchRadiusToSharedPreferences(_seekBar.Context,
+                                                                          actualRadiusSet.ToString());
         }
 
         private void _buttonRemoveAccount_Click(object sender, EventArgs e)
@@ -145,17 +190,22 @@ namespace BirdTouch.Activities
 
         private void SeekBar_StopTrackingTouch(object sender, SeekBar.StopTrackingTouchEventArgs e)
         {
-            var actualRadiusSet = e.SeekBar.Progress + _progressMinimumValue;
+            UpdateSearchRadiusInSharedPreferencesFromSeekBar();
+        }
+
+        private void UpdateSearchRadiusInSharedPreferencesFromSeekBar()
+        {
+            var actualRadiusSet = _seekBar.Progress + _progressMinimumValue;
 
             Snackbar.Make(
-                    sender as SeekBar,
+                    _seekBar as SeekBar,
                     Html.FromHtml(string
                     .Format("<font color=\"#ffffff\">Search radius is set to {0} meters</font>",
                             actualRadiusSet)),
                     Snackbar.LengthLong)
                      .Show();
 
-            SearchRadiusSettingsHelper.AddSearchRadiusToSharedPreferences(e.SeekBar.Context,
+            SearchRadiusSettingsHelper.AddSearchRadiusToSharedPreferences(_seekBar.Context,
                                                                           actualRadiusSet.ToString());
         }
 
