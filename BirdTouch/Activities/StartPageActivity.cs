@@ -50,6 +50,8 @@ namespace BirdTouch.Activities
         private WebClient _webClientUserPrivateDataUponOpeningEditDataActivity;
         private WebClient _webClientUserBusinessDataUponOpeningEditDataActivity;
 
+        public static Fragment1_Private _fragmentPrivateUsers;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             // Create view
@@ -201,7 +203,7 @@ namespace BirdTouch.Activities
                     .SetSingleUse(SHOWCASE_ID)
                     .Show());
 
-                //var target6 = _viewPager.GetChildAt(0);
+                //var target6 = _fragmentPrivateUsers.View;
 
                 //sequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
                 //    .SetTarget(target6)
@@ -256,8 +258,10 @@ namespace BirdTouch.Activities
         {
             adapter = new TabAdapter(SupportFragmentManager);
 
+            _fragmentPrivateUsers = new Fragment1_Private();
+
             // When changing order, update Constants.AdapterFragmentsOrder
-            adapter.AddFragment(new Fragment1_Private(), "Private");
+            adapter.AddFragment(_fragmentPrivateUsers, "Private");
             adapter.AddFragment(new Fragment1_PrivateSavedUsers(), "Saved private");
             adapter.AddFragment(new Fragment2_Business(), "Business");
             adapter.AddFragment(new Fragment2_BusinessSavedUsers(), "Saved business");

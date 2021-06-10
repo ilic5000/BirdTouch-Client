@@ -312,6 +312,7 @@
     <Compile Include="Constants\AdapterFragmentsOrder.cs" />
     <Compile Include="Constants\IntentConstants.cs" />
     <Compile Include="Constants\SharedPreferencesConstants.cs" />
+    <Compile Include="Dialogs\LoginSettingsDialog.cs" />
     <Compile Include="Dialogs\SignUpDialog.cs" />
     <Compile Include="Dialogs\SignInDialog.cs" />
     <Compile Include="Activities\EditBusinessUserInfoActivity.cs" />
@@ -821,6 +822,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\baseline_add_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\dialog_login_settings.axml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

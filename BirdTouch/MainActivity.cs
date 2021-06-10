@@ -20,6 +20,7 @@ namespace BirdTouch
     {
         private Button _btnRegister;
         private Button _btnSignIn;
+        private Button _btnLoginSettings;
         private WebClient _webClientSignedIn;
 
         protected override void OnCreate(Bundle bundle)
@@ -49,6 +50,7 @@ namespace BirdTouch
                 // Find buttons
                 _btnRegister = FindViewById<Button>(Resource.Id.btnRegister);
                 _btnSignIn = FindViewById<Button>(Resource.Id.btnSignIn);
+                _btnLoginSettings = FindViewById<Button>(Resource.Id.btnLoginSettings);
 
                 // Add desired actions for buttons
 
@@ -62,6 +64,12 @@ namespace BirdTouch
                 _btnSignIn.Click += (object sender, EventArgs e) =>
                 {
                     new SignInDialog().Show(SupportFragmentManager, "Dialog fragment");
+                };
+
+                // Show dialog for login settings
+                _btnLoginSettings.Click += (object sender, EventArgs e) =>
+                {
+                    new LoginSettingsDialog().Show(SupportFragmentManager, "Dialog fragment");
                 };
             }
         }
