@@ -11,7 +11,8 @@ If endpoints, protocol or ip address of the WebAPI server changes, you'll need t
 
 Note: If you are already logged in, then you must either sign-out or clear cache for the app in Android Settings in order to get to the welcome screen. 
 
-<img src="./img/welcome-screen.jpg" width="35%" height="35%"/>
+<img src="./img/welcome-screen.jpg" width="35%" height="35%"/>&nbsp;&nbsp;
+<img src="./img/welcome-screen-server-configuration.jpg" margin-left="15px" width="35%" height="35%"/>
 
 ## Debug mode
 
