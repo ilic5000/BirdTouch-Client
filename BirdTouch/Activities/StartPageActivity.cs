@@ -217,11 +217,15 @@ namespace BirdTouch.Activities
                 _viewPager.ChildViewAdded += _viewPager_ChildViewAdded;
 
                 // Disable show guide for next time login
-                //todo: uncomment after finish testing
-                //pref.Edit().PutBoolean(user.Username + "FirstRodeo", false).Commit();
+                pref.Edit().PutBoolean(user.Username + "FirstRodeo", false).Commit();
             }
         }
 
+        /// <summary>
+        /// Needed to implement last showcase like this because onStart() this view is not available, so we need to wait for it to be populated in order to have valid target
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _viewPager_ChildViewAdded(object sender, ViewGroup.ChildViewAddedEventArgs e)
         {
             if (_viewPager.ChildCount == 1)

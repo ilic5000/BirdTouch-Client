@@ -130,10 +130,11 @@ namespace BirdTouch.Dialogs
         {
             if (e.Error != null)
             {
+                var errorDescription = ((System.Net.WebException)e.Error).Response.Headers.Get(name: "user-creation-first-error");
                 // TODO: Notify users about the type of error
                 Snackbar.Make(
                     this.View,
-                    Android.Text.Html.FromHtml("<font color=\"#ffffff\">Error has occurred</font>"),
+                    Android.Text.Html.FromHtml($"<font color=\"#ffffff\">{errorDescription}</font>"),
                     Snackbar.LengthLong)
                      .Show();
             }
@@ -180,7 +181,7 @@ namespace BirdTouch.Dialogs
 
         private void UsernameEditText_AfterFocusChanged(object sender, View.FocusChangeEventArgs e)
         {
-            if (_usernameWrapper.Error != string.Empty)
+            if (!string.IsNullOrEmpty(_usernameWrapper.Error))
             {
                 return;
             }
