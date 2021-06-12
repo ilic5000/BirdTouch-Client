@@ -187,7 +187,7 @@ namespace BirdTouch.Fragments
                 {
                     Snackbar.Make(
                         _frameLay,
-                        Html.FromHtml("<font color=\"#ffffff\">No GPS or Network Geolocation available</font>"),
+                        Html.FromHtml("<font color=\"#ffffff\">No GPS or Network Geolocation available (Permissions?)</font>"),
                         Snackbar.LengthLong)
                          .Show();
                 }

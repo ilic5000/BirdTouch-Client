@@ -2,7 +2,7 @@
 
 <resources>
   <string name="webapi_protocol">http</string>
-  <string name="webapi_address">172.22.200.173</string>
+  <string name="webapi_address">172.27.132.252</string>
   <string name="webapi_port">4050</string>
   <string name="webapi_endpoint_registerUser">api/users</string>
   <string name="webapi_endpoint_getUserLogin">api/login</string>

@@ -26,6 +26,7 @@ using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 using Xama.JTPorts.ShowcaseView.Interfaces;
 using IO.Blushine.Android.UI.Showcase;
 using static BirdTouch.Resource;
+using System.Threading;
 
 namespace BirdTouch.Activities
 {
@@ -55,7 +56,6 @@ namespace BirdTouch.Activities
 
         private const string SHOWCASE_ID = "NEW-USER-SHOWCASE";
         private MaterialShowcaseSequence _welcomeSequence;
-        private int _childrenAddedViewPager = 0;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -142,20 +142,35 @@ namespace BirdTouch.Activities
             // Setup fragments
             SetUpViewPager(_viewPager);
             _tabs.SetupWithViewPager(_viewPager);
+
+            _viewPager.ChildViewAdded += ViewPager_ChildViewAdded;
         }
 
-
-        protected override void OnStart()
+        /// <summary>
+        /// Showcase was added here because we need to wait for all views to become available as targets
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ViewPager_ChildViewAdded(object sender, ViewGroup.ChildViewAddedEventArgs e)
         {
-            base.OnStart();
+            if (_viewPager.ChildCount == 1)
+            {
+                ShowShowcase();
+            }
+        }
 
+        private void ShowShowcase()
+        {
             // First start of the app for this user
             // If it is a first start, then it needs to show guide, but next time, guide will not be shown
             // pref.GetBoolean returns true if cannot find value in preferences
-            // Be careful with childview, if changed, then order in guide will be wrong, or something can be null
-            ISharedPreferences pref = ApplicationContext.GetSharedPreferences("FirstTimeRun", FileCreationMode.Private);
-            if (pref.GetBoolean(user.Username + "FirstRodeo", true))
+            ISharedPreferences pref = ApplicationContext.GetSharedPreferences(SharedPreferencesConstants.FIRST_TIME_RUN, FileCreationMode.Private);
+
+            if (!pref.GetBoolean($"{user.Username}-{SharedPreferencesConstants.FIRST_TIME_RUN_USER_WAS_WELCOMED}", defValue: false))
             {
+                // Disable show guide (sequence) for next time login
+                pref.Edit().PutBoolean($"{user.Username}-{SharedPreferencesConstants.FIRST_TIME_RUN_USER_WAS_WELCOMED}", value: true).Commit();
+
                 // For more info about his library:
                 // https://github.com/deano2390/MaterialShowcaseView/blob/master/sample/src/main/java/uk/co/deanwild/materialshowcaseviewsample/SequenceExample.java
 
@@ -176,7 +191,7 @@ namespace BirdTouch.Activities
                     .SetContentText("Here you can see all users who are currently using application for social purposes")
                     .SetSingleUse(SHOWCASE_ID)
                     .SetDelay(200) // optional but starting animations immediately in onCreate can make them choppy
-                    .Show());
+                    .Build());
 
                 var target2 = ((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(1);
                 _welcomeSequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
@@ -185,7 +200,7 @@ namespace BirdTouch.Activities
                     .SetDismissText("GOT IT")
                     .SetContentText("Here you can find all private users that you saved. \nYou can save private users to have them for future use. \nYou can see them anytime.")
                     .SetSingleUse(SHOWCASE_ID)
-                    .Show());
+                    .Build());
 
                 var target3 = ((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(2);
                 _welcomeSequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
@@ -194,16 +209,16 @@ namespace BirdTouch.Activities
                     .SetDismissText("GOT IT")
                     .SetContentText("Here you can see all users who are currently using application for business purposes. \nIf some user is using application for both social and business purposes, in this tab you will only see his business info.")
                     .SetSingleUse(SHOWCASE_ID)
-                    .Show());
+                    .Build());
 
                 var target4 = ((ViewGroup)_tabs.GetChildAt(0)).GetChildAt(3);
                 _welcomeSequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
                     .SetTarget(target4)
                     .SetTitleText("Saved business users")
                     .SetDismissText("GOT IT")
-                    .SetContentText("Here you can find all business users that you saved.\n You can save business users to have them for future use. \nYou can see them anytime.")
+                    .SetContentText("Here you can find all business users that you saved.\nYou can save business users to have them for future use. \nYou can see them anytime.")
                     .SetSingleUse(SHOWCASE_ID)
-                    .Show());
+                    .Build());
 
                 var target5 = _toolBar.GetChildAt(1);
                 _welcomeSequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
@@ -212,33 +227,17 @@ namespace BirdTouch.Activities
                     .SetDismissText("GOT IT")
                     .SetContentText("Change your personal/business information")
                     .SetSingleUse(SHOWCASE_ID)
-                    .Show());
+                    .Build());
 
-                _viewPager.ChildViewAdded += _viewPager_ChildViewAdded;
+                var finalTarget = _viewPager.GetChildAt(0).FindViewById<LinearLayout>(Resource.Id.wrapper);
 
-                // Disable show guide for next time login
-                pref.Edit().PutBoolean(user.Username + "FirstRodeo", false).Commit();
-            }
-        }
-
-        /// <summary>
-        /// Needed to implement last showcase like this because onStart() this view is not available, so we need to wait for it to be populated in order to have valid target
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void _viewPager_ChildViewAdded(object sender, ViewGroup.ChildViewAddedEventArgs e)
-        {
-            if (_viewPager.ChildCount == 1)
-            {
-                var finalTarget = _viewPager.GetChildAt(0).
-                                 FindViewById<LinearLayout>(Resource.Id.wrapper);
                 _welcomeSequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
                         .SetTarget(finalTarget)
                         .SetTitleText("Go visible")
                         .SetDismissText("GOT IT")
                         .SetContentText("Make yourself visible to others. \nYou can also scan for nearby Birdtouch users. \n\nRemember: if you are not visible, they cannot find you. Also, you cannot find them.")
                         .SetSingleUse(SHOWCASE_ID)
-                        .Show());
+                        .Build());
 
                 _welcomeSequence._showNow();
             }
@@ -478,7 +477,7 @@ namespace BirdTouch.Activities
 
         public void OnViewInflated(View view)
         {
-            //
+            // nothing
         }
     }
 }

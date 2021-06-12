@@ -9,6 +9,7 @@ using BirdTouch.Activities;
 using BirdTouch.Constants;
 using BirdTouch.Dialogs;
 using BirdTouch.Helpers;
+using IO.Blushine.Android.UI.Showcase;
 using System;
 using System.Net;
 using System.Text;
@@ -71,6 +72,25 @@ namespace BirdTouch
                 {
                     new LoginSettingsDialog().Show(SupportFragmentManager, "Dialog fragment");
                 };
+
+                ISharedPreferences pref = ApplicationContext.GetSharedPreferences(SharedPreferencesConstants.FIRST_TIME_RUN, FileCreationMode.Private);
+                if (!pref.GetBoolean($"{SharedPreferencesConstants.FIRST_TIME_RUN_SERVER_SETTINGS_WAS_SHOWN}", defValue: false))
+                {
+                    pref.Edit().PutBoolean($"{SharedPreferencesConstants.FIRST_TIME_RUN_SERVER_SETTINGS_WAS_SHOWN}", value: true).Commit();
+
+                    var _loginPageSequence = new MaterialShowcaseSequence(this, "server-settings-showcase");
+
+                    _loginPageSequence.AddSequenceItem(new MaterialShowcaseView.Builder(this)
+                        .SetTarget(_btnLoginSettings)
+                        .SetTitleText("Server settings")
+                        .SetDismissText("GOT IT")
+                        .SetContentText("Here you can modify server address. \nOnce we go LIVE this option will be removed.")
+                        .SetSingleUse(showcaseId: "server-settings-showcase")
+                        .SetDelay(200) // optional but starting animations immediately in onCreate can make them choppy
+                        .Build());
+
+                    _loginPageSequence._showNow();
+                }
             }
         }
 

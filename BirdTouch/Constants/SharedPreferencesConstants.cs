@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-
-namespace BirdTouch.Constants
+﻿namespace BirdTouch.Constants
 {
     public static class SharedPreferencesConstants
     {
@@ -22,5 +10,8 @@ namespace BirdTouch.Constants
         public static string WEB_SERVER_SETTINGS_PROTOCOL = "WebApiProtocol";
         public static string WEB_SERVER_SETTINGS_ADDRESS = "WebApiAddress";
         public static string WEB_SERVER_SETTINGS_PORT = "WebApiPort";
+        public static string FIRST_TIME_RUN = "FirstTimeRun";
+        public static string FIRST_TIME_RUN_USER_WAS_WELCOMED = "FirstRodeo";
+        public static string FIRST_TIME_RUN_SERVER_SETTINGS_WAS_SHOWN = "ServerSettingsFirstRodeo";
     }
 }
