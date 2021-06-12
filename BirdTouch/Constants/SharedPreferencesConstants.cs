@@ -13,5 +13,6 @@
         public static string FIRST_TIME_RUN = "FirstTimeRun";
         public static string FIRST_TIME_RUN_USER_WAS_WELCOMED = "FirstRodeo";
         public static string FIRST_TIME_RUN_SERVER_SETTINGS_WAS_SHOWN = "ServerSettingsFirstRodeo";
+        public static string FIRST_TIME_RUN_PERMISSIONS_REQUESTED = "PermissionsRequested";
     }
 }

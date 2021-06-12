@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using Android;
+using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Support.Design.Widget;
@@ -27,6 +28,22 @@ namespace BirdTouch
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
+            ISharedPreferences pref = ApplicationContext.GetSharedPreferences(SharedPreferencesConstants.FIRST_TIME_RUN, FileCreationMode.Private);
+            if (!pref.GetBoolean($"{SharedPreferencesConstants.FIRST_TIME_RUN_PERMISSIONS_REQUESTED}", defValue: false))
+            {
+                pref.Edit().PutBoolean($"{SharedPreferencesConstants.FIRST_TIME_RUN_PERMISSIONS_REQUESTED}", value: true).Commit();
+
+                var neededPermissions = new string[]
+                        {
+                            Manifest.Permission.AccessCoarseLocation,
+                            Manifest.Permission.AccessFineLocation,
+                            Manifest.Permission.ReadExternalStorage,
+                            Manifest.Permission.WriteExternalStorage
+                        };
+
+                ActivityCompat.RequestPermissions(this, neededPermissions, 225);
+            }
 
             // If User is already signed in
             if (JwtTokenHelper.IsUserSignedIn(ApplicationContext)
@@ -73,7 +90,7 @@ namespace BirdTouch
                     new LoginSettingsDialog().Show(SupportFragmentManager, "Dialog fragment");
                 };
 
-                ISharedPreferences pref = ApplicationContext.GetSharedPreferences(SharedPreferencesConstants.FIRST_TIME_RUN, FileCreationMode.Private);
+                pref = ApplicationContext.GetSharedPreferences(SharedPreferencesConstants.FIRST_TIME_RUN, FileCreationMode.Private);
                 if (!pref.GetBoolean($"{SharedPreferencesConstants.FIRST_TIME_RUN_SERVER_SETTINGS_WAS_SHOWN}", defValue: false))
                 {
                     pref.Edit().PutBoolean($"{SharedPreferencesConstants.FIRST_TIME_RUN_SERVER_SETTINGS_WAS_SHOWN}", value: true).Commit();
