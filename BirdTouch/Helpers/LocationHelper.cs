@@ -20,11 +20,8 @@ namespace BirdTouch.Helpers
                 Accuracy = Accuracy.Coarse
             };
 
-            IList<string> acceptableLocationProviders = locationManager.GetProviders(criteriaForLocationService,
-                                                                                     true);
-
-            acceptableLocationProviders = locationManager.GetProviders(criteriaForLocationService,
-                                                                       true);
+            var acceptableLocationProviders = locationManager.GetProviders(criteriaForLocationService,
+                                                                           true);
 
             if (acceptableLocationProviders.Any())
             {
@@ -36,6 +33,9 @@ namespace BirdTouch.Helpers
             {
                 Accuracy = Accuracy.Fine
             };
+
+            acceptableLocationProviders = locationManager.GetProviders(criteriaForLocationService,
+                                                                       true);
 
             if (acceptableLocationProviders.Any())
             {
