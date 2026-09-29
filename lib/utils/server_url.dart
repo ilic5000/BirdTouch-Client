@@ -1,6 +1,6 @@
 /// Turns what the user typed into a server base URL, or returns null when it isn't one.
 ///
-/// `188.245.72.17:4050` → `http://188.245.72.17:4050`; a trailing slash is removed. Without a
+/// `160.99.21.233:4050` → `http://160.99.21.233:4050`; a trailing slash is removed. Without a
 /// scheme, `http` is assumed because test servers usually don't have TLS.
 String? normalizeServerUrl(String input) {
   var text = input.trim();

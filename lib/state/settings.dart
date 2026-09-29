@@ -41,7 +41,7 @@ final class AppSettings {
     this.fakeLocation,
   });
 
-  /// Base URL of the BirdTouch server, e.g. `http://188.245.72.17:4050`.
+  /// Base URL of the BirdTouch server, e.g. `http://160.99.21.233:4050`.
   final String serverUrl;
 
   /// Search radius for nearby users, or [unlimitedRadiusMeters].

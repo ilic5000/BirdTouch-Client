@@ -1,6 +1,6 @@
 {
-  "BIRDTOUCH_API_URL": "http://188.245.72.17:4050",
-  "BIRDTOUCH_DEV_OPTIONS": false,
+  "BIRDTOUCH_API_URL": "http://160.99.21.233:4050",
+  "BIRDTOUCH_DEV_OPTIONS": true,
   "BIRDTOUCH_MAP_TILES_URL": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
   "BIRDTOUCH_MAP_ATTRIBUTION": "OpenStreetMap contributors"
 }

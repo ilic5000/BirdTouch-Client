@@ -4,7 +4,7 @@ Only the Python standard library is needed. Run it again to refresh their locati
 hides users whose location is older than 24 hours). Examples:
 
     python tool/seed_demo_users.py                                  # local server, Belgrade
-    python tool/seed_demo_users.py --server http://188.245.72.17:4050 --lat 45.2671 --lon 19.8335
+    python tool/seed_demo_users.py --server http://160.99.21.233:4050 --lat 45.2671 --lon 19.8335
     python tool/seed_demo_users.py --delete                         # remove the demo users
 
 On an Android emulator, move the device to the same place:

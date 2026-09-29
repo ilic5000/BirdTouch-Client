@@ -84,7 +84,7 @@ The app talks to one BirdTouch server. Its address is chosen like this:
    Developer options > Server**). Saving tests the connection (`GET /health`). Changing the server
    signs you out, because a login belongs to one server.
 2. Otherwise the build-time default, `BIRDTOUCH_API_URL`.
-3. Otherwise `http://188.245.72.17:4050`.
+3. Otherwise `http://160.99.21.233:4050`.
 
 ### Build-time settings
 
@@ -94,12 +94,12 @@ Build-time settings are passed with `--dart-define` or, simpler, a JSON file wit
 | File                                                           | Server                        | Developer options |
 | -------------------------------------------------------------- | ----------------------------- | ----------------- |
 | [`local.example.json`](dart_defines/local.example.json)        | `http://10.0.2.2:4050` (your computer, seen from the Android emulator) | on |
-| [`production.example.json`](dart_defines/production.example.json) | `http://188.245.72.17:4050`   | off               |
+| [`production.example.json`](dart_defines/production.example.json) | `http://160.99.21.233:4050`   | on (for now, see below) |
 
 | Setting                 | Default                      | Description                                      |
 | ----------------------- | ---------------------------- | ------------------------------------------------ |
-| `BIRDTOUCH_API_URL`     | `http://188.245.72.17:4050`  | Default server address                           |
-| `BIRDTOUCH_DEV_OPTIONS` | `true` in debug builds, else `false` | Developer options unlocked on first start |
+| `BIRDTOUCH_API_URL`     | `http://160.99.21.233:4050`  | Default server address                           |
+| `BIRDTOUCH_DEV_OPTIONS` | `true` (while in testing; set `false` for a public release) | Developer options unlocked on first start |
 | `BIRDTOUCH_MAP_TILES_URL` | `https://tile.openstreetmap.org/{z}/{x}/{y}.png` | Map tiles (URL template). OpenStreetMap's servers are for light use only ([policy](https://operations.osmfoundation.org/policies/tiles/)); use another provider for a public release |
 | `BIRDTOUCH_MAP_ATTRIBUTION` | `OpenStreetMap contributors` | Credit shown on the maps, as the tile provider requires |
 
@@ -188,7 +188,7 @@ business mode:
 
 ```sh
 python tool/seed_demo_users.py                                   # local server, Belgrade centre
-python tool/seed_demo_users.py --server http://188.245.72.17:4050 --lat 45.2671 --lon 19.8335
+python tool/seed_demo_users.py --server http://160.99.21.233:4050 --lat 45.2671 --lon 19.8335
 python tool/seed_demo_users.py --delete                          # remove them again
 ```
 
@@ -199,8 +199,8 @@ same location.
 
 ### Developer options in the app
 
-In debug builds they are on by default. In other builds, **long-press the "Settings" title** in
-*Me > Settings* to toggle them (as in the old app). They add:
+They are on by default while the app is in testing (`BIRDTOUCH_DEV_OPTIONS`). **Long-press the
+"Settings" title** in *Me > Settings* to toggle them (as in the old app). They add:
 
 - search radius up to 500 km, or unlimited (useful when testers are in different cities);
 - the server address, and a link to the server's API documentation (`/docs`);
@@ -270,9 +270,10 @@ settings of the server the testers use, e.g.:
 flutter build apk --release --dart-define-from-file=dart_defines/production.example.json
 ```
 
-Testers who need the developer options can unlock them in the app (long-press "Settings"), or you
-build with `BIRDTOUCH_DEV_OPTIONS=true` (it's in [`local.example.json`](dart_defines/local.example.json);
-copy [`production.example.json`](dart_defines/production.example.json) and set it to `true`).
+The developer options are on by default while the app is in testing. Users can turn them off
+(or on again) by long-pressing the "Settings" title. Before a public release, set
+`BIRDTOUCH_DEV_OPTIONS` to `false` in `lib/config/app_config.dart` and
+[`production.example.json`](dart_defines/production.example.json).
 
 Use `--build-number` to give every test build a higher number, e.g. `--build-number=42`; the
 version name comes from `version:` in `pubspec.yaml`.
@@ -412,7 +413,7 @@ changes with the picture, so pictures are cached on disk by URL.
 | Android only                                            | Android and iOS from one codebase                            |
 | Drawer + 4 tabs (Private, Saved private, Business, Saved business) | Bottom navigation: Private, Business, Saved (private/business), Me |
 | Sign in / sign up / server settings in dialogs          | Full screens; server settings as a sheet with a connection test |
-| Server as protocol + address + port                     | One address, e.g. `http://188.245.72.17:4050`                |
+| Server as protocol + address + port                     | One address, e.g. `http://160.99.21.233:4050`                |
 | Saved contacts in local storage, "upload to cloud" button | Contacts on the server, saved one by one, same on all devices |
 | Location sent once when going visible                   | Sent every 5 minutes while visible and the app is open       |
 | Pictures cropped with uCrop, sent as base64 inside the profile | Cropped (uCrop / TOCropViewController), scaled on the device and uploaded separately (raw bytes) |

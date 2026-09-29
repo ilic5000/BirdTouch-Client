@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Build-time configuration.
 ///
 /// Values come from `--dart-define` / `--dart-define-from-file` (see `dart_defines/`), so the same
@@ -8,15 +6,16 @@ abstract final class AppConfig {
   /// Server used until the user picks another one in the server settings.
   static const defaultServerUrl = String.fromEnvironment(
     'BIRDTOUCH_API_URL',
-    defaultValue: 'http://188.245.72.17:4050',
+    defaultValue: 'http://160.99.21.233:4050',
   );
 
-  /// Whether developer options (larger search radius, server address, ...) are unlocked on the
-  /// first start. Always on in debug builds. Testers can also unlock them by long-pressing the
-  /// "Settings" title.
+  /// Whether developer options (larger search radius, server address, fake location, ...) are
+  /// unlocked on the first start. On by default while the app is in testing: set it to `false`
+  /// (here and in `production.example.json`) before a public release. Users can toggle them by
+  /// long-pressing the "Settings" title.
   static const developerOptionsByDefault = bool.fromEnvironment(
     'BIRDTOUCH_DEV_OPTIONS',
-    defaultValue: kDebugMode,
+    defaultValue: true,
   );
 
   /// How often the location is sent to the server while the user is visible. The server hides

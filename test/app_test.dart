@@ -152,7 +152,7 @@ void main() {
     expect(find.text('BirdTouch'), findsOneWidget);
     expect(find.text('Sign in'), findsOneWidget);
     expect(find.text('Sign up'), findsOneWidget);
-    expect(find.text('188.245.72.17:4050'), findsOneWidget);
+    expect(find.text('160.99.21.233:4050'), findsOneWidget);
     await stopApp(tester);
   });
 

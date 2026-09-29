@@ -108,7 +108,7 @@ void main() {
 
   group('server URL', () {
     test('adds http and removes trailing slashes', () {
-      expect(normalizeServerUrl('188.245.72.17:4050'), 'http://188.245.72.17:4050');
+      expect(normalizeServerUrl('160.99.21.233:4050'), 'http://160.99.21.233:4050');
       expect(normalizeServerUrl('https://api.birdtouch.rs/'), 'https://api.birdtouch.rs');
       expect(normalizeServerUrl(' http://10.0.2.2:4050// '), 'http://10.0.2.2:4050');
     });
