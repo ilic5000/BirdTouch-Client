@@ -1,0 +1,3 @@
+tags:
+  e2e:
+    # Needs a running server: BIRDTOUCH_E2E_URL=http://localhost:4050 flutter test test/e2e

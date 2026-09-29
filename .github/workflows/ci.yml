@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [master, "feature/**"]
+  pull_request:
+
+jobs:
+  test:
+    name: Analyze and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed lib test
+      - run: flutter analyze
+      - run: flutter test
+
+  android:
+    name: Android APK
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter build apk --release --dart-define-from-file=dart_defines/production.example.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: birdtouch-android
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  ios:
+    name: iOS (unsigned)
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter build ios --release --no-codesign --dart-define-from-file=dart_defines/production.example.json

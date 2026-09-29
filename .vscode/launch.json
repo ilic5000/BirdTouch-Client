@@ -1,0 +1,27 @@
+{
+  // Run configurations for VS Code (Run and Debug panel). See README "Running in debug mode".
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "BirdTouch (local server)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["--dart-define-from-file=dart_defines/local.example.json"]
+    },
+    {
+      "name": "BirdTouch (production server)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["--dart-define-from-file=dart_defines/production.example.json"]
+    },
+    {
+      "name": "BirdTouch (profile mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "program": "lib/main.dart"
+    }
+  ]
+}

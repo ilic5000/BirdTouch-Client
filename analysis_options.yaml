@@ -1,0 +1,29 @@
+# Static analysis: `flutter analyze` (also run in CI). Lints: https://dart.dev/lints
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  exclude:
+    - build/**
+
+linter:
+  rules:
+    always_declare_return_types: true
+    avoid_dynamic_calls: true
+    avoid_print: true
+    cancel_subscriptions: true
+    directives_ordering: true
+    prefer_const_constructors: true
+    prefer_final_locals: true
+    prefer_single_quotes: true
+    require_trailing_commas: false
+    sort_child_properties_last: true
+    unawaited_futures: true
+    unnecessary_await_in_return: true
+    use_super_parameters: true
+
+formatter:
+  page_width: 100
